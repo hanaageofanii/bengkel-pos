@@ -1,7 +1,14 @@
+## Instalasi
+
 git clone https://github.com/hanaageofanii/bengkel-pos.git
+cd bengkel-pos
+composer install
 npm install
+cp .env.example .env
+php artisan key:generate
 php artisan migrate
-php artisan ser
+php artisan serve
+
 
 login page 
 1. Id user
