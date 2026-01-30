@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Dashboard</title>
-</head>
 <body>
-    <h1>Halo, {{ auth()->user()->name }}</h1>
+    <h1>Dashboard 5a AUTO SERVICE
+    <p>Halo, {{ auth()->user()->name }}</p>
 
     <form method="POST" action="{{ route('logout') }}">
         @csrf
