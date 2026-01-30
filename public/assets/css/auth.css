@@ -1,0 +1,65 @@
+:root {
+    --primary: #1b3c53;
+    --primary-hover: #234c6a;
+    --secondary: #456882;
+    --bg-soft: #d2c1b6;
+}
+
+body {
+    background-color: var(--bg-soft);
+    font-family:
+        system-ui,
+        -apple-system,
+        BlinkMacSystemFont,
+        "Segoe UI",
+        sans-serif;
+}
+
+.auth-card {
+    background: #ffffff;
+    border-radius: 1rem;
+    box-shadow: 0 20px 30px rgba(0, 0, 0, 0.15);
+}
+
+.auth-title {
+    color: var(--primary);
+}
+
+.auth-label {
+    color: var(--secondary);
+    font-size: 0.875rem;
+}
+
+.auth-input {
+    width: 100%;
+    padding: 0.55rem 0.75rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--secondary);
+    outline: none;
+}
+
+.auth-input:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 2px rgba(27, 60, 83, 0.25);
+}
+
+.auth-button {
+    background-color: var(--primary);
+    color: white;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+}
+
+.auth-button:hover {
+    background-color: var(--primary-hover);
+}
+
+.auth-error {
+    background: #fdecec;
+    color: #b91c1c;
+    padding: 0.6rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+}
