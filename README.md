@@ -1,3 +1,8 @@
+git clone https://github.com/hanaageofanii/bengkel-pos.git
+npm install
+php artisan migrate
+php artisan ser
+
 login page 
 1. Id user
 2. nama
