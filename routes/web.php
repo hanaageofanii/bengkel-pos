@@ -8,6 +8,7 @@ use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\JasaController;
+use App\Http\Controllers\InvoiceController;
 
 
 /*
@@ -102,3 +103,8 @@ Route::get('/dashboard', function () {
 
     // Jasa
     Route::resource('jasa', JasaController::class);
+
+    // Invoices
+Route::resource('invoice', InvoiceController::class);
+Route::get('invoice/{invoice}/print', [InvoiceController::class, 'print'])
+    ->name('invoice.print');

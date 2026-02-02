@@ -10,19 +10,13 @@ return new class extends Migration
     {
         Schema::create('pelanggans', function (Blueprint $table) {
             $table->id();
-
-            // NAMA PELANGGAN (ORANG / PERUSAHAAN)
             $table->string('nama');
-
             $table->string('no_hp')->nullable();
             $table->enum('tipe', ['pribadi', 'perusahaan'])->default('pribadi');
-
-            // DATA MOBIL
             $table->string('plat_nomor')->unique();
             $table->string('merk_mobil');
             $table->string('model_mobil');
             $table->year('tahun_mobil')->nullable();
-
             $table->timestamps();
         });
     }

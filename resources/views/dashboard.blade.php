@@ -28,6 +28,14 @@
                 Dashboard
             </a>
 
+            <a href="{{ route('invoice.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->routeIs('invoice.*')
+                    ? 'bg-white/20 font-semibold border-l-4 border-white'
+                    : 'hover:bg-white/10' }}">
+                Invoice
+            </a>
+
             <a href="{{ route('karyawan.index') }}"
                class="block px-3 py-2 rounded transition
                {{ request()->routeIs('karyawan.*')
