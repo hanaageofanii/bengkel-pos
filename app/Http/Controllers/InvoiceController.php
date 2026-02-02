@@ -7,6 +7,7 @@ use App\Models\Pelanggan;
 use App\Models\Jasa;
 use App\Models\Barang;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class InvoiceController extends Controller
 {
@@ -44,55 +45,94 @@ class InvoiceController extends Controller
     // ================= STORE =================
     public function store(Request $request)
     {
-        $invoiceNo = 'INV-' . date('Ymd') . '-' . rand(100,999);
+        $invoiceNo = 'INV-' . date('Ymd') . '-' . rand(100, 999);
 
-        // JASA
-        $jasa = [];
-        foreach ($request->jasa_id ?? [] as $i => $id) {
-            $jasa[] = [
-                'id'    => $id,
-                'nama'  => $request->jasa_nama[$i],
-                'harga' => (int)$request->jasa_harga[$i],
-            ];
-        }
+        DB::transaction(function () use ($request, $invoiceNo) {
 
-        // BARANG
-        $barang = [];
-        foreach ($request->barang_id ?? [] as $i => $id) {
-            $qty   = (int)$request->barang_qty[$i];
-            $harga = (int)$request->barang_harga[$i];
+            /* ================= JASA ================= */
+            $jasa = [];
+            foreach ($request->jasa_id ?? [] as $i => $id) {
+                if (!$id) continue;
 
-            $barang[] = [
-                'id'    => $id,
-                'nama'  => $request->barang_nama[$i],
-                'qty'   => $qty,
-                'harga' => $harga,
-                'total' => $qty * $harga,
-            ];
-        }
+                $jasa[] = [
+                    'id'    => $id,
+                    'nama'  => $request->jasa_nama[$i] ?? '',
+                    'harga' => (int) ($request->jasa_harga[$i] ?? 0),
+                ];
+            }
 
-        $totalJasa = collect($jasa)->sum('harga');
-        $totalPart = collect($barang)->sum('total');
+            /* ================= BARANG (AKUMULASI PER ID) ================= */
+            $barangMap = [];
 
-        $invoice = Invoice::create([
-            'invoice_no'   => $invoiceNo,
-            'pelanggan_id' => $request->pelanggan_id,
-            'tanggal'      => $request->tanggal,
-            'km'           => $request->km,
-            'no_chasis'    => $request->no_chasis,
-            'no_mesin'     => $request->no_mesin,
-            'no_telp'      => $request->no_telp,
-            'keluhan'      => $request->keluhan,
-            'jasa'         => $jasa,
-            'barang'       => $barang,
-            'total_jasa'   => $totalJasa,
-            'total_part'   => $totalPart,
-            'grand_total'  => $totalJasa + $totalPart,
-            'status_bayar' => $request->status_bayar,
-            'metode_bayar' => $request->metode_bayar,
-        ]);
+            foreach ($request->barang_id ?? [] as $i => $id) {
+                if (!$id) continue;
 
-        return redirect()->route('invoice.print', $invoice);
+                $qty   = (int) ($request->barang_qty[$i] ?? 0);
+                $harga = (int) ($request->barang_harga[$i] ?? 0);
+
+                if ($qty <= 0) continue;
+
+                if (!isset($barangMap[$id])) {
+                    $barangMap[$id] = [
+                        'id'    => $id,
+                        'nama'  => $request->barang_nama[$i] ?? '',
+                        'qty'   => 0,
+                        'harga' => $harga,
+                        'total' => 0,
+                    ];
+                }
+
+                $barangMap[$id]['qty'] += $qty;
+                $barangMap[$id]['total'] =
+                    $barangMap[$id]['qty'] * $barangMap[$id]['harga'];
+            }
+
+            /* ================= CEK & POTONG STOK ================= */
+            $barang = [];
+
+            foreach ($barangMap as $item) {
+
+                $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
+
+                if ($barangModel->stok < $item['qty']) {
+                    abort(400, "Stock {$barangModel->nama} tidak mencukupi");
+                }
+
+                $barangModel->decrement('stok', $item['qty']);
+
+                $barang[] = $item;
+            }
+
+            /* ================= TOTAL ================= */
+            $totalJasa = collect($jasa)->sum('harga');
+            $totalPart = collect($barang)->sum('total');
+
+            /* ================= STATUS BAYAR (ENUM AMAN) ================= */
+            $statusBayar = $request->status_bayar === 'lunas'
+                ? 'sudah'
+                : $request->status_bayar;
+
+            /* ================= SIMPAN INVOICE ================= */
+            Invoice::create([
+                'invoice_no'   => $invoiceNo,
+                'pelanggan_id' => $request->pelanggan_id,
+                'tanggal'      => $request->tanggal,
+                'km'           => $request->km,
+                'no_chasis'    => $request->no_chasis,
+                'no_mesin'     => $request->no_mesin,
+                'no_telp'      => $request->no_telp,
+                'keluhan'      => $request->keluhan,
+                'jasa'         => $jasa,
+                'barang'       => $barang,
+                'total_jasa'   => $totalJasa,
+                'total_part'   => $totalPart,
+                'grand_total'  => $totalJasa + $totalPart,
+                'status_bayar' => $statusBayar,
+                'metode_bayar' => $request->metode_bayar,
+            ]);
+        });
+
+        return redirect()->route('invoice.index');
     }
 
     // ================= PRINT =================

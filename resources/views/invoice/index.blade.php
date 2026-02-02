@@ -6,9 +6,9 @@
 <div class="space-y-8">
 
     <!-- HEADER -->
-    <div class="flex items-center justify-between">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
-            <h2 class="text-3xl font-bold text-gray-800 tracking-tight">
+            <h2 class="text-3xl font-bold text-gray-900 tracking-tight">
                 Invoice
             </h2>
             <p class="text-sm text-gray-500 mt-1">
@@ -17,23 +17,40 @@
         </div>
 
         <a href="{{ route('invoice.create') }}"
-           class="bg-blue-600 hover:bg-blue-700 text-white
-                  px-5 py-2.5 rounded-lg text-sm font-medium shadow-sm">
+           class="inline-flex items-center gap-2
+                  bg-blue-600 hover:bg-blue-700
+                  text-white px-6 py-3
+                  rounded-xl text-sm font-semibold shadow-sm">
             + Buat Invoice
         </a>
     </div>
 
-    <!-- SEARCH -->
-    <div class="bg-white rounded-xl shadow-sm border p-4">
-        <form method="GET" class="flex gap-3">
-            <input name="q"
-                   value="{{ $q }}"
-                   placeholder="Cari invoice / nama / plat / merk mobil"
-                   class="input w-full md:w-96">
+    <!-- SEARCH (KIRI, LEBIH PANJANG) -->
+    <div class="flex justify-start">
+        <form method="GET" class="w-full md:w-auto">
+            <div class="relative w-full md:w-[420px]">
+                <input name="q"
+                       value="{{ $q }}"
+                       placeholder="Cari invoice, pelanggan, plat, atau mobil…"
+                       class="w-full pl-5 pr-28 py-2.5
+                              border border-gray-300
+                              rounded-xl
+                              text-sm
+                              bg-white
+                              focus:outline-none
+                              focus:ring-2
+                              focus:ring-blue-200
+                              focus:border-blue-400">
 
-            <button class="px-5 py-2 rounded-lg bg-gray-800 text-white text-sm">
-                Cari
-            </button>
+                <button type="submit"
+                        class="absolute right-1 top-1 bottom-1
+                               px-5
+                               rounded-lg
+                               bg-blue-600 hover:bg-blue-700
+                               text-white text-sm font-semibold">
+                    Cari
+                </button>
+            </div>
         </form>
     </div>
 
@@ -42,42 +59,28 @@
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-gray-600">
                 <tr>
-                    <th class="px-6 py-4 text-left font-medium">
-                        Invoice
-                    </th>
-                    <th class="px-6 py-4 text-left font-medium">
-                        Pelanggan
-                    </th>
-                    <th class="px-6 py-4 text-center font-medium">
-                        Tanggal
-                    </th>
-                    <th class="px-6 py-4 text-right font-medium">
-                        Total
-                    </th>
-                    <th class="px-6 py-4 text-center font-medium">
-                        Status
-                    </th>
-                    <th class="px-6 py-4 text-right font-medium">
-                        Aksi
-                    </th>
+                    <th class="px-6 py-4 text-left font-semibold">Invoice</th>
+                    <th class="px-6 py-4 text-left font-semibold">Pelanggan</th>
+                    <th class="px-6 py-4 text-center font-semibold">Tanggal</th>
+                    <th class="px-6 py-4 text-right font-semibold">Total</th>
+                    <th class="px-6 py-4 text-center font-semibold">Status</th>
+                    <th class="px-6 py-4 text-right font-semibold">Aksi</th>
                 </tr>
             </thead>
 
-            <tbody>
+            <tbody class="divide-y divide-gray-100">
                 @forelse($invoices as $i)
-                <tr class="border-t hover:bg-gray-50 transition">
+                <tr class="hover:bg-gray-50 transition">
 
-                    <!-- INVOICE NO -->
-                    <td class="px-6 py-4 font-semibold text-gray-800">
+                    <td class="px-6 py-5 font-semibold text-gray-900">
                         {{ $i->invoice_no }}
                     </td>
 
-                    <!-- PELANGGAN -->
-                    <td class="px-6 py-4">
-                        <div class="font-medium text-gray-800">
+                    <td class="px-6 py-5">
+                        <div class="font-medium text-gray-900">
                             {{ $i->pelanggan->nama }}
                         </div>
-                        <div class="text-xs text-gray-500 tracking-wide uppercase">
+                        <div class="text-xs text-gray-500 uppercase tracking-wide">
                             {{ $i->pelanggan->plat_nomor }}
                         </div>
                         <div class="text-xs text-gray-400">
@@ -86,48 +89,45 @@
                         </div>
                     </td>
 
-                    <!-- TANGGAL -->
-                    <td class="px-6 py-4 text-center text-gray-600">
+                    <td class="px-6 py-5 text-center text-gray-600">
                         {{ \Carbon\Carbon::parse($i->tanggal)->format('d M Y') }}
                     </td>
 
-                    <!-- TOTAL -->
-                    <td class="px-6 py-4 text-right font-semibold">
+                    <td class="px-6 py-5 text-right font-bold text-gray-900">
                         Rp {{ number_format($i->grand_total) }}
                     </td>
 
-                    <!-- STATUS -->
-                    <td class="px-6 py-4 text-center">
+                    <td class="px-6 py-5 text-center">
                         @if($i->status_bayar === 'sudah')
                             <span class="inline-flex px-3 py-1 rounded-full
                                          bg-green-100 text-green-700
                                          text-xs font-semibold">
-                                Sudah Bayar
+                                ● Sudah Bayar
                             </span>
                         @else
                             <span class="inline-flex px-3 py-1 rounded-full
                                          bg-red-100 text-red-700
                                          text-xs font-semibold">
-                                Belum Bayar
+                                ● Belum Bayar
                             </span>
                         @endif
                     </td>
 
-                    <!-- AKSI -->
-                    <td class="px-6 py-4">
-                        <div class="flex justify-end gap-5 text-sm font-medium">
-                            <a href="{{ route('invoice.print',$i) }}"
-                               class="text-blue-600 hover:text-blue-800 transition">
-                                Print
-                            </a>
-                        </div>
+                    <td class="px-6 py-5 text-right">
+                        <a href="{{ route('invoice.print',$i) }}"
+                           class="px-4 py-2 rounded-lg
+                                  bg-blue-50 text-blue-600
+                                  hover:bg-blue-100
+                                  text-xs font-semibold">
+                            Print
+                        </a>
                     </td>
 
                 </tr>
                 @empty
                 <tr>
                     <td colspan="6"
-                        class="px-6 py-12 text-center text-gray-500">
+                        class="px-6 py-20 text-center text-gray-500">
                         Belum ada invoice
                     </td>
                 </tr>
