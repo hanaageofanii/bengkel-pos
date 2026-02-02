@@ -8,11 +8,13 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
 </head>
 
-<body class="min-h-screen flex bg-gray-100">
+<body class="bg-gray-100">
 
-    <aside class="w-64 bg-[#1B3C53] text-white flex flex-col">
+    <aside class="fixed top-0 left-0 h-screen w-64
+                  bg-[#1B3C53] text-white flex flex-col z-50">
 
-        <div class="px-6 py-4 text-lg font-semibold border-b border-white/10 text-center">
+        <div class="px-6 py-4 text-lg font-semibold
+                    border-b border-white/10 text-center">
             5A Auto Service
         </div>
 
@@ -42,6 +44,14 @@
                 Absensi
             </a>
 
+            <a href="{{ route('pelanggan.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->routeIs('pelanggan.*')
+                    ? 'bg-white/20 font-semibold border-l-4 border-white'
+                    : 'hover:bg-white/10' }}">
+                Pelanggan
+            </a>
+
         </nav>
 
         <form method="POST"
@@ -56,7 +66,7 @@
         </form>
     </aside>
 
-    <main class="flex-1 p-6 overflow-y-auto">
+    <main class="ml-64 min-h-screen p-6 overflow-y-auto">
         @yield('content')
     </main>
 

@@ -5,6 +5,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\KaryawanController;
 use App\Models\Karyawan;
 use App\Http\Controllers\AbsensiController;
+use App\Http\Controllers\PelangganController;
 
 
 /*
@@ -77,15 +78,19 @@ Route::get('/dashboard', function () {
     Route::patch('/karyawan/{karyawan}/status', [KaryawanController::class, 'toggleStatus'])
         ->name('karyawan.toggle-status');});
 
-// Absensi
-Route::get('/absensi', [AbsensiController::class, 'index'])
-    ->name('absensi.index');
+    // Absensi
+    Route::get('/absensi', [AbsensiController::class, 'index'])
+        ->name('absensi.index');
 
-    Route::post('/absensi', [AbsensiController::class, 'store'])
-    ->name('absensi.store');
+        Route::post('/absensi', [AbsensiController::class, 'store'])
+        ->name('absensi.store');
 
-Route::put('/absensi/{absensi}', [AbsensiController::class, 'update'])
-    ->name('absensi.update');
+    Route::put('/absensi/{absensi}', [AbsensiController::class, 'update'])
+        ->name('absensi.update');
 
-Route::delete('/absensi/{absensi}', [AbsensiController::class, 'destroy'])
-    ->name('absensi.destroy');
+    Route::delete('/absensi/{absensi}', [AbsensiController::class, 'destroy'])
+        ->name('absensi.destroy');
+
+
+    // Pelanggan
+    Route::resource('pelanggan', PelangganController::class);
