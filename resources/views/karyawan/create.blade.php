@@ -3,76 +3,101 @@
 @section('title', 'Tambah Karyawan')
 
 @section('content')
-<div class="w-full">
+<div class="w-full max-w-6xl mx-auto">
 
     <!-- HEADER -->
-    <div class="mb-10">
-        <h2 class="text-3xl font-semibold text-gray-800 leading-tight">
+    <div class="mb-12">
+        <h2 class="text-3xl font-bold text-gray-800 tracking-tight">
             Tambah Karyawan
         </h2>
-        <p class="text-gray-500 mt-2">
+        <p class="text-gray-500 mt-2 text-sm">
             Lengkapi data karyawan dengan benar sebelum menyimpan
         </p>
     </div>
 
-    <!-- FORM -->
-    <form method="POST" action="{{ route('karyawan.store') }}"
-          class="w-full bg-white rounded-2xl shadow px-16 py-12">
+    <!-- FORM CARD -->
+    <form method="POST"
+          action="{{ route('karyawan.store') }}"
+          class="bg-white rounded-2xl shadow-sm border border-gray-100 px-14 py-12">
         @csrf
 
         <!-- FORM GRID -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-16 gap-y-12">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-14 gap-y-10">
 
             <!-- Nama -->
-            <div class="flex flex-col">
-                <label class="text-sm font-medium text-gray-700 mb-3">
+            <div class="space-y-3">
+                <label class="text-sm font-semibold text-gray-700">
                     Nama Karyawan
                 </label>
-                <input type="text" name="nama" required
+                <input type="text"
+                       name="nama"
+                       required
+                       value="{{ old('nama') }}"
                        placeholder="Contoh: Budi Santoso"
-                       class="h-14 w-full border border-gray-300 rounded-xl px-5
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                       class="w-full h-14 rounded-xl border border-gray-300 px-5 text-sm
+                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              transition outline-none">
             </div>
 
             <!-- Jabatan -->
-            <div class="flex flex-col">
-                <label class="text-sm font-medium text-gray-700 mb-3">
+            <div class="space-y-3">
+                <label class="text-sm font-semibold text-gray-700">
                     Jabatan
                 </label>
-                <input type="text" name="jabatan"
-                       placeholder="Contoh: Mekanik"
-                       class="h-14 w-full border border-gray-300 rounded-xl px-5
-                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
+                <input type="text"
+                       name="jabatan"
+                       value="{{ old('jabatan') }}"
+                       placeholder="Contoh: Mekanik, Admin"
+                       class="w-full h-14 rounded-xl border border-gray-300 px-5 text-sm
+                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              transition outline-none">
             </div>
 
-            <!-- Status -->
-            {{-- <div class="flex flex-col md:col-span-2">
-                <label class="text-sm font-medium text-gray-700 mb-3">
-                    Status Karyawan
+            <!-- No HP -->
+            <div class="space-y-3">
+                <label class="text-sm font-semibold text-gray-700">
+                    No. HP
                 </label>
-                <select name="status"
-                        class="h-14 w-full border border-gray-300 rounded-xl px-5
-                               bg-white
-                               focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none">
-                    <option value="aktif">Aktif</option>
-                    <option value="cuti">Cuti</option>
-                    <option value="resign">Resign</option>
-                    <option value="nonaktif">Nonaktif</option>
-                </select>
-            </div> --}}
+                <input type="text"
+                       name="no_hp"
+                       value="{{ old('no_hp') }}"
+                       placeholder="Contoh: 08xxxxxxxxxx"
+                       class="w-full h-14 rounded-xl border border-gray-300 px-5 text-sm
+                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              transition outline-none">
+            </div>
+
+            <!-- Email -->
+            <div class="space-y-3">
+                <label class="text-sm font-semibold text-gray-700">
+                    Email
+                </label>
+                <input type="email"
+                       name="email"
+                       value="{{ old('email') }}"
+                       placeholder="Contoh: nama@email.com"
+                       class="w-full h-14 rounded-xl border border-gray-300 px-5 text-sm
+                              focus:ring-2 focus:ring-blue-500 focus:border-blue-500
+                              transition outline-none">
+            </div>
+
+            <!-- Status (Hidden, default aktif) -->
+            <input type="hidden" name="status" value="aktif">
 
         </div>
 
-        <!-- FOOTER ACTION -->
-        <div class="flex items-center justify-end gap-8 mt-16 pt-8 border-t">
+        <!-- ACTION FOOTER -->
+        <div class="flex items-center justify-end gap-6 mt-16 pt-8 border-t border-gray-100">
             <a href="{{ route('karyawan.index') }}"
-               class="text-gray-600 hover:text-gray-800 font-medium">
+               class="px-6 py-3 rounded-lg text-sm font-medium text-gray-600
+                      hover:text-gray-900 hover:bg-gray-100 transition">
                 Batal
             </a>
 
             <button type="submit"
-                    class="bg-green-600 hover:bg-green-700 text-white
-                           px-14 py-4 rounded-xl text-sm font-semibold shadow-md">
+                    class="px-12 py-3 rounded-xl text-sm font-semibold text-white
+                           bg-green-600 hover:bg-green-700
+                           shadow-md shadow-green-200 transition">
                 Simpan Data
             </button>
         </div>

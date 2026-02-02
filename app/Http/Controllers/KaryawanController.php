@@ -30,13 +30,18 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'    => 'required|string|max:255',
+            'nama'   => 'required|string|max:255',
             'jabatan' => 'nullable|string|max:255',
+            'no_hp'  => 'nullable|string|max:20',
+            'email'  => 'nullable|email|max:255',
+            'status' => 'required|in:aktif,cuti,resign,nonaktif',
         ]);
 
         Karyawan::create([
-            'nama'    => $request->nama,
+             'nama'    => $request->nama,
             'jabatan' => $request->jabatan,
+            'no_hp'   => $request->no_hp,
+            'email'   => $request->email,
             'aktif'   => true,
         ]);
 
@@ -56,15 +61,19 @@ class KaryawanController extends Controller
     public function update(Request $request, Karyawan $karyawan)
     {
         $request->validate([
-            'nama'    => 'required|string|max:255',
+            'nama'   => 'required|string|max:255',
             'jabatan' => 'nullable|string|max:255',
-            'status'  => 'required|in:aktif,cuti,resign,nonaktif',
+            'no_hp'  => 'nullable|string|max:20',
+            'email'  => 'nullable|email|max:255',
+            'status' => 'required|in:aktif,cuti,resign,nonaktif',
         ]);
 
         $karyawan->update([
             'nama'    => $request->nama,
             'jabatan' => $request->jabatan,
             'status'  => $request->status,
+            'no_hp'   => $request->no_hp,
+            'email'   => $request->email,
         ]);
 
         return redirect()
