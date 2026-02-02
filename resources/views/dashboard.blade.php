@@ -60,6 +60,15 @@
                 Stok Barang
             </a>
 
+            <a href="{{ route('jasa.index') }}"
+               class="block px-3 py-2 rounded transition
+               {{ request()->routeIs('jasa.*')
+                    ? 'bg-white/20 font-semibold border-l-4 border-white'
+                    : 'hover:bg-white/10' }}">
+                Jasa Pekerjaan
+            </a>
+
+
 
         </nav>
 
