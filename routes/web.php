@@ -6,6 +6,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Models\Karyawan;
 use App\Http\Controllers\AbsensiController;
 use App\Http\Controllers\PelangganController;
+use App\Http\Controllers\BarangController;
 
 
 /*
@@ -94,3 +95,6 @@ Route::get('/dashboard', function () {
 
     // Pelanggan
     Route::resource('pelanggan', PelangganController::class);
+
+    // Barang
+    Route::resource('barang', BarangController::class);
