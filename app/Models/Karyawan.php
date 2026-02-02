@@ -6,5 +6,5 @@ use Illuminate\Database\Eloquent\Model;
 
 class Karyawan extends Model
 {
-    protected $fillable = ['nama', 'jabatan', 'aktif'];
+    protected $fillable = ['nama', 'jabatan', 'status'];
 }

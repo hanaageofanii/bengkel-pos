@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->string('jabatan')->nullable();
-            $table->boolean('aktif')->default(true);
+            $table->enum('status', ['aktif', 'cuti', 'resign', 'nonaktif'])->default('aktif');
             $table->timestamps();
 });
     }
