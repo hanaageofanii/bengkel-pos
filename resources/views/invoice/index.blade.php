@@ -25,7 +25,6 @@
         </a>
     </div>
 
-    <!-- SEARCH (KIRI, LEBIH PANJANG) -->
     <div class="flex justify-start">
         <form method="GET" class="w-full md:w-auto">
             <div class="relative w-full md:w-[420px]">
@@ -113,15 +112,34 @@
                         @endif
                     </td>
 
-                    <td class="px-6 py-5 text-right">
+                    <td class="px-6 py-5 text-right space-x-2">
+
+                        <!-- LIHAT -->
+                        <a href="{{ route('invoice.show',$i) }}"
+                        class="px-3 py-2 rounded-lg
+                                bg-gray-100 text-gray-700
+                                text-xs font-semibold">
+                            Lihat
+                        </a>
+
+                        <!-- EDIT -->
+                        <a href="{{ route('invoice.edit',$i) }}"
+                        class="px-3 py-2 rounded-lg
+                                bg-yellow-100 text-yellow-700
+                                text-xs font-semibold">
+                            Edit
+                        </a>
+
+                        <!-- PRINT -->
                         <a href="{{ route('invoice.print',$i) }}"
-                           class="px-4 py-2 rounded-lg
-                                  bg-blue-50 text-blue-600
-                                  hover:bg-blue-100
-                                  text-xs font-semibold">
+                        class="px-3 py-2 rounded-lg
+                                bg-blue-100 text-blue-700
+                                text-xs font-semibold">
                             Print
                         </a>
+
                     </td>
+
 
                 </tr>
                 @empty

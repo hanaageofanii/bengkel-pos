@@ -232,12 +232,8 @@
                             class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400">
                         <option value="">— Pilih Metode —</option>
                         <option value="cash">Cash</option>
-                        <option value="tf_bca">Transfer BCA</option>
-                        <option value="tf_mandiri">Transfer Mandiri</option>
-                        <option value="tf_bri">Transfer BRI</option>
-                        <option value="tf_bni">Transfer BNI</option>
-                        <option value="debit">Debit Card</option>
-                        <option value="qris">QRIS</option>
+                        <option value="bca">Transfer BCA</option>
+                        <option value="mandiri">Transfer Mandiri</option>
                     </select>
                 </div>
             </div>

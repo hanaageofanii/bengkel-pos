@@ -43,96 +43,148 @@ class InvoiceController extends Controller
     }
 
     // ================= STORE =================
-    public function store(Request $request)
-    {
-        $invoiceNo = 'INV-' . date('Ymd') . '-' . rand(100, 999);
+public function store(Request $request)
+{
+    $invoiceNo = 'INV-' . date('Ymd') . '-' . rand(100, 999);
 
-        DB::transaction(function () use ($request, $invoiceNo) {
+    DB::transaction(function () use ($request, $invoiceNo) {
 
-            /* ================= JASA ================= */
-            $jasa = [];
-            foreach ($request->jasa_id ?? [] as $i => $id) {
-                if (!$id) continue;
+        /* ================= JASA ================= */
+        $jasa = [];
+        foreach ($request->jasa_id ?? [] as $i => $id) {
+            if (empty($id)) continue;
 
-                $jasa[] = [
-                    'id'    => $id,
-                    'nama'  => $request->jasa_nama[$i] ?? '',
-                    'harga' => (int) ($request->jasa_harga[$i] ?? 0),
+            $jasa[] = [
+                'id'    => (int) $id,
+                'nama'  => $request->jasa_nama[$i] ?? '',
+                'harga' => (int) ($request->jasa_harga[$i] ?? 0),
+            ];
+        }
+
+        /* ================= BARANG (SUPER AMAN) ================= */
+        $barangMap = [];
+
+        foreach ($request->barang_id ?? [] as $i => $id) {
+
+            if (empty($id)) continue;
+
+            $qty   = (int) ($request->barang_qty[$i] ?? 0);
+            $harga = (int) ($request->barang_harga[$i] ?? 0);
+
+            if ($qty <= 0) continue;
+
+            if (!isset($barangMap[$id])) {
+                $barangMap[$id] = [
+                    'id'    => (int) $id,
+                    'nama'  => $request->barang_nama[$i] ?? '',
+                    'qty'   => 0,
+                    'harga' => $harga,
+                    'total' => 0,
                 ];
             }
 
-            /* ================= BARANG (AKUMULASI PER ID) ================= */
-            $barangMap = [];
+            $barangMap[$id]['qty'] += $qty;
+            $barangMap[$id]['total'] =
+                $barangMap[$id]['qty'] * $barangMap[$id]['harga'];
+        }
 
-            foreach ($request->barang_id ?? [] as $i => $id) {
-                if (!$id) continue;
+        /* ================= CEK & POTONG STOK (ANTI DOBEL) ================= */
+        $barangFinal = [];
 
-                $qty   = (int) ($request->barang_qty[$i] ?? 0);
-                $harga = (int) ($request->barang_harga[$i] ?? 0);
+        foreach ($barangMap as $item) {
 
-                if ($qty <= 0) continue;
+            $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
 
-                if (!isset($barangMap[$id])) {
-                    $barangMap[$id] = [
-                        'id'    => $id,
-                        'nama'  => $request->barang_nama[$i] ?? '',
-                        'qty'   => 0,
-                        'harga' => $harga,
-                        'total' => 0,
-                    ];
-                }
-
-                $barangMap[$id]['qty'] += $qty;
-                $barangMap[$id]['total'] =
-                    $barangMap[$id]['qty'] * $barangMap[$id]['harga'];
+            if ($barangModel->stok < $item['qty']) {
+                abort(400, "Stock {$barangModel->nama} tidak mencukupi");
             }
 
-            /* ================= CEK & POTONG STOK ================= */
-            $barang = [];
+            $barangModel->decrement('stok', $item['qty']);
 
-            foreach ($barangMap as $item) {
+            $barangFinal[] = $item;
+        }
 
-                $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
+        /* ================= TOTAL ================= */
+        $totalJasa = collect($jasa)->sum('harga');
+        $totalPart = collect($barangFinal)->sum('total');
 
-                if ($barangModel->stok < $item['qty']) {
-                    abort(400, "Stock {$barangModel->nama} tidak mencukupi");
-                }
+        /* ================= STATUS BAYAR ================= */
+        $statusBayar = $request->status_bayar === 'lunas'
+            ? 'sudah'
+            : 'belum';
 
-                $barangModel->decrement('stok', $item['qty']);
+        /* ================= SIMPAN INVOICE ================= */
+        Invoice::create([
+            'invoice_no'   => $invoiceNo,
+            'pelanggan_id' => $request->pelanggan_id,
+            'tanggal'      => $request->tanggal,
+            'km'           => $request->km,
+            'no_chasis'    => $request->no_chasis,
+            'no_mesin'     => $request->no_mesin,
+            'no_telp'      => $request->no_telp,
+            'keluhan'      => array_values(array_filter($request->keluhan ?? [])),
+            'jasa'         => $jasa,
+            'barang'       => $barangFinal,
+            'total_jasa'   => $totalJasa,
+            'total_part'   => $totalPart,
+            'grand_total'  => $totalJasa + $totalPart,
+            'status_bayar' => $statusBayar,
+            'metode_bayar' => $request->metode_bayar,
+        ]);
+    });
 
-                $barang[] = $item;
+    return redirect()->route('invoice.index')
+        ->with('success', 'Invoice berhasil dibuat');
+}
+
+// ================= SHOW =================
+    public function show(Invoice $invoice)
+    {
+        return view('invoice.show', compact('invoice'));
+    }
+
+    // ================= EDIT =================
+    public function edit(Invoice $invoice)
+    {
+        return view('invoice.edit', [
+            'invoice'    => $invoice,
+            'pelanggans' => Pelanggan::all(),
+            'jasas'      => Jasa::all(),
+            'barangs'    => Barang::all(),
+        ]);
+    }
+
+    // ================= UPDATE =================
+    public function update(Request $request, Invoice $invoice)
+    {
+        DB::transaction(function () use ($request, $invoice) {
+
+            // balikin stok lama
+            foreach ($invoice->barang as $b) {
+                Barang::where('id', $b['id'])->increment('stok', $b['qty']);
             }
 
-            /* ================= TOTAL ================= */
-            $totalJasa = collect($jasa)->sum('harga');
-            $totalPart = collect($barang)->sum('total');
+            // pakai logic STORE lagi (ringkas)
+            $request->merge(['_method' => 'STORE']);
+            $this->store($request);
 
-            /* ================= STATUS BAYAR (ENUM AMAN) ================= */
-            $statusBayar = $request->status_bayar === 'lunas'
-                ? 'sudah'
-                : $request->status_bayar;
-
-            /* ================= SIMPAN INVOICE ================= */
-            Invoice::create([
-                'invoice_no'   => $invoiceNo,
-                'pelanggan_id' => $request->pelanggan_id,
-                'tanggal'      => $request->tanggal,
-                'km'           => $request->km,
-                'no_chasis'    => $request->no_chasis,
-                'no_mesin'     => $request->no_mesin,
-                'no_telp'      => $request->no_telp,
-                'keluhan'      => $request->keluhan,
-                'jasa'         => $jasa,
-                'barang'       => $barang,
-                'total_jasa'   => $totalJasa,
-                'total_part'   => $totalPart,
-                'grand_total'  => $totalJasa + $totalPart,
-                'status_bayar' => $statusBayar,
-                'metode_bayar' => $request->metode_bayar,
-            ]);
+            $invoice->delete(); // hapus invoice lama
         });
 
-        return redirect()->route('invoice.index');
+        return redirect()->route('invoice.index')->with('success','Invoice diupdate');
+    }
+
+    // ================= DELETE =================
+    public function destroy(Invoice $invoice)
+    {
+        DB::transaction(function () use ($invoice) {
+            foreach ($invoice->barang as $b) {
+                Barang::where('id', $b['id'])->increment('stok', $b['qty']);
+            }
+            $invoice->delete();
+        });
+
+        return back()->with('success','Invoice dihapus');
     }
 
     // ================= PRINT =================
