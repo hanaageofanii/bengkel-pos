@@ -2,10 +2,11 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>@yield('title', 'Dashboard') | 5A Auto Service</title>
+    <title>@yield('title', 'Dashboard') | 5a Auto Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
 </head>
 
 <body class="bg-gray-100">
@@ -13,10 +14,16 @@
     <aside class="fixed top-0 left-0 h-screen w-64
                   bg-[#1B3C53] text-white flex flex-col z-50">
 
-        <div class="px-6 py-4 text-lg font-semibold
-                    border-b border-white/10 text-center">
-            5A Auto Service
-        </div>
+<div class="px-6 py-3 border-b border-white/10
+            flex flex-col items-center">
+    <img src="{{ asset('assets/images/logo.png') }}"
+         alt="5A Auto Service"
+         class="h-44">
+
+    <div class="text-lg font-semibold tracking-wide -mt-3 leading-none text-red-600">
+        5A Auto Service
+    </div>
+</div>
 
         <nav class="flex-1 px-4 py-4 space-y-1 text-sm">
 

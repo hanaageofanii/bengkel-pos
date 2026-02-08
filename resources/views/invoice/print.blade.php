@@ -35,7 +35,7 @@
         }
 
         .header-title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: bold;
             color: #c00;
         }
@@ -52,10 +52,21 @@
 
 <!-- ================= HEADER ================= -->
 <div class="text-center">
-    <img src="{{ public_path('logo.png') }}" height="80"><br>
-    <div class="header-title">5A AUTO SERVICE</div>
-    <div>
-        Ruko Permata Harapan Baru Blok H No.17<br>
+    <img src="{{ asset('assets/images/logo.png') }}"
+         style="
+            height: 150px;
+            display: block;
+            margin: 0 auto -40px auto;
+         ">
+
+    <div class="header-title"
+         style="margin: 0; padding: 0;">
+        5a AUTO SERVICE
+    </div>
+
+    <div class="text-sm"
+         style="margin-top: 4px;">
+        Ruko Permata Harapan Baru Blok H No.17 Jl. Raya Pejuang Harapan Indah Medan Satria Bekasi<br>
         Telp : 0878-7880-6657
     </div>
 </div>
@@ -150,12 +161,22 @@
 <!-- ================= FOOTER ================= -->
 <table class="no-border">
     <tr>
-        <td>
-            Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}<br>
-            Hormat Kami,<br><br><br>
-            <b>HARI KUSWANTO</b>
-        </td>
-        <td class="text-right">
+<td style="vertical-align:top; padding-top:0">
+    Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}<br>
+    Hormat Kami,
+
+    <div style="height:0; position:relative;">
+        <img src="{{ asset('assets/images/ttd.png') }}"
+             style="
+                position: relative;
+                top: -90px;
+                height: 210px;
+                display: block;
+             ">
+    </div>
+</td>
+
+<td class="text-right">
             Pembayaran melalui Rekening:<br>
             <b>Mandiri :</b> 1560010520965<br>
             <b>BCA :</b> 5315064497<br>
