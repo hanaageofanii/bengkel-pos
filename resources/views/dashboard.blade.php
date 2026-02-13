@@ -18,7 +18,7 @@
             flex flex-col items-center">
     <img src="{{ asset('assets/images/logo.png') }}"
          alt="5A Auto Service"
-         class="h-44">
+         class="h-40">
 
     <div class="text-lg font-semibold tracking-wide -mt-3 leading-none text-red-600">
         5A Auto Service

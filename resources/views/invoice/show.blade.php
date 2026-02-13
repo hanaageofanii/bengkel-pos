@@ -22,8 +22,8 @@
 
         <!-- ================= HEADER ================= -->
         <div class="text-center mb-4">
-            <img src="{{ asset('assets/images/logo.png') }}" height="70" class="mx-auto mb-2">
-            <div class="text-xl font-bold text-red-500 -mt-40">5a AUTO SERVICE</div>
+            <img src="{{ asset('assets/images/logo.png') }}" height="60" class="mx-auto mb-2">
+            <div class="text-xl font-bold text-red-500 -mt-32">5a AUTO SERVICE</div>
             <div class="text-sm">
                 Ruko Permata Harapan Baru Blok H No.17 Jl. Raya Pejuang  Harapan Indah Medan Satria Bekasi<br>
                 Telp : 0878-7880-6657
