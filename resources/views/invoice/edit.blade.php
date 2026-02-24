@@ -31,9 +31,12 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
                 <div>
                     <label class="label">Pelanggan</label>
-                    <select name="pelanggan_id" class="input">
+                   <select name="pelanggan_id"
+                            class="input"
+                            @change="setPelanggan($event)">
                         @foreach($pelanggans as $p)
                             <option value="{{ $p->id }}"
+                                data-tipe="{{ $p->tipe }}"
                                 {{ $invoice->pelanggan_id == $p->id ? 'selected':'' }}>
                                 {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
                             </option>
@@ -111,13 +114,14 @@
             <select class="col-span-6 input h-10"
                     @change="setJasa($event,i)">
                 <option value="">Pilih Jasa</option>
-                @foreach($jasas as $js)
-                    <option value="{{ $js->id }}"
-                        :selected="j.id == {{ $js->id }}"
-                        data-nama="{{ $js->nama }}"
-                        data-harga="{{ $js->harga_pribadi }}">
-                        {{ $js->nama }}
-                    </option>
+               @foreach($jasas as $js)
+                <option value="{{ $js->id }}"
+                    :selected="j.id == {{ $js->id }}"
+                    data-nama="{{ $js->nama }}"
+                    data-pribadi="{{ $js->harga_pribadi }}"
+                    data-perusahaan="{{ $js->harga_perusahaan }}">
+                    {{ $js->nama }}
+                </option>
                 @endforeach
             </select>
 
@@ -156,13 +160,14 @@
                     <select class="col-span-5 input"
                             @change="setBarang($event,i)">
                         <option value="">Pilih Barang</option>
-                        @foreach($barangs as $br)
-                            <option value="{{ $br->id }}"
-                                :selected="b.id == {{ $br->id }}"
-                                data-nama="{{ $br->nama }}"
-                                data-harga="{{ $br->harga_pribadi }}">
-                                {{ $br->nama }}
-                            </option>
+                       @foreach($barangs as $br)
+                        <option value="{{ $br->id }}"
+                            :selected="b.id == {{ $br->id }}"
+                            data-nama="{{ $br->nama }}"
+                            data-pribadi="{{ $br->harga_pribadi }}"
+                            data-perusahaan="{{ $br->harga_perusahaan }}">
+                            {{ $br->nama }}
+                        </option>
                         @endforeach
                     </select>
 
@@ -310,102 +315,114 @@
     </form>
 </div>
 
-<!-- ================= ALPINE ================= -->
 <script>
 function invoiceEditForm() {
     return {
+
+        jasaMaster: @json($jasas),
+        barangMaster: @json($barangs),
+
         keluhan: @json($invoice->keluhan ?? []),
-        jasa: Array.isArray(@json($invoice->jasa ?? []))
-              ? @json($invoice->jasa ?? [])
-              : [],
-        barang: Array.isArray(@json($invoice->barang ?? []))
-              ? @json($invoice->barang ?? [])
-              : [],
+
+        jasa: @json($invoice->jasa ?? []),
+        barang: @json($invoice->barang ?? []),
 
         statusBayar: @json($invoice->status_bayar ?? 'belum'),
         paymentAwal: @json($invoice->payment_awal ?? 0),
 
-        addingJasa: false,
-        addingBarang: false,
+        tipePelanggan: 'pribadi',
 
+        init() {
+            const select = document.querySelector('[name="pelanggan_id"]')
+            if (select) {
+                this.tipePelanggan =
+                    select.selectedOptions[0].dataset.tipe || 'pribadi'
+            }
 
-init() {
-    this.statusBayar = '{{ $invoice->status_bayar }}'
-    this.paymentAwal = {{ $invoice->payment_awal }}
-},
+            // 🔥 INI YANG BIKIN LANGSUNG BISA GANTI TIPE
+            this.injectHargaAwal()
+        },
 
-        // ===== JASA =====
-        addJasa() {
-            if (this.addingJasa) return
-            this.addingJasa = true
+        /* ================= INJECT HARGA AWAL ================= */
+        injectHargaAwal() {
 
-            this.jasa.push({
-                id: '',
-                nama: '',
-                harga: 0
+            this.jasa.forEach(j => {
+                const master = this.jasaMaster.find(x => x.id == j.id)
+                if (!master) return
+
+                j.harga_pribadi = master.harga_pribadi
+                j.harga_perusahaan = master.harga_perusahaan
+
+                j.harga = this.tipePelanggan === 'perusahaan'
+                    ? master.harga_perusahaan
+                    : master.harga_pribadi
             })
 
-            setTimeout(() => this.addingJasa = false, 150)
+            this.barang.forEach(b => {
+                const master = this.barangMaster.find(x => x.id == b.id)
+                if (!master) return
+
+                b.harga_pribadi = master.harga_pribadi
+                b.harga_perusahaan = master.harga_perusahaan
+
+                b.harga = this.tipePelanggan === 'perusahaan'
+                    ? master.harga_perusahaan
+                    : master.harga_pribadi
+            })
+        },
+
+        setPelanggan(e) {
+            this.tipePelanggan =
+                e.target.selectedOptions[0].dataset.tipe || 'pribadi'
+
+            this.injectHargaAwal()
         },
 
         setJasa(e, i) {
-            let o = e.target.selectedOptions[0]
-            if (!o.value) return
+            const master = this.jasaMaster.find(x => x.id == e.target.value)
+            if (!master) return
 
             this.jasa[i] = {
-                id: o.value,
-                nama: o.dataset.nama,
-                harga: Number(o.dataset.harga ?? 0)
+                id: master.id,
+                nama: master.nama,
+                harga_pribadi: master.harga_pribadi,
+                harga_perusahaan: master.harga_perusahaan,
+                harga: this.tipePelanggan === 'perusahaan'
+                    ? master.harga_perusahaan
+                    : master.harga_pribadi
             }
-        },
-
-        // ===== BARANG =====
-        addBarang() {
-            if (this.addingBarang) return
-            this.addingBarang = true
-
-            this.barang.push({
-                id: '',
-                nama: '',
-                qty: 1,
-                harga: 0
-            })
-
-            setTimeout(() => this.addingBarang = false, 150)
         },
 
         setBarang(e, i) {
-            let o = e.target.selectedOptions[0]
-            if (!o.value) return
+            const master = this.barangMaster.find(x => x.id == e.target.value)
+            if (!master) return
 
             this.barang[i] = {
-                id: o.value,
-                nama: o.dataset.nama,
+                id: master.id,
+                nama: master.nama,
                 qty: this.barang[i]?.qty ?? 1,
-                harga: Number(o.dataset.harga ?? 0)
+                harga_pribadi: master.harga_pribadi,
+                harga_perusahaan: master.harga_perusahaan,
+                harga: this.tipePelanggan === 'perusahaan'
+                    ? master.harga_perusahaan
+                    : master.harga_pribadi
             }
         },
 
-                get grandTotal() {
-            let totalJasa = this.jasa.reduce((t,j)=>t + Number(j.harga||0),0)
-            let totalPart = this.barang.reduce((t,b)=>t + (Number(b.harga||0) * Number(b.qty||0)),0)
+        get grandTotal() {
+            const totalJasa = this.jasa.reduce(
+                (t, j) => t + Number(j.harga || 0), 0
+            )
+
+            const totalPart = this.barang.reduce(
+                (t, b) => t + (Number(b.harga || 0) * Number(b.qty || 0)), 0
+            )
+
             return totalJasa + totalPart
-        },
-
-        get sisa() {
-            let s = this.grandTotal - Number(this.paymentAwal||0)
-            return s < 0 ? 0 : s
-        },
-
-        formatRupiah(num) {
-            return 'Rp ' + Number(num).toLocaleString('id-ID')
-        },
+        }
     }
-
 }
 </script>
-
-
 <style>
 .label{font-weight:600;font-size:12px;color:#555}
 .input{width:100%;padding:8px;border:1px solid #ccc;border-radius:8px}

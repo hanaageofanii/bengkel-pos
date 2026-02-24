@@ -290,7 +290,7 @@
             <input type="text"
                 :value="formatRupiah(sisa)"
                 readonly
-                class="w-full px-4 py-2.5 border-2 border-gray-200 bg-gray-100 rounded-lg">
+                class="w-full px-4 py-2.5 border-2 border-gray-200 bg-gray-300 rounded-lg">
         </template>
 
         <template x-if="statusBayar === 'sudah'">
@@ -303,7 +303,7 @@
 </div>
 
 <!-- ================= ACTION ================= -->
-        <div class="px-8 py-6 flex justify-end gap-4 bg-gray-50">
+        <div class="px-8 py-6 flex justify-end gap-4 bg-white">
             <a href="{{ route('invoice.index') }}"
                class="px-8 py-3 text-sm font-bold text-gray-600 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
                 BATAL
