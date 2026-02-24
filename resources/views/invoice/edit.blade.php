@@ -188,28 +188,116 @@
             </template>
         </div>
 
-        <!-- ================= PEMBAYARAN ================= -->
-        <div class="p-6 border-b">
-            <div class="grid grid-cols-2 gap-6 text-sm">
-                <div>
-                    <label class="label">Status Bayar</label>
-                    <select name="status_bayar" class="input">
-                        <option value="belum" {{ $invoice->status_bayar=='belum'?'selected':'' }}>Belum</option>
-                        <option value="lunas" {{ $invoice->status_bayar=='sudah'?'selected':'' }}>Lunas</option>
-                    </select>
-                </div>
+<!-- ================= PEMBAYARAN ================= -->
+<div class="px-8 py-6 border-b-2 border-gray-200">
 
-                <div>
-                    <label class="label">Metode Bayar</label>
-                    <select name="metode_bayar" class="input">
-                        <option value="cash" {{ $invoice->metode_bayar=='cash'?'selected':'' }}>Cash</option>
-                        <option value="bca" {{ $invoice->metode_bayar=='bca'?'selected':'' }}>Transfer BCA</option>
-                        <option value="mandiri" {{ $invoice->metode_bayar=='mandiri'?'selected':'' }}>Transfer Mandiri</option>
-                    </select>
-                </div>
-            </div>
+    <h3 class="text-base font-bold text-gray-600 mb-6 pb-2 border-b border-gray-200">
+        PEMBAYARAN
+    </h3>
+
+    <!-- STATUS & METODE -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-6">
+
+        <!-- STATUS -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Status Pembayaran
+            </label>
+            <select name="status_bayar"
+                x-model="statusBayar"
+                @change="if(statusBayar==='sudah'){ paymentAwal = grandTotal }"
+                class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+
+                <option value="belum">Belum Lunas</option>
+                <option value="sudah">Lunas</option>
+
+            </select>
         </div>
 
+        <!-- METODE -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Metode Pembayaran
+            </label>
+
+            <select name="metode_bayar"
+                class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+
+                <option value="">— Pilih Metode —</option>
+
+                <option value="cash"
+                    {{ $invoice->metode_bayar == 'cash' ? 'selected' : '' }}>
+                    Cash
+                </option>
+
+                <option value="bca"
+                    {{ $invoice->metode_bayar == 'bca' ? 'selected' : '' }}>
+                    Transfer BCA
+                </option>
+
+                <option value="mandiri"
+                    {{ $invoice->metode_bayar == 'mandiri' ? 'selected' : '' }}>
+                    Transfer Mandiri
+                </option>
+
+            </select>
+        </div>
+    </div>
+
+
+    <!-- DP & SISA -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+
+        <!-- PAYMENT AWAL -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Payment Awal (DP)
+            </label>
+
+            <!-- BELUM -->
+            <template x-if="statusBayar === 'belum'">
+                <input type="number"
+                    name="payment_awal"
+                    x-model="paymentAwal"
+                    min="0"
+                    class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+            </template>
+
+            <!-- SUDAH -->
+            <template x-if="statusBayar === 'sudah'">
+                <div>
+                    <div class="w-full px-4 py-2.5 border-2 border-green-400 bg-green-100 text-green-700 rounded-lg font-bold text-center">
+                        LUNAS
+                    </div>
+                    <input type="hidden" name="payment_awal" :value="grandTotal">
+                </div>
+            </template>
+        </div>
+
+
+        <!-- SISA (DISPLAY ONLY - TIDAK DIKIRIM) -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Sisa Tagihan
+            </label>
+
+            <template x-if="statusBayar === 'belum'">
+                <input type="text"
+                    :value="formatRupiah(grandTotal - paymentAwal)"
+                    readonly
+                    class="w-full px-4 py-2.5 border-2 border-gray-200 bg-gray-100 rounded-lg font-semibold">
+            </template>
+
+            <template x-if="statusBayar === 'sudah'">
+                <div class="w-full px-4 py-2.5 border-2 border-green-400 bg-green-100 text-green-700 rounded-lg font-bold text-center">
+                    LUNAS
+                </div>
+            </template>
+        </div>
+
+    </div>
+</div>
+</div>
         <!-- ACTION -->
         <div class="p-6 flex justify-end gap-4 bg-gray-50">
             <a href="{{ route('invoice.index') }}" class="btn-secondary">
@@ -234,8 +322,17 @@ function invoiceEditForm() {
               ? @json($invoice->barang ?? [])
               : [],
 
+        statusBayar: @json($invoice->status_bayar ?? 'belum'),
+        paymentAwal: @json($invoice->payment_awal ?? 0),
+
         addingJasa: false,
         addingBarang: false,
+
+
+init() {
+    this.statusBayar = '{{ $invoice->status_bayar }}'
+    this.paymentAwal = {{ $invoice->payment_awal }}
+},
 
         // ===== JASA =====
         addJasa() {
@@ -287,8 +384,24 @@ function invoiceEditForm() {
                 qty: this.barang[i]?.qty ?? 1,
                 harga: Number(o.dataset.harga ?? 0)
             }
-        }
+        },
+
+                get grandTotal() {
+            let totalJasa = this.jasa.reduce((t,j)=>t + Number(j.harga||0),0)
+            let totalPart = this.barang.reduce((t,b)=>t + (Number(b.harga||0) * Number(b.qty||0)),0)
+            return totalJasa + totalPart
+        },
+
+        get sisa() {
+            let s = this.grandTotal - Number(this.paymentAwal||0)
+            return s < 0 ? 0 : s
+        },
+
+        formatRupiah(num) {
+            return 'Rp ' + Number(num).toLocaleString('id-ID')
+        },
     }
+
 }
 </script>
 

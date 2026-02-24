@@ -25,6 +25,7 @@
         </a>
     </div>
 
+    <!-- SEARCH -->
     <div class="flex justify-start">
         <form method="GET" class="w-full md:w-auto">
             <div class="relative w-full md:w-[420px]">
@@ -58,12 +59,14 @@
         <table class="w-full text-sm">
             <thead class="bg-gray-50 text-gray-600">
                 <tr>
-                    <th class="px-6 py-4 text-left font-semibold">Invoice</th>
-                    <th class="px-6 py-4 text-left font-semibold">Pelanggan</th>
+                    <th class="px-6 py-4 text-center font-semibold">Invoice</th>
+                    <th class="px-6 py-4 text-center font-semibold">Pelanggan</th>
                     <th class="px-6 py-4 text-center font-semibold">Tanggal</th>
-                    <th class="px-6 py-4 text-right font-semibold">Total</th>
+                    <th class="px-6 py-4 text-center font-semibold">Total</th>
                     <th class="px-6 py-4 text-center font-semibold">Status</th>
-                    <th class="px-6 py-4 text-right font-semibold">Aksi</th>
+                    <th class="px-6 py-4 text-center font-semibold">DP</th>
+                    <th class="px-6 py-4 text-center font-semibold">Sisa</th>
+                    <th class="px-6 py-4 text-center font-semibold">Aksi</th>
                 </tr>
             </thead>
 
@@ -71,10 +74,12 @@
                 @forelse($invoices as $i)
                 <tr class="hover:bg-gray-50 transition">
 
+                    <!-- INVOICE -->
                     <td class="px-6 py-5 font-semibold text-gray-900">
                         {{ $i->invoice_no }}
                     </td>
 
+                    <!-- PELANGGAN -->
                     <td class="px-6 py-5">
                         <div class="font-medium text-gray-900">
                             {{ $i->pelanggan->nama }}
@@ -88,14 +93,17 @@
                         </div>
                     </td>
 
+                    <!-- TANGGAL -->
                     <td class="px-6 py-5 text-center text-gray-600">
                         {{ \Carbon\Carbon::parse($i->tanggal)->format('d M Y') }}
                     </td>
 
+                    <!-- TOTAL -->
                     <td class="px-6 py-5 text-right font-bold text-gray-900">
                         Rp {{ number_format($i->grand_total) }}
                     </td>
 
+                    <!-- STATUS -->
                     <td class="px-6 py-5 text-center">
                         @if($i->status_bayar === 'sudah')
                             <span class="inline-flex px-3 py-1 rounded-full
@@ -112,9 +120,45 @@
                         @endif
                     </td>
 
+                    <td class="px-6 py-5 text-right font-semibold">
+
+                    @if($i->payment_awal == $i->grand_total && $i->grand_total > 0)
+
+                        <span class="text-green-600 font-bold">
+                            LUNAS
+                        </span>
+
+                    @else
+
+                        Rp {{ number_format($i->payment_awal) }}
+
+                    @endif
+
+                </td>
+
+                    <!-- SISA -->
+
+                    <td class="px-6 py-5 text-right font-semibold">
+                        @if($i->sisa == 0)
+
+                            <span class="text-green-600 font-bold">
+                                LUNAS
+                            </span>
+
+                        @else
+
+                            Rp {{ number_format($i->sisa) }}
+
+                        @endif
+                    </td>
+                    {{-- <td class="px-6 py-5 text-right
+                        {{ $i->sisa > 0 ? 'text-red-600 font-semibold' : 'text-green-600 font-semibold' }}">
+                        Rp {{ number_format($i->sisa) }}
+                    </td> --}}
+
+                    <!-- AKSI -->
                     <td class="px-6 py-5 text-right space-x-2">
 
-                        <!-- LIHAT -->
                         <a href="{{ route('invoice.show',$i) }}"
                         class="px-3 py-2 rounded-lg
                                 bg-gray-100 text-gray-700
@@ -122,7 +166,6 @@
                             Lihat
                         </a>
 
-                        <!-- EDIT -->
                         <a href="{{ route('invoice.edit',$i) }}"
                         class="px-3 py-2 rounded-lg
                                 bg-yellow-100 text-yellow-700
@@ -130,7 +173,6 @@
                             Edit
                         </a>
 
-                        <!-- PRINT -->
                         <a href="{{ route('invoice.print',$i) }}"
                         class="px-3 py-2 rounded-lg
                                 bg-blue-100 text-blue-700
@@ -140,11 +182,10 @@
 
                     </td>
 
-
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="6"
+                    <td colspan="8"
                         class="px-6 py-20 text-center text-gray-500">
                         Belum ada invoice
                     </td>

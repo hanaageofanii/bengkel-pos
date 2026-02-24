@@ -107,29 +107,53 @@ public function store(Request $request)
         /* ================= TOTAL ================= */
         $totalJasa = collect($jasa)->sum('harga');
         $totalPart = collect($barangFinal)->sum('total');
+        $grandTotal = $totalJasa + $totalPart;
+
+        $paymentAwal = (int) ($request->payment_awal ?? 0);
+
+        if ($paymentAwal < 0) {
+            abort(400,'Payment tidak boleh minus');
+        }
+
+        if ($paymentAwal > $grandTotal) {
+            abort(400,'Payment tidak boleh melebihi total');
+        }
+
+        $sisa = $grandTotal - $paymentAwal;
 
         /* ================= STATUS BAYAR ================= */
-        $statusBayar = $request->status_bayar === 'lunas'
-            ? 'sudah'
-            : 'belum';
+
+        $statusBayar = $sisa == 0 ? 'sudah' : 'belum';
+
+        // /* ================= STATUS BAYAR ================= */
+        // $statusBayar = $request->status_bayar === 'lunas'
+        //     ? 'sudah'
+        //     : 'belum';
 
         /* ================= SIMPAN INVOICE ================= */
         Invoice::create([
             'invoice_no'   => $invoiceNo,
             'pelanggan_id' => $request->pelanggan_id,
             'tanggal'      => $request->tanggal,
+            'tanggal_bayar'=> $paymentAwal > 0 ? now() : null,
+
             'km'           => $request->km,
             'no_chasis'    => $request->no_chasis,
             'no_mesin'     => $request->no_mesin,
             'no_telp'      => $request->no_telp,
+
             'keluhan'      => array_values(array_filter($request->keluhan ?? [])),
             'jasa'         => $jasa,
             'barang'       => $barangFinal,
+
             'total_jasa'   => $totalJasa,
             'total_part'   => $totalPart,
-            'grand_total'  => $totalJasa + $totalPart,
+            'grand_total'  => $grandTotal,
+
+            'payment_awal' => $paymentAwal,
+            'sisa'         => $sisa,
             'status_bayar' => $statusBayar,
-            'metode_bayar' => $request->metode_bayar,
+            'metode_bayar' => $paymentAwal > 0 ? $request->metode_bayar : null,
         ]);
     });
 
@@ -155,25 +179,118 @@ public function store(Request $request)
     }
 
     // ================= UPDATE =================
-    public function update(Request $request, Invoice $invoice)
-    {
-        DB::transaction(function () use ($request, $invoice) {
+public function update(Request $request, Invoice $invoice)
+{
+    DB::transaction(function () use ($request, $invoice) {
 
-            // balikin stok lama
-            foreach ($invoice->barang as $b) {
-                Barang::where('id', $b['id'])->increment('stok', $b['qty']);
+        /* ================= BALIKIN STOK LAMA ================= */
+        foreach ($invoice->barang as $b) {
+            Barang::where('id', $b['id'])
+                ->increment('stok', $b['qty']);
+        }
+
+        /* ================= JASA ================= */
+        $jasa = [];
+        foreach ($request->jasa_id ?? [] as $i => $id) {
+            if (empty($id)) continue;
+
+            $jasa[] = [
+                'id'    => (int) $id,
+                'nama'  => $request->jasa_nama[$i] ?? '',
+                'harga' => (int) ($request->jasa_harga[$i] ?? 0),
+            ];
+        }
+
+        /* ================= BARANG ================= */
+        $barangMap = [];
+
+        foreach ($request->barang_id ?? [] as $i => $id) {
+
+            if (empty($id)) continue;
+
+            $qty   = (int) ($request->barang_qty[$i] ?? 0);
+            $harga = (int) ($request->barang_harga[$i] ?? 0);
+
+            if ($qty <= 0) continue;
+
+            if (!isset($barangMap[$id])) {
+                $barangMap[$id] = [
+                    'id'    => (int) $id,
+                    'nama'  => $request->barang_nama[$i] ?? '',
+                    'qty'   => 0,
+                    'harga' => $harga,
+                    'total' => 0,
+                ];
             }
 
-            // pakai logic STORE lagi (ringkas)
-            $request->merge(['_method' => 'STORE']);
-            $this->store($request);
+            $barangMap[$id]['qty'] += $qty;
+            $barangMap[$id]['total'] =
+                $barangMap[$id]['qty'] * $barangMap[$id]['harga'];
+        }
 
-            $invoice->delete(); // hapus invoice lama
-        });
+        $barangFinal = [];
 
-        return redirect()->route('invoice.index')->with('success','Invoice diupdate');
-    }
+        foreach ($barangMap as $item) {
 
+            $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
+
+            if ($barangModel->stok < $item['qty']) {
+                abort(400, "Stock {$barangModel->nama} tidak mencukupi");
+            }
+
+            $barangModel->decrement('stok', $item['qty']);
+
+            $barangFinal[] = $item;
+        }
+
+        /* ================= TOTAL ================= */
+        $totalJasa  = collect($jasa)->sum('harga');
+        $totalPart  = collect($barangFinal)->sum('total');
+        $grandTotal = $totalJasa + $totalPart;
+
+        // 🔥 INI BAGIAN PALING PENTING
+
+        $paymentAwal = $request->status_bayar === 'sudah'
+            ? $grandTotal
+            : (int) ($request->payment_awal ?? 0);
+
+        if ($paymentAwal > $grandTotal) {
+            abort(400,'Payment tidak boleh melebihi total');
+        }
+
+        $sisa = $grandTotal - $paymentAwal;
+
+        $statusBayar = $request->status_bayar;
+
+        /* ================= UPDATE INVOICE ================= */
+        $invoice->update([
+            'pelanggan_id' => $request->pelanggan_id,
+            'tanggal'      => $request->tanggal,
+            'tanggal_bayar'=> $paymentAwal > 0 ? now() : null,
+
+            'km'        => $request->km,
+            'no_chasis' => $request->no_chasis,
+            'no_mesin'  => $request->no_mesin,
+            'no_telp'   => $request->no_telp,
+
+            'keluhan' => array_values(array_filter($request->keluhan ?? [])),
+            'jasa'    => $jasa,
+            'barang'  => $barangFinal,
+
+            'total_jasa'  => $totalJasa,
+            'total_part'  => $totalPart,
+            'grand_total' => $grandTotal,
+
+            'payment_awal' => $paymentAwal,
+            'sisa'         => $sisa,
+            'status_bayar' => $statusBayar,
+            'metode_bayar' => $request->metode_bayar,
+            ]);
+    });
+
+    return redirect()->route('invoice.index')
+        ->with('success','Invoice berhasil diupdate');
+}
     // ================= DELETE =================
     public function destroy(Invoice $invoice)
     {

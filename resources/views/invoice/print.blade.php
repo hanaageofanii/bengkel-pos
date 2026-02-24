@@ -45,6 +45,16 @@
             font-size: 18px;
             margin: 10px 0;
         }
+
+        .lunas {
+            color: green;
+            font-weight: bold;
+        }
+
+        .belum {
+            color: #c00;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -53,20 +63,15 @@
 <!-- ================= HEADER ================= -->
 <div class="text-center">
     <img src="{{ asset('assets/images/logo.png') }}"
-         style="
-            height: 150px;
-            display: block;
-            margin: 0 auto -40px auto;
-         ">
+         style="height:150px; display:block; margin:0 auto -40px auto;">
 
-    <div class="header-title"
-         style="margin: 0; padding: 0;">
+    <div class="header-title">
         5a AUTO SERVICE
     </div>
 
-    <div class="text-sm"
-         style="margin-top: 4px;">
-        Ruko Permata Harapan Baru Blok H No.17 Jl. Raya Pejuang Harapan Indah Medan Satria Bekasi<br>
+    <div style="margin-top:4px;">
+        Ruko Permata Harapan Baru Blok H No.17 <br>
+        Jl. Raya Pejuang Harapan Indah Medan Satria Bekasi<br>
         Telp : 0878-7880-6657
     </div>
 </div>
@@ -88,7 +93,7 @@
         </td>
         <td width="45%">
             <table>
-                <tr><td class="bold">Date</td><td>{{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}</td></tr>
+                <tr><td class="bold">Tanggal</td><td>{{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}</td></tr>
                 <tr><td class="bold">No. Chasis</td><td>{{ $invoice->no_chasis }}</td></tr>
                 <tr><td class="bold">No. Mesin</td><td>{{ $invoice->no_mesin }}</td></tr>
                 <tr><td class="bold">No. Telp</td><td>{{ $invoice->no_telp }}</td></tr>
@@ -151,32 +156,49 @@
     </tr>
 
     <tr class="bold">
-        <td colspan="4" class="text-right">Total Jasa + Part</td>
+        <td colspan="4" class="text-right">Grand Total</td>
         <td class="text-right">Rp {{ number_format($invoice->grand_total) }}</td>
     </tr>
+
+    @if($invoice->payment_awal > 0)
+    <tr>
+        <td colspan="4" class="text-right bold">Payment Awal</td>
+        <td class="text-right">Rp {{ number_format($invoice->payment_awal) }}</td>
+    </tr>
+    @endif
+
+    @if($invoice->sisa > 0)
+    <tr>
+        <td colspan="4" class="text-right bold">Sisa Tagihan</td>
+        <td class="text-right belum">
+            Rp {{ number_format($invoice->sisa) }}
+        </td>
+    </tr>
+    @else
+    <tr>
+        <td colspan="4" class="text-right bold">Status</td>
+        <td class="text-right lunas">
+            LUNAS
+        </td>
+    </tr>
+    @endif
+
 </table>
 
-<br>
+<br><br>
 
 <!-- ================= FOOTER ================= -->
 <table class="no-border">
     <tr>
-<td style="vertical-align:top; padding-top:0">
-    Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}<br>
-    Hormat Kami,
+        <td style="vertical-align:top; padding-top:0"> Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
+            <br> Hormat Kami,
+            <div style="height:0; position:relative;">
+                <img src="{{ asset('assets/images/ttd.png') }}"
+                style=" position: relative; top: -90px; height: 210px; display: block; ">
+            </div>
+        </td>
 
-    <div style="height:0; position:relative;">
-        <img src="{{ asset('assets/images/ttd.png') }}"
-             style="
-                position: relative;
-                top: -90px;
-                height: 210px;
-                display: block;
-             ">
-    </div>
-</td>
-
-<td class="text-right">
+        <td class="text-right">
             Pembayaran melalui Rekening:<br>
             <b>Mandiri :</b> 1560010520965<br>
             <b>BCA :</b> 5315064497<br>

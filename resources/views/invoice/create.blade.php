@@ -210,36 +210,99 @@
             </div>
         </div>
 
+
 <!-- ================= PEMBAYARAN ================= -->
-        <div class="px-8 py-6 border-b-2 border-gray-200">
-            <h3 class="text-base font-bold text-gray-600 mb-6 pb-2 border-b border-gray-200">
-                PEMBAYARAN
-            </h3>
+<div class="px-8 py-6 border-b-2 border-gray-200">
 
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">Status Pembayaran</label>
-                    <select name="status_bayar"
-                            class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400">
-                        <option value="belum">Belum Lunas</option>
-                        <option value="lunas">Lunas</option>
-                    </select>
-                </div>
+    <h3 class="text-base font-bold text-gray-600 mb-6 pb-2 border-b border-gray-200">
+        PEMBAYARAN
+    </h3>
 
-                <div>
-                    <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">Metode Pembayaran</label>
-                    <select name="metode_bayar"
-                            class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-gray-300 focus:border-gray-400">
-                        <option value="">— Pilih Metode —</option>
-                        <option value="cash">Cash</option>
-                        <option value="bca">Transfer BCA</option>
-                        <option value="mandiri">Transfer Mandiri</option>
-                    </select>
-                </div>
-            </div>
+    <!-- STATUS & METODE -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm mb-6">
+
+        <!-- STATUS -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Status Pembayaran
+            </label>
+            <select name="status_bayar"
+            x-model="statusBayar"
+            @change="if(statusBayar==='sudah'){ paymentAwal = grandTotal }"
+            class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+            <option value="belum">Belum Lunas</option>
+            <option value="sudah">Lunas</option>
+        </select>
         </div>
 
-        <!-- ================= ACTION ================= -->
+        <!-- METODE -->
+        <div>
+            <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+                Metode Pembayaran
+            </label>
+           <select name="metode_bayar"
+                class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+
+                <option value="">— Pilih Metode —</option>
+                <option value="cash">Cash</option>
+                <option value="bca">Transfer BCA</option>
+                <option value="mandiri">Transfer Mandiri</option>
+            </select>
+    </div>
+</div>
+
+    <!-- DP & SISA -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm">
+
+    <!-- PAYMENT AWAL -->
+    <div>
+        <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+            Payment Awal (DP)
+        </label>
+
+        <!-- BELUM -->
+        <template x-if="statusBayar === 'belum'">
+            <input type="number"
+                name="payment_awal"
+                x-model="paymentAwal"
+                min="0"
+                class="w-full px-4 py-2.5 border-2 border-gray-300 rounded-lg">
+        </template>
+
+        <!-- SUDAH -->
+        <template x-if="statusBayar === 'sudah'">
+            <div>
+                <div class="w-full px-4 py-2.5 border-2 border-green-400 bg-green-100 text-green-700 rounded-lg font-bold text-center">
+                    LUNAS
+                </div>
+                <input type="hidden" name="payment_awal" :value="grandTotal">
+            </div>
+        </template>
+    </div>
+
+    <!-- SISA -->
+    <div>
+        <label class="block text-xs font-semibold text-gray-600 mb-2 uppercase">
+            Sisa Tagihan
+        </label>
+
+        <template x-if="statusBayar === 'belum'">
+            <input type="text"
+                :value="formatRupiah(sisa)"
+                readonly
+                class="w-full px-4 py-2.5 border-2 border-gray-200 bg-gray-100 rounded-lg">
+        </template>
+
+        <template x-if="statusBayar === 'sudah'">
+            <div class="w-full px-4 py-2.5 border-2 border-green-400 bg-green-100 text-green-700 rounded-lg font-bold text-center">
+                LUNAS
+            </div>
+        </template>
+    </div>
+
+</div>
+
+<!-- ================= ACTION ================= -->
         <div class="px-8 py-6 flex justify-end gap-4 bg-gray-50">
             <a href="{{ route('invoice.index') }}"
                class="px-8 py-3 text-sm font-bold text-gray-600 bg-white border-2 border-gray-300 rounded-xl hover:bg-gray-100 hover:border-gray-400 transition-all shadow-sm">
@@ -260,6 +323,18 @@ function invoiceForm() {
         keluhan: [''],
         jasa: [],
         barang: [],
+        statusBayar: 'belum',
+        paymentAwal: 0,
+
+        init() {
+            this.$nextTick(() => {
+                let select = document.querySelector('[name="pelanggan_id"]')
+                if (select && select.selectedOptions.length > 0) {
+                    this.tipePelanggan =
+                        select.selectedOptions[0].dataset.tipe || 'pribadi'
+                }
+            })
+        },
 
         setPelanggan(e) {
             this.tipePelanggan =
@@ -333,7 +408,21 @@ function invoiceForm() {
                 alert('Qty melebihi stock')
                 b.qty = b.stock
             }
-        }
+        },
+
+            get grandTotal() {
+            let totalJasa = this.jasa.reduce((t,j)=>t + Number(j.harga||0),0)
+            let totalPart = this.barang.reduce((t,b)=>t + (Number(b.harga||0) * Number(b.qty||0)),0)
+            return totalJasa + totalPart
+        },
+
+        get sisa() {
+            return this.grandTotal - Number(this.paymentAwal||0)
+        },
+
+         formatRupiah(num) {
+            return 'Rp ' + Number(num).toLocaleString('id-ID')
+        },
     }
 }
 </script>
