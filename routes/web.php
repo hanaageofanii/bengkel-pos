@@ -112,3 +112,13 @@ Route::resource('invoice', InvoiceController::class);
 
     Route::get('/outstanding', [InvoiceController::class, 'outstanding'])
     ->name('invoice.outstanding');
+
+Route::post(
+    '/invoice/{invoice}/cicilan',
+    [InvoiceController::class,'cicilanStore']
+)->name('invoice.cicilan.store');
+
+Route::delete(
+    '/invoice/cicilan/{payment}',
+    [InvoiceController::class,'cicilanDelete']
+)->name('invoice.cicilan.delete');

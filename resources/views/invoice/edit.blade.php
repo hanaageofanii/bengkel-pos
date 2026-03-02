@@ -313,7 +313,99 @@
             </button>
         </div>
     </form>
+
+
 </div>
+
+    @if($invoice->sisa > 0)
+
+<div class="bg-white rounded-2xl shadow border p-6 mt-6">
+
+    <h3 class="font-bold text-gray-700 mb-4">
+        Tambah Cicilan
+    </h3>
+
+    <form method="POST"
+          action="{{ route('invoice.cicilan.store',$invoice) }}"
+          class="grid grid-cols-4 gap-4">
+
+        @csrf
+
+        <input type="number"
+               name="jumlah"
+               required
+               max="{{ $invoice->sisa }}"
+               placeholder="Jumlah"
+               class="input">
+
+        <input type="date"
+               name="tanggal_bayar"
+               value="{{ date('Y-m-d') }}"
+               required
+               class="input">
+
+        <select name="metode" class="input">
+            <option value="cash">Cash</option>
+            <option value="bca">BCA</option>
+            <option value="mandiri">Mandiri</option>
+        </select>
+
+        <button class="btn-primary">
+            Simpan Cicilan
+        </button>
+
+    </form>
+</div>
+
+@endif
+
+@if($invoice->payments->count())
+
+<div class="bg-white rounded-2xl shadow border p-6 mt-6">
+
+    <h3 class="font-bold text-gray-700 mb-4">
+        Riwayat Cicilan
+    </h3>
+
+    <table class="w-full border text-sm">
+        <thead class="bg-gray-100">
+            <tr>
+                <th class="border p-2">Tanggal</th>
+                <th class="border p-2 text-right">Jumlah</th>
+                <th class="border p-2">Metode</th>
+                <th class="border p-2 text-center">Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach($invoice->payments as $p)
+            <tr>
+                <td class="border p-2">
+                    {{ \Carbon\Carbon::parse($p->tanggal_bayar)->format('d/m/Y') }}
+                </td>
+                <td class="border p-2 text-right">
+                    Rp {{ number_format($p->jumlah) }}
+                </td>
+                <td class="border p-2">
+                    {{ strtoupper($p->metode) }}
+                </td>
+                <td class="border p-2 text-center">
+                    <form method="POST"
+                          action="{{ route('invoice.cicilan.delete',$p) }}">
+                        @csrf
+                        @method('DELETE')
+                        <button class="text-red-600 font-bold">
+                            Hapus
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
+
+</div>
+
+@endif
 
 <script>
 function invoiceEditForm() {
@@ -345,7 +437,7 @@ function invoiceEditForm() {
             this.injectHargaAwal()
         },
 
-        /* ================= INJECT HARGA SAAT LOAD ================= */
+        /* ================= INJECT HARGA ================= */
         injectHargaAwal() {
 
             this.jasa.forEach(j => {
@@ -365,7 +457,7 @@ function invoiceEditForm() {
             })
         },
 
-        /* ================= GANTI TIPE ================= */
+        /* ================= TIPE PELANGGAN ================= */
         setPelanggan(e) {
             this.tipePelanggan =
                 e.target.selectedOptions[0].dataset.tipe || 'pribadi'
@@ -422,7 +514,6 @@ function invoiceEditForm() {
 
         /* ================= GRAND TOTAL ================= */
         get grandTotal() {
-
             const totalJasa = this.jasa.reduce(
                 (t, j) => t + Number(j.harga || 0), 0
             )
@@ -434,15 +525,15 @@ function invoiceEditForm() {
             return totalJasa + totalPart
         },
 
-        /* ================= SISA ================= */
+        /* ================= SISA DP ONLY ================= */
         get sisa() {
             return this.grandTotal - Number(this.paymentAwal || 0)
         },
 
-        /* ================= FORMAT RUPIAH ================= */
         formatRupiah(num) {
             return 'Rp ' + Number(num).toLocaleString('id-ID')
         }
+
     }
 }
 </script>

@@ -11,13 +11,14 @@ class Invoice extends Model
         'km','no_chasis','no_mesin','no_telp',
         'keluhan','jasa','barang',
         'total_jasa','total_part','grand_total',
-        'status_bayar','metode_bayar','payment_awal','sisa','tanggal_bayar',
+        'metode_bayar','payment_awal','tanggal_bayar',
+        'status_bayar','sisa'
     ];
 
     protected $casts = [
         'keluhan' => 'array',
-        'jasa' => 'array',
-        'barang' => 'array',
+        'jasa'    => 'array',
+        'barang'  => 'array',
     ];
 
     public function pelanggan()
@@ -25,20 +26,20 @@ class Invoice extends Model
         return $this->belongsTo(Pelanggan::class);
     }
 
-    public function barangs()
+    public function payments()
     {
-        return $this->belongsTo(Barang::class);
+        return $this->hasMany(InvoicePayment::class);
     }
 
-    public function jasas()
+    // Helper saja, bukan accessor
+    public function totalTerbayar()
     {
-        return $this->belongsTo(Jasa::class);
+        return (int)$this->payment_awal +
+               (int)$this->payments()->sum('jumlah');
     }
 
-    protected static function booted()
-{
-    static::saving(function ($invoice) {
-        $invoice->sisa = $invoice->grand_total - $invoice->payment_awal;
-    });
-}
+    public function isLunas()
+    {
+        return $this->sisa <= 0;
+    }
 }
