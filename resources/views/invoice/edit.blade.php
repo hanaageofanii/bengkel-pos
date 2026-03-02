@@ -319,11 +319,12 @@
 function invoiceEditForm() {
     return {
 
+        /* ================= MASTER DATA ================= */
         jasaMaster: @json($jasas),
         barangMaster: @json($barangs),
 
+        /* ================= DATA DARI DB ================= */
         keluhan: @json($invoice->keluhan ?? []),
-
         jasa: @json($invoice->jasa ?? []),
         barang: @json($invoice->barang ?? []),
 
@@ -332,18 +333,19 @@ function invoiceEditForm() {
 
         tipePelanggan: 'pribadi',
 
+        /* ================= INIT ================= */
         init() {
+
             const select = document.querySelector('[name="pelanggan_id"]')
             if (select) {
                 this.tipePelanggan =
                     select.selectedOptions[0].dataset.tipe || 'pribadi'
             }
 
-            // 🔥 INI YANG BIKIN LANGSUNG BISA GANTI TIPE
             this.injectHargaAwal()
         },
 
-        /* ================= INJECT HARGA AWAL ================= */
+        /* ================= INJECT HARGA SAAT LOAD ================= */
         injectHargaAwal() {
 
             this.jasa.forEach(j => {
@@ -352,10 +354,6 @@ function invoiceEditForm() {
 
                 j.harga_pribadi = master.harga_pribadi
                 j.harga_perusahaan = master.harga_perusahaan
-
-                j.harga = this.tipePelanggan === 'perusahaan'
-                    ? master.harga_perusahaan
-                    : master.harga_pribadi
             })
 
             this.barang.forEach(b => {
@@ -364,20 +362,32 @@ function invoiceEditForm() {
 
                 b.harga_pribadi = master.harga_pribadi
                 b.harga_perusahaan = master.harga_perusahaan
-
-                b.harga = this.tipePelanggan === 'perusahaan'
-                    ? master.harga_perusahaan
-                    : master.harga_pribadi
             })
         },
 
+        /* ================= GANTI TIPE ================= */
         setPelanggan(e) {
             this.tipePelanggan =
                 e.target.selectedOptions[0].dataset.tipe || 'pribadi'
 
-            this.injectHargaAwal()
+            this.updateHargaByTipe()
         },
 
+        updateHargaByTipe() {
+            this.jasa.forEach(j => {
+                j.harga = this.tipePelanggan === 'perusahaan'
+                    ? j.harga_perusahaan
+                    : j.harga_pribadi
+            })
+
+            this.barang.forEach(b => {
+                b.harga = this.tipePelanggan === 'perusahaan'
+                    ? b.harga_perusahaan
+                    : b.harga_pribadi
+            })
+        },
+
+        /* ================= SET JASA ================= */
         setJasa(e, i) {
             const master = this.jasaMaster.find(x => x.id == e.target.value)
             if (!master) return
@@ -393,6 +403,7 @@ function invoiceEditForm() {
             }
         },
 
+        /* ================= SET BARANG ================= */
         setBarang(e, i) {
             const master = this.barangMaster.find(x => x.id == e.target.value)
             if (!master) return
@@ -409,7 +420,9 @@ function invoiceEditForm() {
             }
         },
 
+        /* ================= GRAND TOTAL ================= */
         get grandTotal() {
+
             const totalJasa = this.jasa.reduce(
                 (t, j) => t + Number(j.harga || 0), 0
             )
@@ -419,6 +432,16 @@ function invoiceEditForm() {
             )
 
             return totalJasa + totalPart
+        },
+
+        /* ================= SISA ================= */
+        get sisa() {
+            return this.grandTotal - Number(this.paymentAwal || 0)
+        },
+
+        /* ================= FORMAT RUPIAH ================= */
+        formatRupiah(num) {
+            return 'Rp ' + Number(num).toLocaleString('id-ID')
         }
     }
 }

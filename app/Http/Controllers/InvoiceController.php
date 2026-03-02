@@ -131,30 +131,38 @@ public function store(Request $request)
         //     : 'belum';
 
         /* ================= SIMPAN INVOICE ================= */
-        Invoice::create([
-            'invoice_no'   => $invoiceNo,
-            'pelanggan_id' => $request->pelanggan_id,
-            'tanggal'      => $request->tanggal,
-            'tanggal_bayar'=> $paymentAwal > 0 ? now() : null,
+/* ================= SIMPAN INVOICE ================= */
+$invoice = new Invoice();
 
-            'km'           => $request->km,
-            'no_chasis'    => $request->no_chasis,
-            'no_mesin'     => $request->no_mesin,
-            'no_telp'      => $request->no_telp,
+$invoice->invoice_no   = $invoiceNo;
+$invoice->pelanggan_id = $request->pelanggan_id;
+$invoice->tanggal      = $request->tanggal;
 
-            'keluhan'      => array_values(array_filter($request->keluhan ?? [])),
-            'jasa'         => $jasa,
-            'barang'       => $barangFinal,
+$invoice->km        = $request->km;
+$invoice->no_chasis = $request->no_chasis;
+$invoice->no_mesin  = $request->no_mesin;
+$invoice->no_telp   = $request->no_telp;
 
-            'total_jasa'   => $totalJasa,
-            'total_part'   => $totalPart,
-            'grand_total'  => $grandTotal,
+$invoice->keluhan = array_values(array_filter($request->keluhan ?? []));
+$invoice->jasa    = $jasa;
+$invoice->barang  = $barangFinal;
 
-            'payment_awal' => $paymentAwal,
-            'sisa'         => $sisa,
-            'status_bayar' => $statusBayar,
-            'metode_bayar' => $paymentAwal > 0 ? $request->metode_bayar : null,
-        ]);
+$invoice->total_jasa  = $totalJasa;
+$invoice->total_part  = $totalPart;
+$invoice->grand_total = $grandTotal;
+
+$paymentAwal = (int) ($request->payment_awal ?? 0);
+
+if ($paymentAwal < 0 || $paymentAwal > $grandTotal) {
+    abort(400, 'Payment tidak valid');
+}
+
+$invoice->payment_awal = $paymentAwal;
+$invoice->status_bayar = $paymentAwal >= $grandTotal ? 'sudah' : 'belum';
+$invoice->tanggal_bayar = $paymentAwal >= $grandTotal ? now() : null;
+$invoice->metode_bayar  = $request->metode_bayar;
+
+$invoice->save();
     });
 
     return redirect()->route('invoice.index')
@@ -309,4 +317,26 @@ public function update(Request $request, Invoice $invoice)
     {
         return view('invoice.print', compact('invoice'));
     }
+
+    // ================= OUTSTANDING =================
+
+public function outstanding()
+{
+    $invoices = Invoice::with('pelanggan')
+        ->where('sisa', '>', 0)
+        ->latest()
+        ->get();
+
+$totalAll = Invoice::where('sisa', '>', 0)
+    ->sum('grand_total');
+
+    $totalOutstanding = Invoice::where('sisa', '>', 0)
+        ->sum('sisa');
+
+    return view('invoice.outstanding', compact(
+        'invoices',
+        'totalAll',
+        'totalOutstanding'
+    ));
+}
 }

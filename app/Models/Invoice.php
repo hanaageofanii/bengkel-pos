@@ -34,4 +34,11 @@ class Invoice extends Model
     {
         return $this->belongsTo(Jasa::class);
     }
+
+    protected static function booted()
+{
+    static::saving(function ($invoice) {
+        $invoice->sisa = $invoice->grand_total - $invoice->payment_awal;
+    });
+}
 }

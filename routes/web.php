@@ -109,3 +109,6 @@ Route::get('invoice/{invoice}/print', [InvoiceController::class, 'print'])
     ->name('invoice.print');
 
 Route::resource('invoice', InvoiceController::class);
+
+    Route::get('/outstanding', [InvoiceController::class, 'outstanding'])
+    ->name('invoice.outstanding');
