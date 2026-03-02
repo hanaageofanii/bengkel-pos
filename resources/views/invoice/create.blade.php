@@ -176,11 +176,15 @@
                                 @change="setBarang($event,index)">
                             <option value="">— Pilih Barang —</option>
                             @foreach($barangs as $br)
-                                <option value="{{ $br->id }}"
-                                        data-nama="{{ $br->nama }}"
-                                        data-pribadi="{{ $br->harga_pribadi }}"
-                                        data-perusahaan="{{ $br->harga_perusahaan }}">
+                               <option value="{{ $br->id }}"
+                                    data-nama="{{ $br->nama }}"
+                                    data-pribadi="{{ $br->harga_pribadi }}"
+                                    data-perusahaan="{{ $br->harga_perusahaan }}"
+                                    {{ $br->stok <= 0 ? 'disabled' : '' }}>
+
                                     {{ $br->nama }}
+                                    {{-- (Stok: {{ $br->stok }}) --}}
+                                    {{ $br->stok <= 0 ? ' - Stok Habis' : '' }}
                                 </option>
                             @endforeach
                         </select>

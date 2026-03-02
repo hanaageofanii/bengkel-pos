@@ -96,9 +96,11 @@ public function store(Request $request)
 
             $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
 
-            if ($barangModel->stok < $item['qty']) {
-                abort(400, "Stock {$barangModel->nama} tidak mencukupi");
-            }
+             if ($barangModel->stok < $item['qty']) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Stock {$barangModel->nama} tidak mencukupi");
+        }
 
             $barangModel->decrement('stok', $item['qty']);
 
@@ -162,7 +164,7 @@ $invoice->payment_awal = $paymentAwal;
 $invoice->status_bayar = $paymentAwal >= $grandTotal ? 'sudah' : 'belum';
 $invoice->tanggal_bayar = $paymentAwal >= $grandTotal ? now() : null;
 $invoice->metode_bayar  = $request->metode_bayar;
-
+$invoice->sisa = $grandTotal - $paymentAwal;
 
 $invoice->save();
 
@@ -260,8 +262,10 @@ public function update(Request $request, Invoice $invoice)
             $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
 
             if ($barangModel->stok < $item['qty']) {
-                abort(400, "Stock {$barangModel->nama} tidak mencukupi");
-            }
+            return redirect()->back()
+                ->withInput()
+                ->with('error', "Stock {$barangModel->nama} tidak mencukupi");
+        }
 
             $barangModel->decrement('stok', $item['qty']);
 

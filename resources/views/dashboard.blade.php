@@ -110,6 +110,17 @@
     <main class="ml-64 min-h-screen p-6 overflow-y-auto">
         @yield('content')
     </main>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
+@if(session('error'))
+<script>
+Swal.fire({
+    icon: 'error',
+    title: 'Stok Tidak Cukup',
+    text: "{{ session('error') }}",
+    confirmButtonColor: '#ef4444'
+});
+</script>
+@endif
 </body>
 </html>
