@@ -55,7 +55,7 @@ $absensiHariIni = Absensi::with('karyawan')
 
 $statusLabel = [
     'H'  => ['label' => 'Hadir',            'color' => '#059669'],
-    'L'  => ['label' => 'Lembur',           'color' => '#2563eb'],
+    'L'  => ['label' => 'Libur',           'color' => '#2563eb'],
     'S'  => ['label' => 'Sakit',            'color' => '#d97706'],
     'K'  => ['label' => 'Izin',             'color' => '#7c3aed'],
     'UM' => ['label' => 'Tanpa Keterangan', 'color' => '#dc2626'],
@@ -509,21 +509,21 @@ for ($i = 4; $i >= 0; $i--) {
         </div>
         <div id="tab-hari" class="absensi-grid active" style="grid-template-columns:repeat(5,1fr);gap:12px;">
             <div class="stat-card"><div class="accent-bar" style="background:#059669;"></div><p class="stat-label">Hadir</p><p class="stat-number" style="color:#059669;">{{ $hariH }}</p><p class="stat-sub">orang</p></div>
-            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Lembur</p><p class="stat-number" style="color:#2563eb;">{{ $hariL }}</p><p class="stat-sub">orang</p></div>
+            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Libur</p><p class="stat-number" style="color:#2563eb;">{{ $hariL }}</p><p class="stat-sub">orang</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#d97706;"></div><p class="stat-label">Sakit</p><p class="stat-number" style="color:#d97706;">{{ $hariS }}</p><p class="stat-sub">orang</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#7c3aed;"></div><p class="stat-label">Izin</p><p class="stat-number" style="color:#7c3aed;">{{ $hariK }}</p><p class="stat-sub">orang</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#dc2626;"></div><p class="stat-label">Tanpa Ket.</p><p class="stat-number" style="color:#dc2626;">{{ $hariUM }}</p><p class="stat-sub">orang</p></div>
         </div>
         <div id="tab-minggu" class="absensi-grid" style="grid-template-columns:repeat(5,1fr);gap:12px;">
             <div class="stat-card"><div class="accent-bar" style="background:#059669;"></div><p class="stat-label">Hadir</p><p class="stat-number" style="color:#059669;">{{ $mingguH }}</p><p class="stat-sub">total</p></div>
-            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Lembur</p><p class="stat-number" style="color:#2563eb;">{{ $mingguL }}</p><p class="stat-sub">total</p></div>
+            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Libur</p><p class="stat-number" style="color:#2563eb;">{{ $mingguL }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#d97706;"></div><p class="stat-label">Sakit</p><p class="stat-number" style="color:#d97706;">{{ $mingguS }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#7c3aed;"></div><p class="stat-label">Izin</p><p class="stat-number" style="color:#7c3aed;">{{ $mingguK }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#dc2626;"></div><p class="stat-label">Tanpa Ket.</p><p class="stat-number" style="color:#dc2626;">{{ $mingguUM }}</p><p class="stat-sub">total</p></div>
         </div>
         <div id="tab-bulan" class="absensi-grid" style="grid-template-columns:repeat(5,1fr);gap:12px;">
             <div class="stat-card"><div class="accent-bar" style="background:#059669;"></div><p class="stat-label">Hadir</p><p class="stat-number" style="color:#059669;">{{ $bulanH }}</p><p class="stat-sub">total</p></div>
-            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Lembur</p><p class="stat-number" style="color:#2563eb;">{{ $bulanL }}</p><p class="stat-sub">total</p></div>
+            <div class="stat-card"><div class="accent-bar" style="background:#2563eb;"></div><p class="stat-label">Libur</p><p class="stat-number" style="color:#2563eb;">{{ $bulanL }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#d97706;"></div><p class="stat-label">Sakit</p><p class="stat-number" style="color:#d97706;">{{ $bulanS }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#7c3aed;"></div><p class="stat-label">Izin</p><p class="stat-number" style="color:#7c3aed;">{{ $bulanK }}</p><p class="stat-sub">total</p></div>
             <div class="stat-card"><div class="accent-bar" style="background:#dc2626;"></div><p class="stat-label">Tanpa Ket.</p><p class="stat-number" style="color:#dc2626;">{{ $bulanUM }}</p><p class="stat-sub">total</p></div>
