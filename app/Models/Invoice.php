@@ -31,14 +31,29 @@ class Invoice extends Model
         return $this->hasMany(InvoicePayment::class);
     }
 
-    // Helper saja, bukan accessor
-    public function totalTerbayar()
+    /**
+     * Accessor — bisa dipanggil di blade sebagai $invoice->total_terbayar
+     * Otomatis load dari relasi yang sudah di-eager load (tidak query ulang)
+     */
+    public function getTotalTerbayarAttribute(): int
     {
-        return (int)$this->payment_awal +
-               (int)$this->payments()->sum('jumlah');
+        return (int) $this->payment_awal
+             + (int) $this->payments->sum('jumlah'); // pakai ->payments (relasi), bukan ->payments()
     }
 
-    public function isLunas()
+    /**
+     * Accessor — sisa real yang selalu sinkron dengan cicilan
+     * Baca dari kolom sisa di DB yang sudah diupdate controller
+     */
+    public function getSisaTagihanAttribute(): int
+    {
+        return max(0, (int) $this->sisa);
+    }
+
+    /**
+     * Helper boolean — boleh tetap ada
+     */
+    public function isLunas(): bool
     {
         return $this->sisa <= 0;
     }

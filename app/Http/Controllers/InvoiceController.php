@@ -189,10 +189,11 @@ if ($request->cicilan_jumlah) {
 }
 
 // ================= SHOW =================
-    public function show(Invoice $invoice)
-    {
-        return view('invoice.show', compact('invoice'));
-    }
+  public function show(Invoice $invoice)
+{
+    $invoice->load('payments', 'pelanggan');
+    return view('invoice.show', compact('invoice'));
+}
 
     // ================= EDIT =================
     public function edit(Invoice $invoice)
@@ -331,10 +332,13 @@ public function update(Request $request, Invoice $invoice)
     }
 
     // ================= PRINT =================
-    public function print(Invoice $invoice)
-    {
-        return view('invoice.print', compact('invoice'));
-    }
+   public function print(Invoice $invoice)
+{
+    // Load payments supaya $invoice->total_terbayar bisa hitung dengan benar
+    $invoice->load('payments', 'pelanggan');
+
+    return view('invoice.print', compact('invoice'));
+}
 
     // ================= OUTSTANDING =================
 
@@ -361,41 +365,32 @@ $totalAll = Invoice::where('sisa', '>', 0)
 public function cicilanStore(Request $request, Invoice $invoice)
 {
     $request->validate([
-        'jumlah' => 'required|numeric|min:1',
+        'jumlah'        => 'required|numeric|min:1',
         'tanggal_bayar' => 'required|date',
+        'metode'        => 'required|in:cash,bca,mandiri', // ← tambahkan ini
     ]);
 
-    // ❗ Proteksi agar tidak bayar lebih dari sisa
     if ($request->jumlah > $invoice->sisa) {
-        return back()->with('error','Jumlah melebihi sisa tagihan');
+        return back()->with('error', 'Jumlah melebihi sisa tagihan');
     }
 
-    // Simpan cicilan
     $invoice->payments()->create([
-        'jumlah' => $request->jumlah,
+        'jumlah'        => $request->jumlah,
         'tanggal_bayar' => $request->tanggal_bayar,
-        'metode' => $request->metode
+        'metode'        => $request->metode,
     ]);
 
-    // Ambil ulang data invoice terbaru
+    // Hitung ulang sisa dari nol (DP + semua cicilan)
     $invoice->refresh();
-
-    // Hitung total terbayar (DP + semua cicilan)
-    $totalTerbayar = $invoice->payment_awal +
-                     $invoice->payments()->sum('jumlah');
-
-    $sisaBaru = $invoice->grand_total - $totalTerbayar;
-
-    if ($sisaBaru < 0) {
-        $sisaBaru = 0;
-    }
+    $totalTerbayar = $invoice->payment_awal + $invoice->payments()->sum('jumlah');
+    $sisaBaru      = max(0, $invoice->grand_total - $totalTerbayar);
 
     $invoice->update([
-        'sisa' => $sisaBaru,
-        'status_bayar' => $sisaBaru == 0 ? 'sudah' : 'belum'
+        'sisa'        => $sisaBaru,
+        'status_bayar' => $sisaBaru == 0 ? 'sudah' : 'belum',
     ]);
 
-    return back()->with('success','Cicilan berhasil ditambahkan');
+    return back()->with('success', 'Cicilan berhasil ditambahkan');
 }
 
 public function cicilanDelete(InvoicePayment $payment)

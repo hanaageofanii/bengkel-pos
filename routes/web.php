@@ -9,6 +9,8 @@ use App\Http\Controllers\PelangganController;
 use App\Http\Controllers\BarangController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\InvoiceController;
+use App\Http\Controllers\DashboardController;
+
 
 
 /*
@@ -122,3 +124,6 @@ Route::delete(
     '/invoice/cicilan/{payment}',
     [InvoiceController::class,'cicilanDelete']
 )->name('invoice.cicilan.delete');
+
+Route::get('/dashboard/absensi-rekap', [DashboardController::class, 'absensiRekap'])
+        ->name('dashboard.absensiRekap');

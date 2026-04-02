@@ -157,45 +157,46 @@
 <!-- PEMBAYARAN -->
 @if($invoice->payment_awal > 0)
 <tr>
-<td colspan="4" class="text-right bold">Payment Awal</td>
-<td class="text-right">Rp {{ number_format($invoice->payment_awal) }}</td>
+    <td colspan="4" class="text-right bold">Payment Awal (DP)</td>
+    <td class="text-right">Rp {{ number_format($invoice->payment_awal) }}</td>
 </tr>
 @endif
 
 @foreach($invoice->payments as $i => $pay)
 <tr>
-<td colspan="4" class="text-right">
-Cicilan {{ $i+1 }} ({{ \Carbon\Carbon::parse($pay->tanggal_bayar)->format('d/m/Y') }})
-</td>
-<td class="text-right">
-Rp {{ number_format($pay->jumlah) }}
-</td>
+    <td colspan="4" class="text-right">
+        Cicilan {{ $i + 1 }}
+        ({{ \Carbon\Carbon::parse($pay->tanggal_bayar)->format('d/m/Y') }})
+    </td>
+    <td class="text-right">Rp {{ number_format($pay->jumlah) }}</td>
 </tr>
 @endforeach
 
+{{-- Total Terbayar --}}
 <tr class="bold double-line">
-<td colspan="4" class="text-right">Total Terbayar</td>
-<td class="text-right">
-Rp {{ number_format($invoice->total_terbayar) }}
-</td>
+    <td colspan="4" class="text-right">Total Terbayar</td>
+    <td class="text-right">
+        Rp {{ number_format($invoice->total_terbayar) }}
+    </td>
 </tr>
 
+{{-- Sisa Tagihan --}}
 @if($invoice->sisa_tagihan > 0)
 <tr>
-<td colspan="4" class="text-right bold">Sisa Tagihan</td>
-<td class="text-right belum">
-Rp {{ number_format($invoice->sisa_tagihan) }}
-</td>
-</tr>
-@else
-<tr>
-<td colspan="4" class="text-right bold">Status</td>
-<td class="text-right lunas">
-LUNAS
-</td>
+    <td colspan="4" class="text-right bold">Sisa Tagihan</td>
+    <td class="text-right belum">
+        Rp {{ number_format($invoice->sisa_tagihan) }}
+    </td>
 </tr>
 @endif
 
+{{-- Status Lunas hanya muncul jika benar-benar 0 --}}
+@if($invoice->sisa_tagihan <= 0)
+<tr>
+    <td colspan="4" class="text-right bold">Status</td>
+    <td class="text-right lunas">LUNAS</td>
+</tr>
+@endif
 </table>
 
 <br><br>
