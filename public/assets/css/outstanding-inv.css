@@ -1,0 +1,347 @@
+/* ── stat cards ── */
+.stat-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px 28px;
+    position: relative;
+    overflow: hidden;
+    transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+}
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+}
+.stat-card::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+}
+.stat-card.blue::before {
+    background: linear-gradient(90deg, #1e90ff, #4f8ef7);
+}
+.stat-card.red::before {
+    background: linear-gradient(90deg, #f26c6c, #ff4444);
+}
+
+.stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+}
+.stat-icon.blue {
+    background: rgba(79, 142, 247, 0.15);
+}
+.stat-icon.red {
+    background: rgba(242, 108, 108, 0.15);
+}
+.stat-icon svg {
+    width: 22px;
+    height: 22px;
+    fill: currentColor;
+}
+.stat-icon.blue svg {
+    color: #4f8ef7;
+}
+.stat-icon.red svg {
+    color: #f26c6c;
+}
+
+.stat-label {
+    font-size: 10.5px;
+    font-weight: 700;
+    letter-spacing: 1.1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 8px;
+}
+.stat-value {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--text);
+    line-height: 1;
+}
+.stat-card.red .stat-value {
+    color: #f26c6c;
+}
+
+/* ── table card ── */
+.table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.table-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.table-card-title {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.table-card-title span.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f26c6c;
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(242, 108, 108, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px rgba(242, 108, 108, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(242, 108, 108, 0);
+    }
+}
+
+/* ── search ── */
+.search-wrap {
+    position: relative;
+}
+.search-wrap svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    fill: var(--muted);
+    pointer-events: none;
+}
+.search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    font-size: 12.5px;
+    padding: 7px 12px 7px 32px;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input::placeholder {
+    color: var(--muted);
+}
+.search-input:focus {
+    border-color: var(--accent);
+}
+
+/* ── table ── */
+.inv-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inv-table thead tr {
+    background: var(--surface2);
+}
+
+.inv-table th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.inv-table th.text-right {
+    text-align: right;
+}
+
+.inv-table td {
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--text-soft);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+
+.inv-table tbody tr:last-child td {
+    border-bottom: none;
+}
+
+.inv-table tbody tr:hover td {
+    background: var(--surface2);
+}
+
+.inv-table td.text-right {
+    text-align: right;
+}
+
+/* ── cell components ── */
+.date-badge {
+    font-size: 11.5px;
+    color: var(--muted);
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 3px 9px;
+    white-space: nowrap;
+    display: inline-block;
+}
+
+.customer-cell {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(79, 142, 247, 0.15);
+    color: #4f8ef7;
+    font-family: "Rajdhani", sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(79, 142, 247, 0.2);
+}
+
+.customer-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.car-cell {
+    font-size: 12.5px;
+    color: var(--text-soft);
+}
+
+.plat-badge {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.8px;
+    text-transform: uppercase;
+    color: #4f8ef7;
+    background: rgba(79, 142, 247, 0.1);
+    border: 1px solid rgba(79, 142, 247, 0.2);
+    border-radius: 6px;
+    padding: 3px 10px;
+    display: inline-block;
+}
+
+.amount-total {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+.amount-dp {
+    font-size: 12.5px;
+    color: var(--muted);
+}
+
+.sisa-badge {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #f26c6c;
+    background: rgba(242, 108, 108, 0.1);
+    border: 1px solid rgba(242, 108, 108, 0.2);
+    border-radius: 8px;
+    padding: 5px 12px;
+    display: inline-block;
+    white-space: nowrap;
+}
+
+/* ── empty state ── */
+.empty-state {
+    text-align: center;
+    padding: 56px 20px;
+}
+.empty-state svg {
+    width: 48px;
+    height: 48px;
+    fill: var(--muted);
+    margin: 0 auto 14px;
+    display: block;
+    opacity: 0.4;
+}
+.empty-state p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ── page header ── */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.page-title-text {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    line-height: 1;
+}
+.page-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 5px;
+    letter-spacing: 0.2px;
+}
+.count-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(242, 108, 108, 0.12);
+    border: 1px solid rgba(242, 108, 108, 0.25);
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f26c6c;
+    margin-top: 10px;
+}
+.count-chip svg {
+    width: 12px;
+    height: 12px;
+    fill: #f26c6c;
+}

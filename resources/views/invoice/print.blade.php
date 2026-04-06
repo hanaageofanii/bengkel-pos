@@ -2,54 +2,8 @@
 <html>
 <head>
     <title>{{ $invoice->invoice_no }}</title>
-    <style>
-        @page { size: A4; margin: 20px; }
-
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 12px;
-            color: #000;
-        }
-
-        .text-center { text-align: center }
-        .text-right { text-align: right }
-        .bold { font-weight: bold }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 8px;
-        }
-
-        th, td {
-            border: 1px solid #000;
-            padding: 6px;
-        }
-
-        .no-border td {
-            border: none;
-            padding: 2px;
-        }
-
-        .header-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: #c00;
-        }
-
-        .invoice-title {
-            letter-spacing: 6px;
-            font-size: 18px;
-            margin: 10px 0;
-        }
-
-        .lunas { color: green; font-weight: bold; }
-        .belum { color: #c00; font-weight: bold; }
-
-        .double-line {
-            border-top: 3px double #000 !important;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('assets/css/print-inv.css') }}">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body onload="window.print()">

@@ -8,285 +8,11 @@
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
-
-    <style>
-        /* ══════════════════════════════════════
-           THEME VARIABLES
-        ══════════════════════════════════════ */
-        :root {
-            --sidebar-w: 240px;
-        }
-
-        [data-theme="dark"] {
-            --bg:         #0f1117;
-            --surface:    #181c27;
-            --surface2:   #1e2333;
-            --border:     #262c3d;
-            --accent:     #4f8ef7;
-            --accent2:    #1e90ff;
-            --text:       #e4e8f0;
-            --text-soft:  #b0b8d0;
-            --muted:      #6b7694;
-            --red:        #f26c6c;
-            --green:      #3ef08a;
-            --sidebar-bg: #13172100;
-            --sidebar-surface: #181c27;
-            --sidebar-border:  #262c3d;
-            --sidebar-text:    #c8d0e8;
-            --sidebar-muted:   #6b7694;
-            --sidebar-active-bg: rgba(79,142,247,.15);
-            --sidebar-active-border: #4f8ef7;
-            --sidebar-hover-bg:  rgba(255,255,255,.05);
-            --logo-filter: none;
-        }
-
-        [data-theme="light"] {
-            --bg:         #f0f4f8;
-            --surface:    #ffffff;
-            --surface2:   #f5f7fa;
-            --border:     #dde3ed;
-            --accent:     #2563eb;
-            --accent2:    #1d4ed8;
-            --text:       #1a202c;
-            --text-soft:  #4a5568;
-            --muted:      #718096;
-            --red:        #e53e3e;
-            --green:      #38a169;
-            --sidebar-bg: #1b2a3b;
-            --sidebar-surface: #1b2a3b;
-            --sidebar-border:  rgba(255,255,255,.1);
-            --sidebar-text:    #cbd5e1;
-            --sidebar-muted:   #94a3b8;
-            --sidebar-active-bg: rgba(255,255,255,.15);
-            --sidebar-active-border: #ffffff;
-            --sidebar-hover-bg: rgba(255,255,255,.07);
-            --logo-filter: none;
-        }
-
-        /* ══════════════════════════════════════
-           BASE
-        ══════════════════════════════════════ */
-        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            transition: background .25s, color .25s;
-        }
-
-        /* ══════════════════════════════════════
-           SIDEBAR
-        ══════════════════════════════════════ */
-        .sidebar {
-            position: fixed;
-            top: 0; left: 0;
-            height: 100vh;
-            width: var(--sidebar-w);
-            background: var(--sidebar-surface);
-            border-right: 1px solid var(--sidebar-border);
-            display: flex;
-            flex-direction: column;
-            z-index: 50;
-            transition: background .25s, border-color .25s;
-            box-shadow: 4px 0 24px rgba(0,0,0,.3);
-        }
-
-        /* top accent line */
-        .sidebar::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0;
-            height: 3px;
-            background: linear-gradient(90deg, #1e90ff, #4f8ef7, #8ab6ff);
-        }
-
-        /* ── logo area ── */
-        .sidebar-logo {
-            padding: 20px 20px 16px;
-            border-bottom: 1px solid var(--sidebar-border);
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .sidebar-logo img {
-            height: 40px;
-            width: 40px;
-            object-fit: contain;
-            border-radius: 8px;
-            filter: var(--logo-filter);
-        }
-
-        .sidebar-logo-text .brand {
-            font-family: 'Rajdhani', sans-serif;
-            font-size: 15px;
-            font-weight: 700;
-            color: #fff;
-            letter-spacing: .4px;
-            line-height: 1;
-        }
-
-        .sidebar-logo-text .sub {
-            font-size: 10px;
-            color: var(--sidebar-muted);
-            margin-top: 3px;
-            letter-spacing: .6px;
-            text-transform: uppercase;
-        }
-
-        /* ── nav section label ── */
-        .nav-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 1.2px;
-            text-transform: uppercase;
-            color: var(--sidebar-muted);
-            padding: 16px 16px 6px;
-        }
-
-        /* ── nav links ── */
-        .sidebar-nav {
-            flex: 1;
-            padding: 8px 12px;
-            overflow-y: auto;
-            scrollbar-width: none;
-        }
-        .sidebar-nav::-webkit-scrollbar { display: none; }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 9px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-            color: var(--sidebar-text);
-            text-decoration: none;
-            margin-bottom: 2px;
-            border-left: 3px solid transparent;
-            transition: background .15s, color .15s, border-color .15s;
-            position: relative;
-        }
-
-        .nav-item:hover {
-            background: var(--sidebar-hover-bg);
-            color: #fff;
-        }
-
-        .nav-item.active {
-            background: var(--sidebar-active-bg);
-            border-left-color: var(--sidebar-active-border);
-            color: #fff;
-            font-weight: 600;
-        }
-
-        .nav-item svg {
-            width: 16px;
-            height: 16px;
-            fill: currentColor;
-            flex-shrink: 0;
-            opacity: .75;
-        }
-
-        .nav-item.active svg { opacity: 1; }
-
-        /* ── theme toggle in sidebar ── */
-        .sidebar-theme {
-            padding: 10px 12px 4px;
-        }
-        .theme-label {
-            font-size: 9.5px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: var(--sidebar-muted);
-            margin-bottom: 7px;
-            padding-left: 2px;
-        }
-        .theme-toggle {
-            display: flex;
-            background: rgba(255,255,255,.06);
-            border: 1px solid var(--sidebar-border);
-            border-radius: 8px;
-            padding: 3px;
-            gap: 3px;
-        }
-        .theme-btn {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 5px;
-            padding: 6px 4px;
-            border-radius: 5px;
-            border: none;
-            cursor: pointer;
-            background: transparent;
-            color: var(--sidebar-muted);
-            font-size: 11px;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            transition: background .18s, color .18s;
-        }
-        .theme-btn svg { width: 13px; height: 13px; fill: currentColor; flex-shrink: 0; }
-        .theme-btn.active {
-            background: rgba(79,142,247,.2);
-            color: #4f8ef7;
-        }
-
-        /* ── logout ── */
-        .sidebar-footer {
-            padding: 8px 12px 12px;
-            border-top: 1px solid var(--sidebar-border);
-        }
-
-        .btn-logout {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            width: 100%;
-            padding: 9px 12px;
-            border-radius: 7px;
-            font-size: 13px;
-            color: #f26c6c;
-            background: transparent;
-            border: none;
-            cursor: pointer;
-            text-align: left;
-            font-family: 'Inter', sans-serif;
-            transition: background .15s;
-        }
-
-        .btn-logout svg { width: 15px; height: 15px; fill: #f26c6c; flex-shrink: 0; }
-        .btn-logout:hover { background: rgba(242,108,108,.1); }
-
-        /* ══════════════════════════════════════
-           MAIN CONTENT
-        ══════════════════════════════════════ */
-        .main-content {
-            margin-left: var(--sidebar-w);
-            min-height: 100vh;
-        }
-
-        .content-inner {
-            padding: 28px 28px;
-        }
-
-        /* ══════════════════════════════════════
-           GRID BACKGROUND (subtle)
-        ══════════════════════════════════════ */
-        /* [data-theme="dark"] body {
-            background-image:
-                repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(38,44,61,.5) 39px, rgba(38,44,61,.5) 40px),
-                repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(38,44,61,.5) 39px, rgba(38,44,61,.5) 40px);
-        } */
-    </style>
+    <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
 </head>
 
 <body>
 
-    {{-- ══════════════ SIDEBAR ══════════════ --}}
     <aside class="sidebar">
 
         {{-- Logo --}}
@@ -357,7 +83,6 @@
 
         </nav>
 
-        {{-- Theme Toggle --}}
         <div class="sidebar-theme">
             <div class="theme-label">Tampilan</div>
             <div class="theme-toggle">
@@ -372,7 +97,6 @@
             </div>
         </div>
 
-        {{-- Logout --}}
         <div class="sidebar-footer">
             <form method="POST" action="{{ route('logout') }}">
                 @csrf
@@ -385,7 +109,6 @@
 
     </aside>
 
-    {{-- ══════════════ MAIN ══════════════ --}}
     <main class="main-content">
         <div class="content-inner">
             @yield('content')
@@ -413,7 +136,6 @@
         document.getElementById('btnLight').classList.toggle('active', theme === 'light');
     }
 
-    // Load saved theme on page load
     (function() {
         const saved = localStorage.getItem('theme') || 'dark';
         document.documentElement.setAttribute('data-theme', saved);
