@@ -234,5 +234,5 @@
         </div>
     </form>
 </div>
-<script src="{{ asset('assets/js/create-invoice.js') }}"></script>
+<script src="{{ asset('assets/js/create.invoice.js') }}"></script>
 @endsection
