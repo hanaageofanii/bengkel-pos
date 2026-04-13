@@ -10,6 +10,7 @@ use App\Http\Controllers\BarangController;
 use App\Http\Controllers\JasaController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\EstimasiController;
 
 
 
@@ -127,3 +128,8 @@ Route::delete(
 
 Route::get('/dashboard/absensi-rekap', [DashboardController::class, 'absensiRekap'])
         ->name('dashboard.absensiRekap');
+
+
+//estimasi
+Route::get('/estimasi',        [EstimasiController::class, 'create'])->name('estimasi.create');
+Route::post('/estimasi/preview', [EstimasiController::class, 'preview'])->name('estimasi.preview');

@@ -223,6 +223,21 @@
     </div>
 </div>
 
+ {{-- ── Notes ── --}}
+<div class="inv-section">
+    <div class="inv-section-head">
+        <div class="inv-section-title">
+            <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+            Notes
+        </div>
+    </div>
+    <div class="mz-field">
+        {{-- ✅ value lama harus di-load --}}
+        <textarea name="notes" rows="3" class="mz-textarea"
+                  placeholder="Catatan tambahan...">{{ old('notes', $invoice->notes) }}</textarea>
+    </div>
+</div>
+
             {{-- Summary --}}
 <div class="inv-summary">
     <div class="sum-item">

@@ -5,7 +5,7 @@
 
 body {
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 12px;
+    font-size: 10px;
     color: #000;
 }
 
@@ -15,20 +15,18 @@ body {
 .text-right {
     text-align: right;
 }
-.bold {
-    font-weight: bold;
-}
 
 table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 8px;
+    font-size: 10px;
 }
 
 th,
 td {
-    border: 1px solid #000;
     padding: 6px;
+    border: 1px solid black;
 }
 
 .no-border td {
@@ -36,16 +34,79 @@ td {
     padding: 2px;
 }
 
+.header-container {
+    text-align: center;
+    line-height: 1.2;
+}
+
+.logo {
+    width: 320px;
+    display: block;
+    margin: 0 auto;
+}
+
+.logo-wrapper {
+    line-height: 0;
+}
+
 .header-title {
-    font-size: 20px;
+    font-size: 32px;
     font-weight: bold;
-    color: #c00;
+    color: #d40000;
+    margin: -82px 0 0 0;
+    line-height: 1;
+}
+
+.header-address {
+    font-size: 14px;
+    margin-top: 3px;
+    font-weight: bold;
 }
 
 .invoice-title {
-    letter-spacing: 6px;
-    font-size: 18px;
-    margin: 10px 0;
+    text-align: center;
+    font-weight: bold;
+    font-size: 32px;
+    letter-spacing: 16px;
+    margin-bottom: 10px;
+}
+
+.outer-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 8px;
+    margin-bottom: 4px;
+    table-layout: fixed;
+}
+
+.outer-table .spacer-col {
+    width: 28px;
+    border: none;
+    padding: 0;
+    background: transparent;
+}
+
+.inner-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.inner-table td {
+    border: 1px solid black;
+    padding: 4px 6px;
+}
+
+.inner-table td:first-child {
+    width: 40%;
+    font-weight: bold;
+}
+.inner-table td:last-child {
+    width: 60%;
+}
+
+.bold {
+    font-weight: bold;
 }
 
 .lunas {
@@ -59,4 +120,77 @@ td {
 
 .double-line {
     border-top: 3px double #000 !important;
+}
+
+table tr td[colspan="4"] {
+    border-left: none;
+}
+
+.total-label {
+    border: 1px solid #000;
+    border-right: none;
+    padding: 4px 6px;
+    font-weight: bold;
+    width: 18%;
+}
+
+.total-amount {
+    border: 1px solid #000;
+    padding: 4px 6px;
+    font-weight: bold;
+    width: 14%;
+}
+
+.note-cell {
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.rekening-box {
+    border: 1px solid #000;
+    padding: 8px 12px;
+    font-size: 10px;
+    line-height: 1.8;
+    display: inline-block;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.rekening-box {
+    border: 1px solid black;
+    padding: 2px;
+}
+
+.rek-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1px;
+}
+
+.rek-table td {
+    border: none;
+    padding: 0px 0;
+}
+
+.rek-label {
+    width: 40%;
+    font-weight: bold;
+    color: #cc0000;
+}
+
+.rek-num {
+    width: 60%;
+    font-weight: bold;
+    color: #cc0000;
+}
+
+.rek-nama {
+    text-align: center;
+    margin-top: 2px;
+    font-weight: bold;
+    color: #cc0000;
+}
+
+img {
+    opacity: 0.9;
 }

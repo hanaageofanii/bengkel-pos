@@ -22,15 +22,27 @@
     </div>
 
     {{-- Search --}}
-    <div class="inv-search">
-        <form method="GET">
-            <div class="search-wrap">
-                <input name="q" value="{{ $q }}" placeholder="Cari invoice, pelanggan, plat, atau mobil…" class="search-input">
-                <button type="submit" class="search-btn">Cari</button>
-            </div>
-        </form>
-    </div>
+<div class="inv-search">
+    <form method="GET">
+        <div class="search-wrap">
+            <input name="q" value="{{ $q }}"
+                   placeholder="Cari invoice, pelanggan, plat, atau mobil…"
+                   class="search-input">
 
+            <div class="search-date-group">
+                <input type="date" name="dari"   value="{{ $dari }}"   class="search-date" title="Dari tanggal">
+                <span class="date-sep">—</span>
+                <input type="date" name="sampai" value="{{ $sampai }}" class="search-date" title="Sampai tanggal">
+            </div>
+
+            <button type="submit" class="search-btn">Cari</button>
+
+            @if($q || $dari || $sampai)
+                <a href="{{ route('invoice.index') }}" class="search-reset">Reset</a>
+            @endif
+        </div>
+    </form>
+</div>
     {{-- Table Card --}}
     <div class="inv-card">
         <div class="inv-card-bar"></div>

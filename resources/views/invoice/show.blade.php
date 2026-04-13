@@ -229,6 +229,29 @@
     @endif
 </div>
 
+          {{-- ── Notes ── --}}
+            @if($invoice->notes)
+            <div class="inv-section">
+                <div class="inv-section-head">
+                    <div class="inv-section-title">
+                        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                        Notes
+                    </div>
+                </div>
+                <div style="
+                    background: var(--mz-surface2);
+                    border: 1px solid var(--mz-border);
+                    border-radius: 6px;
+                    padding: 12px 14px;
+                    font-size: 12.5px;
+                    color: var(--mz-muted);
+                    line-height: 1.6;
+                    white-space: pre-wrap;
+                ">{{ $invoice->notes }}</div>
+            </div>
+            @endif
+
+
         {{-- ── Pembayaran ── --}}
         <div class="inv-section">
             <div class="inv-section-head">
@@ -290,6 +313,7 @@
                 @endif
             </div>
         </div>
+
 
         {{-- ── Footer TTD & Bank ── --}}
         <div class="inv-foot">

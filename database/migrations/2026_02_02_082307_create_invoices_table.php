@@ -28,6 +28,7 @@ public function up(): void
         $table->integer('grand_total')->default(0);
         $table->enum('status_bayar', ['belum', 'sudah'])->default('belum');
         $table->enum('metode_bayar', ['cash', 'mandiri', 'bca'])->nullable();
+        $table->string('notes')->nullable();
         $table->timestamps();
     });
 }

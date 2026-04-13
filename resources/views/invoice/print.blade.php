@@ -2,178 +2,237 @@
 <html>
 <head>
     <title>{{ $invoice->invoice_no }}</title>
-<link rel="stylesheet" href="{{ asset('assets/css/print-inv.css') }}">
-<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/print-inv.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 </head>
 
 <body onload="window.print()">
 
 <!-- HEADER -->
-<div class="text-center">
-    <img src="{{ asset('assets/images/logo.png') }}"
-         style="height:150px; display:block; margin:0 auto -40px auto;">
+<div class="header-container">
+    <div class="logo-wrapper">
+        <img src="{{ asset('assets/images/logo.png') }}" class="logo">
+    </div>
 
     <div class="header-title">
         5a AUTO SERVICE
     </div>
 
-    <div style="margin-top:4px;">
-        Ruko Permata Harapan Baru Blok H No.17 <br>
-        Jl. Raya Pejuang Harapan Indah Medan Satria Bekasi<br>
+    <div class="header-address">
+        Ruko Permata Harapan Baru Blok H No.17 Jl. Raya Pejuang Harapan Indah Medan Satria Bekasi<br>
         Telp : 0878-7880-6657
     </div>
 </div>
 
-<hr>
+<hr style="border: 1px solid black;">
 
-<div class="invoice-title text-center bold">INVOICE</div>
+<div class="invoice-title">INVOICE</div>
 
-<!-- DATA CUSTOMER -->
-<table class="no-border">
-<tr>
-<td width="55%">
-<table>
-<tr><td class="bold">Nama</td><td>{{ $invoice->pelanggan->nama }}</td></tr>
-<tr><td class="bold">Merk / Type</td><td>{{ $invoice->pelanggan->merk_mobil }}</td></tr>
-<tr><td class="bold">No. Polisi</td><td>{{ strtoupper($invoice->pelanggan->plat_nomor) }}</td></tr>
-<tr><td class="bold">KM</td><td>{{ $invoice->km }}</td></tr>
-</table>
-</td>
-<td width="45%">
-<table>
-<tr><td class="bold">Tanggal</td><td>{{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}</td></tr>
-<tr><td class="bold">No. Chasis</td><td>{{ $invoice->no_chasis }}</td></tr>
-<tr><td class="bold">No. Mesin</td><td>{{ $invoice->no_mesin }}</td></tr>
-<tr><td class="bold">No. Telp</td><td>{{ $invoice->no_telp }}</td></tr>
-</table>
-</td>
-</tr>
+<table class="outer-table">
+    <colgroup>
+        <col style="width: 47%">
+        <col style="width: 6%">   {{-- spacer --}}
+        <col style="width: 47%">
+    </colgroup>
+    <tbody>
+        <tr>
+            <!-- KIRI -->
+            <td style="padding: 0; border: none; vertical-align: top;">
+                <table class="inner-table">
+                    <tr>
+                        <td>Nama</td>
+                        <td></td>
+                    </tr>
+                    <tr>
+                        <td>Merk / Type</td>
+                        <td>{{ $invoice->pelanggan->merk_mobil }}</td>
+                    </tr>
+                    <tr>
+                        <td>No. Polisi</td>
+                        <td>{{ strtoupper($invoice->pelanggan->plat_nomor) }}</td>
+                    </tr>
+                    <tr>
+                        <td>KM</td>
+                        <td>{{ $invoice->km }}</td>
+                    </tr>
+                </table>
+            </td>
+
+            <!-- SPACER — tidak ada border, tidak ada padding -->
+            <td class="spacer-col"></td>
+
+            <!-- KANAN -->
+            <td style="padding: 0; border: none; vertical-align: top;">
+                <table class="inner-table">
+                    <tr>
+                        <td>Date</td>
+                        <td>{{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}</td>
+                    </tr>
+                    <tr>
+                        <td>No. Chasis</td>
+                        <td>{{ $invoice->no_chasis }}</td>
+                    </tr>
+                    <tr>
+                        <td>No. Mesin</td>
+                        <td>{{ $invoice->no_mesin }}</td>
+                    </tr>
+                    <tr>
+                        <td>No. Telp</td>
+                        <td>{{ $invoice->no_telp }}</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </tbody>
 </table>
 
 <!-- JASA -->
 <table>
-<tr class="bold text-center">
-<td width="5%">No</td>
-<td width="45%">Keluhan</td>
-<td width="5%">No</td>
-<td width="30%">Pekerjaan</td>
-<td width="15%">Harga Jasa</td>
-</tr>
+    <tr class="bold text-center">
+        <td width="5%">No</td>
+        <td width="45%">Keluhan</td>
+        <td width="5%">No</td>
+        <td width="30%">Pekerjaan</td>
+        <td width="15%">Harga Jasa</td>
+    </tr>
 
-@php $no = 1; @endphp
-@foreach($invoice->jasa as $j)
-<tr>
-<td class="text-center">{{ $no }}</td>
-<td>{{ $invoice->keluhan[$no-1] ?? '' }}</td>
-<td class="text-center">{{ $no }}</td>
-<td>{{ $j['nama'] }}</td>
-<td class="text-right">Rp {{ number_format($j['harga']) }}</td>
-</tr>
-@php $no++; @endphp
-@endforeach
+    @php $no = 1; @endphp
+    @foreach($invoice->jasa as $j)
+    <tr>
+        <td class="text-center">{{ $no }}</td>
+        <td>{{ $invoice->keluhan[$no-1] ?? '' }}</td>
+        <td class="text-center">{{ $no }}</td>
+        <td>{{ $j['nama'] }}</td>
+        <td class="text-right">Rp {{ number_format($j['harga']) }}</td>
+    </tr>
+    @php $no++; @endphp
+    @endforeach
 
-<tr class="bold">
-<td colspan="4" class="text-right">Total Jasa</td>
-<td class="text-right">Rp {{ number_format($invoice->total_jasa) }}</td>
-</tr>
+    <tr class="bold">
+        <td colspan="3" style="border: none;"></td>
+        <td class="text-right total-label">Total Jasa</td>
+        <td class="text-right total-amount">Rp {{ number_format($invoice->total_jasa) }}</td>
+    </tr>
 </table>
 
 <!-- SPAREPART -->
 <table>
-<tr class="bold text-center">
-<td>No</td>
-<td>Spare Part</td>
-<td>Qty</td>
-<td>Harga</td>
-<td>Total</td>
-</tr>
+    <tr class="bold text-center">
+        <td>No</td>
+        <td>Spare Part</td>
+        <td>Qty</td>
+        <td>Harga</td>
+        <td>Total</td>
+    </tr>
 
-@foreach($invoice->barang as $i => $b)
-<tr>
-<td class="text-center">{{ $i+1 }}</td>
-<td>{{ $b['nama'] }}</td>
-<td class="text-center">{{ $b['qty'] }}</td>
-<td class="text-right">Rp {{ number_format($b['harga']) }}</td>
-<td class="text-right">Rp {{ number_format($b['total']) }}</td>
-</tr>
-@endforeach
+    @foreach($invoice->barang as $i => $b)
+    <tr>
+        <td class="text-center">{{ $i+1 }}</td>
+        <td>{{ $b['nama'] }}</td>
+        <td class="text-center">{{ $b['qty'] }}</td>
+        <td class="text-right">Rp {{ number_format($b['harga']) }}</td>
+        <td class="text-right">Rp {{ number_format($b['total']) }}</td>
+    </tr>
+    @endforeach
 
-<tr class="bold">
-<td colspan="4" class="text-right">Total Part</td>
-<td class="text-right">Rp {{ number_format($invoice->total_part) }}</td>
-</tr>
+    <tr class="bold">
+        <td colspan="3" rowspan="2" class="note-cell" style="border:none; vertical-align:top; padding:4px 6px;">
+            <span style="font-weight:bold;">NOTE:</span><br>
+            {{ $invoice->notes ?? '' }}
+        </td>
+        <td class="text-right total-label">Total Part</td>
+        <td class="text-right total-amount">Rp {{ number_format($invoice->total_part) }}</td>
+    </tr>
 
-<tr class="bold">
-<td colspan="4" class="text-right">Grand Total</td>
-<td class="text-right">Rp {{ number_format($invoice->grand_total) }}</td>
-</tr>
+    <tr class="bold">
+        <td class="text-right total-label">Total Jasa + Part</td>
+        <td class="text-right total-amount">Rp {{ number_format($invoice->grand_total) }}</td>
+    </tr>
 
-<!-- PEMBAYARAN -->
-@if($invoice->payment_awal > 0)
-<tr>
-    <td colspan="4" class="text-right bold">Payment Awal (DP)</td>
-    <td class="text-right">Rp {{ number_format($invoice->payment_awal) }}</td>
-</tr>
-@endif
+    <!-- PEMBAYARAN -->
+    @if($invoice->payment_awal > 0)
+    <tr>
+        <td colspan="3" style="border:none;"></td>
+        <td class="text-right bold total-label">Payment Awal (DP)</td>
+        <td class="text-right total-amount">Rp {{ number_format($invoice->payment_awal) }}</td>
+    </tr>
+    @endif
 
-@foreach($invoice->payments as $i => $pay)
-<tr>
-    <td colspan="4" class="text-right">
-        Cicilan {{ $i + 1 }}
-        ({{ \Carbon\Carbon::parse($pay->tanggal_bayar)->format('d/m/Y') }})
-    </td>
-    <td class="text-right">Rp {{ number_format($pay->jumlah) }}</td>
-</tr>
-@endforeach
+    @foreach($invoice->payments as $i => $pay)
+    <tr>
+        <td colspan="3" style="border:none;"></td>
+        <td class="text-right total-label">
+            Cicilan {{ $i + 1 }}
+            ({{ \Carbon\Carbon::parse($pay->tanggal_bayar)->format('d/m/Y') }})
+        </td>
+        <td class="text-right total-amount">Rp {{ number_format($pay->jumlah) }}</td>
+    </tr>
+    @endforeach
 
-{{-- Total Terbayar --}}
-<tr class="bold double-line">
-    <td colspan="4" class="text-right">Total Terbayar</td>
-    <td class="text-right">
-        Rp {{ number_format($invoice->total_terbayar) }}
-    </td>
-</tr>
+    <tr class="bold">
+        <td colspan="3" style="border:none;"></td>
+        <td class="text-right total-label double-line">Total Terbayar</td>
+        <td class="text-right total-amount double-line">Rp {{ number_format($invoice->total_terbayar) }}</td>
+    </tr>
 
-{{-- Sisa Tagihan --}}
-@if($invoice->sisa_tagihan > 0)
-<tr>
-    <td colspan="4" class="text-right bold">Sisa Tagihan</td>
-    <td class="text-right belum">
-        Rp {{ number_format($invoice->sisa_tagihan) }}
-    </td>
-</tr>
-@endif
+    @if($invoice->sisa_tagihan > 0)
+    <tr>
+        <td colspan="3" style="border:none;"></td>
+        <td class="text-right bold total-label">Sisa Tagihan</td>
+        <td class="text-right total-amount belum">Rp {{ number_format($invoice->sisa_tagihan) }}</td>
+    </tr>
+    @endif
 
-{{-- Status Lunas hanya muncul jika benar-benar 0 --}}
-@if($invoice->sisa_tagihan <= 0)
-<tr>
-    <td colspan="4" class="text-right bold">Status</td>
-    <td class="text-right lunas">LUNAS</td>
-</tr>
-@endif
+    @if($invoice->sisa_tagihan <= 0)
+    <tr>
+        <td colspan="3" style="border:none;"></td>
+        <td class="text-right bold total-label">Status</td>
+        <td class="text-right total-amount lunas">LUNAS</td>
+    </tr>
+    @endif
 </table>
 
-<br><br>
+<!-- TTD FOOTER + Rekening -->
+<table class="no-border" style="margin-top: 2px;">
+    <tr>
+  <td style="vertical-align: top; padding-top: 0; width: 50%; padding-left: 40px; text-align: left;">
 
-<!-- FOOTER -->
-<table class="no-border">
-<tr>
-<td style="vertical-align:top; padding-top:0">
-Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
-<br> Hormat Kami,
-<div style="height:0; position:relative;">
-<img src="{{ asset('assets/images/ttd.png') }}"
-style="position: relative; top: -90px; height: 210px;">
+    <div style="font-weight: bold;">
+        Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
+    </div>
+
+    <div style="margin-left: 20px;">
+        Hormat Kami,
+    </div>
+
+    <div style="position: relative; height: 60px;">
+        <img src="{{ asset('assets/images/ttd.png') }}"
+             style="position: absolute; top: -80px; left: 0; height: 220px;">
+    </div>
+
+</td>
+
 </div>
 </td>
-
-<td class="text-right">
-Pembayaran melalui Rekening:<br>
-<b>Mandiri :</b> 1560010520965<br>
-<b>BCA :</b> 5315064497<br>
-a.n Hari Kuswanto
+    <td style="vertical-align: top; width: 25%; padding: 0 0 0 10px;">
+    <div class="rekening-box">
+        Pembayaran melalui Rekening :
+        <table class="rek-table">
+            <tr>
+                <td class="rek-label">Mandiri</td>
+                <td>: </td>
+                <td class="rek-num"> 1560010520965</td>
+            </tr>
+            <tr>
+                <td class="rek-label">BCA</td>
+                <td>: </td>
+                <td class="rek-num"> 5315064497</td>
+            </tr>
+        </table>
+        <div class="rek-nama">a.n Hari Kuswanto</div>
+    </div>
 </td>
-</tr>
+    </tr>
 </table>
 
 </body>

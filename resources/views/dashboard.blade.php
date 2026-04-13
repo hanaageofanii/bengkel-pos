@@ -35,6 +35,12 @@
                 Dashboard
             </a>
 
+            <a href="{{ route('estimasi.create') }}"
+            class="nav-item {{ request()->routeIs('estimasi.*') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-7h2v7z"/></svg>
+                Estimasi
+            </a>
+
             <a href="{{ route('invoice.index') }}"
                class="nav-item {{ request()->routeIs('invoice.*') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24"><path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zm2 16H8v-2h8v2zm0-4H8v-2h8v2zm-3-5V3.5L18.5 9H13z"/></svg>

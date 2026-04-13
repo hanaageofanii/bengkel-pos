@@ -51,20 +51,33 @@ function invoiceForm() {
                 harga_pribadi: 0,
                 harga_perusahaan: 0,
             });
+            this.$nextTick(() => {
+                $(".select2-jasa").select2({
+                    placeholder: "Cari jasa...",
+                    allowClear: true,
+                });
+                // Re-bind Select2 change setiap kali baris baru ditambah
+                bindSelect2Jasa();
+            });
         },
 
         setJasa(e, i) {
-            let o = e.target.selectedOptions[0];
-            this.jasa[i] = {
-                id: o.value,
-                nama: o.dataset.nama,
-                harga_pribadi: +o.dataset.pribadi,
-                harga_perusahaan: +o.dataset.perusahaan,
-                harga:
-                    this.tipePelanggan === "perusahaan"
-                        ? +o.dataset.perusahaan
-                        : +o.dataset.pribadi,
-            };
+            let select = e.target;
+            let val = $(select).val();
+            let o = select.querySelector(`option[value="${val}"]`);
+
+            if (!o) return;
+
+            let hargaDipakai =
+                this.tipePelanggan === "perusahaan"
+                    ? +o.dataset.perusahaan
+                    : +o.dataset.pribadi;
+
+            this.jasa[i].id = o.value;
+            this.jasa[i].nama = o.dataset.nama;
+            this.jasa[i].harga_pribadi = +o.dataset.pribadi;
+            this.jasa[i].harga_perusahaan = +o.dataset.perusahaan;
+            this.jasa[i].harga = hargaDipakai;
         },
 
         addBarang() {
@@ -77,30 +90,46 @@ function invoiceForm() {
                 harga_pribadi: 0,
                 harga_perusahaan: 0,
             });
+            this.$nextTick(() => {
+                $(".select2-barang").select2({
+                    placeholder: "Cari barang...",
+                    allowClear: true,
+                });
+                // Re-bind Select2 change setiap kali baris baru ditambah
+                bindSelect2Barang();
+            });
         },
 
         setBarang(e, i) {
-            let o = e.target.selectedOptions[0];
+            let select = e.target;
+            let val = $(select).val();
+            let o = select.querySelector(`option[value="${val}"]`);
+
+            if (!o) return;
+
             let stock = +o.dataset.stock;
+
             if (stock <= 0) {
                 alert("STOCK HABIS");
                 return;
             }
+
             if (stock <= 5) {
                 alert(`PERINGATAN: Stock ${o.dataset.nama} tinggal ${stock}`);
             }
-            this.barang[i] = {
-                id: o.value,
-                nama: o.dataset.nama,
-                qty: 1,
-                stock,
-                harga_pribadi: +o.dataset.pribadi,
-                harga_perusahaan: +o.dataset.perusahaan,
-                harga:
-                    this.tipePelanggan === "perusahaan"
-                        ? +o.dataset.perusahaan
-                        : +o.dataset.pribadi,
-            };
+
+            let hargaDipakai =
+                this.tipePelanggan === "perusahaan"
+                    ? +o.dataset.perusahaan
+                    : +o.dataset.pribadi;
+
+            this.barang[i].id = o.value;
+            this.barang[i].nama = o.dataset.nama;
+            this.barang[i].qty = 1;
+            this.barang[i].stock = stock;
+            this.barang[i].harga_pribadi = +o.dataset.pribadi;
+            this.barang[i].harga_perusahaan = +o.dataset.perusahaan;
+            this.barang[i].harga = hargaDipakai;
         },
 
         updateQty(i) {
@@ -132,3 +161,65 @@ function invoiceForm() {
         },
     };
 }
+
+function getAlpine() {
+    let wrap = document.querySelector("[x-data]");
+    if (!wrap) return null;
+    if (wrap._x_dataStack) return wrap._x_dataStack[0];
+    if (wrap.__x) return wrap.__x.$data;
+    return null;
+}
+
+function bindSelect2Pelanggan() {
+    $('[name="pelanggan_id"]')
+        .off("change.s2")
+        .on("change.s2", function () {
+            let tipe = $(this).find(":selected").data("tipe") || "pribadi";
+            let alpine = getAlpine();
+            if (alpine) {
+                // Update langsung ke Alpine state — ini yang fix masalah utama
+                alpine.tipePelanggan = tipe;
+                alpine.updateAllPrices();
+            }
+        });
+}
+
+function bindSelect2Jasa() {
+    $(".select2-jasa")
+        .off("change.s2")
+        .on("change.s2", function () {
+            // Dispatch native event supaya Alpine @change="setJasa" berjalan
+            this.dispatchEvent(new Event("change"));
+        });
+}
+
+function bindSelect2Barang() {
+    $(".select2-barang")
+        .off("change.s2")
+        .on("change.s2", function () {
+            this.dispatchEvent(new Event("change"));
+        });
+}
+
+$(document).ready(function () {
+    // Init Select2
+    $('[name="pelanggan_id"]').select2({
+        placeholder: "Cari pelanggan / plat nomor",
+        allowClear: true,
+    });
+
+    $(".select2-jasa").select2({
+        placeholder: "Cari jasa...",
+        allowClear: true,
+    });
+
+    $(".select2-barang").select2({
+        placeholder: "Cari barang...",
+        allowClear: true,
+    });
+
+    // Bind event handler yang benar
+    bindSelect2Pelanggan();
+    bindSelect2Jasa();
+    bindSelect2Barang();
+});

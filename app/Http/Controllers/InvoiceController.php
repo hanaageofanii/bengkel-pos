@@ -14,24 +14,29 @@ class InvoiceController extends Controller
 {
     // ================= INDEX + SEARCH =================
     public function index(Request $request)
-    {
-        $q = $request->q;
+{
+    $q      = $request->q;
+    $dari   = $request->dari;
+    $sampai = $request->sampai;
 
-        $invoices = Invoice::with('pelanggan')
-            ->when($q, function ($query) use ($q) {
-                $query->where('invoice_no', 'like', "%$q%")
-                    ->orWhereHas('pelanggan', function ($p) use ($q) {
-                        $p->where('nama', 'like', "%$q%")
-                          ->orWhere('plat_nomor', 'like', "%$q%")
-                          ->orWhere('merk_mobil', 'like', "%$q%")
-                          ->orWhere('model_mobil', 'like', "%$q%");
-                    });
-            })
-            ->latest()
-            ->paginate(10);
+    $invoices = Invoice::with('pelanggan')
+        ->when($q, function ($query) use ($q) {
+            $query->where('invoice_no', 'like', "%$q%")
+                ->orWhereHas('pelanggan', function ($p) use ($q) {
+                    $p->where('nama', 'like', "%$q%")
+                      ->orWhere('plat_nomor', 'like', "%$q%")
+                      ->orWhere('merk_mobil', 'like', "%$q%")
+                      ->orWhere('model_mobil', 'like', "%$q%");
+                });
+        })
+        ->when($dari,   fn($q) => $q->whereDate('tanggal', '>=', $dari))
+        ->when($sampai, fn($q) => $q->whereDate('tanggal', '<=', $sampai))
+        ->latest()
+        ->paginate(10)
+        ->withQueryString();
 
-        return view('invoice.index', compact('invoices', 'q'));
-    }
+    return view('invoice.index', compact('invoices', 'q', 'dari', 'sampai'));
+}
 
     // ================= CREATE =================
     public function create()
@@ -123,7 +128,6 @@ public function store(Request $request)
         }
 
         $sisa = $grandTotal - $paymentAwal;
-
         /* ================= STATUS BAYAR ================= */
 
         $statusBayar = $sisa == 0 ? 'sudah' : 'belum';
@@ -166,6 +170,7 @@ $invoice->tanggal_bayar = $paymentAwal >= $grandTotal ? now() : null;
 $invoice->metode_bayar  = $request->metode_bayar;
 $invoice->sisa = $grandTotal - $paymentAwal;
 
+$invoice->notes = $request->notes;
 $invoice->save();
 
 // SIMPAN CICILAN TAMBAHAN
@@ -211,11 +216,11 @@ public function update(Request $request, Invoice $invoice)
 {
     DB::transaction(function () use ($request, $invoice) {
 
-        /* ================= BALIKIN STOK LAMA ================= */
-        foreach ($invoice->barang as $b) {
-            Barang::where('id', $b['id'])
-                ->increment('stok', $b['qty']);
-        }
+        // /* ================= BALIKIN STOK LAMA ================= */
+        // foreach ($invoice->barang as $b) {
+        //     Barang::where('id', $b['id'])
+        //         ->increment('stok', $b['qty']);
+        // }
 
         /* ================= JASA ================= */
         $jasa = [];
@@ -229,50 +234,53 @@ public function update(Request $request, Invoice $invoice)
             ];
         }
 
-        /* ================= BARANG ================= */
-        $barangMap = [];
+/* ================= BARANG ================= */
+$barangMap = [];
 
-        foreach ($request->barang_id ?? [] as $i => $id) {
+foreach ($request->barang_id ?? [] as $i => $id) {
+    if (empty($id)) continue;
 
-            if (empty($id)) continue;
+    $qty   = (int) ($request->barang_qty[$i] ?? 0);
+    $harga = (int) ($request->barang_harga[$i] ?? 0);
 
-            $qty   = (int) ($request->barang_qty[$i] ?? 0);
-            $harga = (int) ($request->barang_harga[$i] ?? 0);
+    if ($qty <= 0) continue;
 
-            if ($qty <= 0) continue;
+    // REPLACE bukan +=, cegah dobel kalau id sama muncul 2x
+    $barangMap[$id] = [
+        'id'    => (int) $id,
+        'nama'  => $request->barang_nama[$i] ?? '',
+        'qty'   => $qty,
+        'harga' => $harga,
+        'total' => $qty * $harga,
+    ];
+}
 
-            if (!isset($barangMap[$id])) {
-                $barangMap[$id] = [
-                    'id'    => (int) $id,
-                    'nama'  => $request->barang_nama[$i] ?? '',
-                    'qty'   => 0,
-                    'harga' => $harga,
-                    'total' => 0,
-                ];
-            }
+// Data barang lama dari DB, di-index by id
+$barangLama = collect($invoice->barang)->keyBy('id');
+$barangFinal = [];
 
-            $barangMap[$id]['qty'] += $qty;
-            $barangMap[$id]['total'] =
-                $barangMap[$id]['qty'] * $barangMap[$id]['harga'];
-        }
+foreach ($barangMap as $id => $item) {
+    $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
 
-        $barangFinal = [];
+    $qtyLama = (int) ($barangLama->get($id)['qty'] ?? 0);
+    $selisih = $item['qty'] - $qtyLama; // positif=tambah, negatif=kurang
 
-        foreach ($barangMap as $item) {
+    if ($selisih > 0 && $barangModel->stok < $selisih) {
+        abort(422, "Stok {$barangModel->nama} tidak mencukupi");
+    }
 
-            $barangModel = Barang::lockForUpdate()->findOrFail($item['id']);
+    if ($selisih !== 0) {
+        $barangModel->increment('stok', -$selisih);
+    }
 
-            if ($barangModel->stok < $item['qty']) {
-            return redirect()->back()
-                ->withInput()
-                ->with('error', "Stock {$barangModel->nama} tidak mencukupi");
-        }
+    $barangFinal[] = $item;
+}
 
-            $barangModel->decrement('stok', $item['qty']);
-
-            $barangFinal[] = $item;
-        }
-
+foreach ($barangLama as $id => $lama) {
+    if (!isset($barangMap[$id])) {
+        Barang::where('id', $id)->increment('stok', $lama['qty']);
+    }
+}
         /* ================= TOTAL ================= */
         $totalJasa  = collect($jasa)->sum('harga');
         $totalPart  = collect($barangFinal)->sum('total');
@@ -286,9 +294,10 @@ public function update(Request $request, Invoice $invoice)
             abort(400,'Payment tidak boleh melebihi total');
         }
 
-        $sisa = $grandTotal - $paymentAwal;
+$totalCicilan = $invoice->payments()->sum('jumlah');
+$sisa = max(0, $grandTotal - $paymentAwal - $totalCicilan);
 
-        $statusBayar = $sisa == 0 ? 'sudah' : 'belum';
+$statusBayar = $sisa == 0 ? 'sudah' : 'belum';
         /* ================= UPDATE INVOICE ================= */
         $invoice->update([
             'pelanggan_id' => $request->pelanggan_id,
@@ -312,6 +321,7 @@ public function update(Request $request, Invoice $invoice)
             'sisa'         => $sisa,
             'status_bayar' => $statusBayar,
             'metode_bayar' => $request->metode_bayar,
+            'notes' => $request->notes,
             ]);
     });
 

@@ -12,7 +12,7 @@ class Invoice extends Model
         'keluhan','jasa','barang',
         'total_jasa','total_part','grand_total',
         'metode_bayar','payment_awal','tanggal_bayar',
-        'status_bayar','sisa'
+        'status_bayar','sisa','notes'
     ];
 
     protected $casts = [

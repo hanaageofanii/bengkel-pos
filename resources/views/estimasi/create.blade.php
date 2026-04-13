@@ -1,14 +1,11 @@
 @extends('dashboard')
 
-@section('title','Buat Invoice')
+@section('title','Buat Estimasi')
 
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('assets/css/create-invoice.css') }}">
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -18,15 +15,31 @@
     <div class="inv-breadcrumb">
         <a href="{{ route('invoice.index') }}">Invoice</a>
         <span>/</span>
-        <span style="color:var(--mz-text)">Buat</span>
+        <span style="color:var(--mz-text)">Estimasi</span>
     </div>
-    <div class="inv-title">Buat Invoice</div>
-    <div class="inv-subtitle">Input transaksi servis & perbaikan kendaraan</div>
+    {{-- ✅ Badge ESTIMASI --}}
+    <div style="display:flex; align-items:center; gap:12px; margin-bottom:4px;">
+        <div class="inv-title">Buat Estimasi</div>
+        <span style="
+            background: rgba(245,197,66,0.12);
+            border: 1px solid rgba(245,197,66,0.35);
+            color: var(--mz-yellow, #f5c542);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        ">Tidak disimpan ke database</span>
+    </div>
+    <div class="inv-subtitle">Preview estimasi biaya servis & perbaikan kendaraan</div>
 
-    <form method="POST" action="{{ route('invoice.store') }}">
+    {{-- ✅ action ke estimasi.preview, bukan invoice.store --}}
+    <form method="POST" action="{{ route('estimasi.preview') }}">
         @csrf
         <div class="inv-card">
-            <div class="inv-card-bar"></div>
+            <div class="inv-card-bar" style="background: linear-gradient(90deg, #f5c542, #f59e0b, #fbbf24);"></div>
 
             {{-- ── Pelanggan ── --}}
             <div class="inv-section">
@@ -108,9 +121,7 @@
                 </div>
                 <template x-for="(j,index) in jasa" :key="j.id + '-' + index">
                     <div class="row-item row-12" style="margin-bottom:10px">
-                        <select class="mz-select select2-jasa"
-                        x-model="j.id"
-                        @change="setJasa($event,index)">
+                        <select class="mz-select select2-jasa" x-model="j.id" @change="setJasa($event,index)">
                             <option value="">— Pilih Jasa —</option>
                             @foreach($jasas as $js)
                                 <option value="{{ $js->id }}"
@@ -144,18 +155,17 @@
                 <template x-for="(b,index) in barang" :key="b.id + '-' + index">
                     <div class="row-item row-part" style="margin-bottom:10px">
                         <select class="mz-select select2-barang" @change="setBarang($event,index)">
-                                <option value="">— Pilih Barang —</option>
-                                @foreach($barangs as $br)
-                                    <option value="{{ $br->id }}"
-                                            data-nama="{{ $br->nama }}"
-                                            data-pribadi="{{ $br->harga_pribadi }}"
-                                            data-perusahaan="{{ $br->harga_perusahaan }}"
-                                            data-stock="{{ $br->stok }}"
-                                            {{ $br->stok <= 0 ? 'disabled' : '' }}>
-                                        {{ $br->nama }}{{ $br->stok <= 0 ? ' — Stok Habis' : '' }}
-                                    </option>
-                                @endforeach
-                            </select>
+                            <option value="">— Pilih Barang —</option>
+                            @foreach($barangs as $br)
+                                <option value="{{ $br->id }}"
+                                        data-nama="{{ $br->nama }}"
+                                        data-pribadi="{{ $br->harga_pribadi }}"
+                                        data-perusahaan="{{ $br->harga_perusahaan }}"
+                                        data-stock="{{ $br->stok }}">
+                                    {{ $br->nama }}
+                                </option>
+                            @endforeach
+                        </select>
                         <input type="hidden" name="barang_id[]" :value="b.id">
                         <input type="hidden" name="barang_nama[]" :value="b.nama">
                         <input type="number" min="1" name="barang_qty[]" x-model="b.qty" placeholder="Qty" class="mz-input" style="text-align:center">
@@ -163,72 +173,6 @@
                         <button type="button" @click="barang.splice(index,1)" class="btn-remove">Hapus</button>
                     </div>
                 </template>
-            </div>
-
-            {{-- ── Pembayaran ── --}}
-            <div class="inv-section">
-                <div class="inv-section-head">
-                    <div class="inv-section-title">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
-                        Pembayaran
-                    </div>
-                </div>
-                <div class="inv-grid" style="margin-bottom:16px">
-                    <div class="mz-field">
-                        <label class="mz-label">Status Pembayaran</label>
-                        <select name="status_bayar" x-model="statusBayar"
-                                @change="if(statusBayar==='sudah'){ paymentAwal = grandTotal }"
-                                class="mz-select">
-                            <option value="belum">Belum Lunas</option>
-                            <option value="sudah">Lunas</option>
-                        </select>
-                    </div>
-                    <div class="mz-field">
-                        <label class="mz-label">Metode Pembayaran</label>
-                        <select name="metode_bayar" class="mz-select">
-                            <option value="">— Pilih Metode —</option>
-                            <option value="cash">Cash</option>
-                            <option value="bca">Transfer BCA</option>
-                            <option value="mandiri">Transfer Mandiri</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="inv-grid">
-                    <div class="mz-field">
-                        <label class="mz-label">Payment Awal (DP)</label>
-                        <template x-if="statusBayar === 'belum'">
-                            <input type="number" name="payment_awal" x-model="paymentAwal" min="0" class="mz-input">
-                        </template>
-                        <template x-if="statusBayar === 'sudah'">
-                            <div>
-                                <div class="lunas-box">LUNAS</div>
-                                <input type="hidden" name="payment_awal" :value="grandTotal">
-                            </div>
-                        </template>
-                    </div>
-                    <div class="mz-field">
-                        <label class="mz-label">Sisa Tagihan</label>
-                        <template x-if="statusBayar === 'belum'">
-                            <div class="sisa-display" x-text="formatRupiah(sisa)"></div>
-                        </template>
-                        <template x-if="statusBayar === 'sudah'">
-                            <div class="lunas-box">LUNAS</div>
-                        </template>
-                    </div>
-                </div>
-            </div>
-
-            {{-- ── Notes ── --}}
-            <div class="inv-section">
-                <div class="inv-section-head">
-                    <div class="inv-section-title">
-                        <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                        Notes
-                    </div>
-                </div>
-                <div class="mz-field">
-                    <textarea name="notes" rows="3" class="mz-textarea" placeholder="Catatan tambahan untuk invoice ini..."></textarea>
-                </div>
             </div>
 
             {{-- Summary --}}
@@ -244,7 +188,7 @@
                 </div>
                 <div style="color:var(--mz-border);font-size:20px">=</div>
                 <div class="sum-item">
-                    <div class="sum-label">Grand Total</div>
+                    <div class="sum-label">Estimasi Total</div>
                     <div class="sum-val grand" x-text="formatRupiah(grandTotal)"></div>
                 </div>
             </div>
@@ -252,7 +196,10 @@
             {{-- Footer --}}
             <div class="inv-footer">
                 <a href="{{ route('invoice.index') }}" class="btn-cancel">Batal</a>
-                <button type="submit" class="btn-submit">Simpan & Print</button>
+                {{-- ✅ tombol preview, warna kuning --}}
+                <button type="submit" class="btn-submit" style="background: linear-gradient(135deg, #d97706, #f5c542);">
+                    Lihat Estimasi
+                </button>
             </div>
         </div>
     </form>
