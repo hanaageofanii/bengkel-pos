@@ -69,7 +69,7 @@
                     </div>
                     <div class="meta-row">
                         <span class="meta-key">Merk / Type</span>
-                        <span class="meta-val">{{ $invoice->pelanggan->merk_mobil }}</span>
+                        <span class="meta-val">{{ $invoice['pelanggan']->merk_mobil }} {{ $invoice['pelanggan']->model_mobil }}</span>
                     </div>
                     <div class="meta-row">
                         <span class="meta-key">No. Polisi</span>

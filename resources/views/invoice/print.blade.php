@@ -45,7 +45,9 @@
                     </tr>
                     <tr>
                         <td>Merk / Type</td>
-                        <td>{{ $invoice->pelanggan->merk_mobil }}</td>
+                        <td>
+                            {{ $invoice['pelanggan']->merk_mobil }} {{ $invoice['pelanggan']->model_mobil }}
+                        </td>
                     </tr>
                     <tr>
                         <td>No. Polisi</td>
@@ -162,7 +164,7 @@
     <tr>
         <td colspan="3" style="border:none;"></td>
         <td class="text-right total-label">
-            Cicilan {{ $i + 1 }}
+            Pembayaran {{ $i + 1 }}
             ({{ \Carbon\Carbon::parse($pay->tanggal_bayar)->format('d/m/Y') }})
         </td>
         <td class="text-right total-amount">Rp {{ number_format($pay->jumlah) }}</td>

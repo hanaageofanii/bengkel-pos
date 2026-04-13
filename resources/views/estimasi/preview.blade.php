@@ -88,7 +88,6 @@
 
 <hr style="border: 1px solid black;">
 
-{{-- ✅ Judul ESTIMASI, bukan INVOICE --}}
 <div class="invoice-title">ESTIMASI</div>
 
 <table class="outer-table">
@@ -103,11 +102,13 @@
                 <table class="inner-table">
                     <tr>
                         <td>Nama</td>
-                        <td>{{ $data['pelanggan']->nama }}</td>
+                        <td></td>
                     </tr>
                     <tr>
                         <td>Merk / Type</td>
-                        <td>{{ $data['pelanggan']->merk_mobil }}</td>
+                        <td>
+                            {{ $data['pelanggan']->merk_mobil }} {{ $data['pelanggan']->model_mobil }}
+                        </td>
                     </tr>
                     <tr>
                         <td>No. Polisi</td>

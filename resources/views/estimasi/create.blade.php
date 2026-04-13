@@ -35,7 +35,6 @@
     </div>
     <div class="inv-subtitle">Preview estimasi biaya servis & perbaikan kendaraan</div>
 
-    {{-- ✅ action ke estimasi.preview, bukan invoice.store --}}
     <form method="POST" action="{{ route('estimasi.preview') }}">
         @csrf
         <div class="inv-card">
