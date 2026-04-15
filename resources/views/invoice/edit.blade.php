@@ -232,7 +232,6 @@
         </div>
     </div>
     <div class="mz-field">
-        {{-- ✅ value lama harus di-load --}}
         <textarea name="notes" rows="3" class="mz-textarea"
                   placeholder="Catatan tambahan...">{{ old('notes', $invoice->notes) }}</textarea>
     </div>

@@ -3,6 +3,30 @@ function setTheme(theme) {
     localStorage.setItem("theme", theme);
 }
 
+function showStockPopup(type, message) {
+    const popup = document.getElementById("stock-popup");
+    const icon = document.getElementById("stock-popup-icon");
+    const title = document.getElementById("stock-popup-title");
+    const msg = document.getElementById("stock-popup-msg");
+
+    if (type === "habis") {
+        icon.textContent = "🚫";
+        title.textContent = "Stok Habis";
+        title.style.color = "var(--mz-red, #f26c6c)";
+    } else {
+        icon.textContent = "⚠️";
+        title.textContent = "Peringatan Stok";
+        title.style.color = "var(--mz-yellow, #f5c542)";
+    }
+
+    msg.textContent = message;
+    popup.style.display = "flex";
+}
+
+function closeStockPopup() {
+    document.getElementById("stock-popup").style.display = "none";
+}
+
 function invoiceForm() {
     return {
         tipePelanggan: "pribadi",
@@ -51,13 +75,26 @@ function invoiceForm() {
                 harga_pribadi: 0,
                 harga_perusahaan: 0,
             });
+
             this.$nextTick(() => {
-                $(".select2-jasa").select2({
-                    placeholder: "Cari jasa...",
-                    allowClear: true,
-                });
-                // Re-bind Select2 change setiap kali baris baru ditambah
-                bindSelect2Jasa();
+                const selects = document.querySelectorAll(".select2-jasa");
+                const last = selects[selects.length - 1];
+                const index = this.jasa.length - 1;
+
+                last.setAttribute("data-index", index);
+
+                if ($(last).data("select2")) $(last).select2("destroy");
+
+                $(last)
+                    .select2({
+                        placeholder: "Cari jasa...",
+                        allowClear: true,
+                        width: "100%",
+                    })
+                    .on("change", (e) => {
+                        const i = parseInt(e.target.getAttribute("data-index"));
+                        this.setJasa(e, i);
+                    });
             });
         },
 
@@ -90,13 +127,27 @@ function invoiceForm() {
                 harga_pribadi: 0,
                 harga_perusahaan: 0,
             });
+
             this.$nextTick(() => {
-                $(".select2-barang").select2({
-                    placeholder: "Cari barang...",
-                    allowClear: true,
-                });
-                // Re-bind Select2 change setiap kali baris baru ditambah
-                bindSelect2Barang();
+                document
+                    .querySelectorAll(".select2-barang")
+                    .forEach((el, i) => {
+                        if (!$(el).data("select2")) {
+                            el.setAttribute("data-index", i);
+                            $(el)
+                                .select2({
+                                    placeholder: "Cari barang...",
+                                    allowClear: true,
+                                    width: "100%",
+                                })
+                                .on("change", (e) => {
+                                    const idx = parseInt(
+                                        e.target.getAttribute("data-index"),
+                                    );
+                                    this.setBarang(e, idx);
+                                });
+                        }
+                    });
             });
         },
 
@@ -110,12 +161,18 @@ function invoiceForm() {
             let stock = +o.dataset.stock;
 
             if (stock <= 0) {
-                alert("STOCK HABIS");
+                showStockPopup(
+                    "habis",
+                    `${o.dataset.nama} sudah tidak tersedia.`,
+                );
                 return;
             }
 
             if (stock <= 5) {
-                alert(`PERINGATAN: Stock ${o.dataset.nama} tinggal ${stock}`);
+                showStockPopup(
+                    "warning",
+                    `Sisa stok ${o.dataset.nama} tinggal ${stock} unit.`,
+                );
             }
 
             let hargaDipakai =
@@ -135,7 +192,10 @@ function invoiceForm() {
         updateQty(i) {
             let b = this.barang[i];
             if (b.qty > b.stock) {
-                alert("Qty melebihi stock");
+                showStockPopup(
+                    "warning",
+                    `Qty melebihi stok. Maksimal ${b.stock} unit.`,
+                );
                 b.qty = b.stock;
             }
         },
@@ -177,49 +237,24 @@ function bindSelect2Pelanggan() {
             let tipe = $(this).find(":selected").data("tipe") || "pribadi";
             let alpine = getAlpine();
             if (alpine) {
-                // Update langsung ke Alpine state — ini yang fix masalah utama
                 alpine.tipePelanggan = tipe;
                 alpine.updateAllPrices();
             }
         });
 }
 
-function bindSelect2Jasa() {
-    $(".select2-jasa")
-        .off("change.s2")
-        .on("change.s2", function () {
-            // Dispatch native event supaya Alpine @change="setJasa" berjalan
-            this.dispatchEvent(new Event("change"));
-        });
-}
-
-function bindSelect2Barang() {
-    $(".select2-barang")
-        .off("change.s2")
-        .on("change.s2", function () {
-            this.dispatchEvent(new Event("change"));
-        });
-}
-
 $(document).ready(function () {
-    // Init Select2
     $('[name="pelanggan_id"]').select2({
         placeholder: "Cari pelanggan / plat nomor",
         allowClear: true,
+        width: "100%",
     });
-
-    $(".select2-jasa").select2({
-        placeholder: "Cari jasa...",
-        allowClear: true,
-    });
-
-    $(".select2-barang").select2({
-        placeholder: "Cari barang...",
-        allowClear: true,
-    });
-
-    // Bind event handler yang benar
     bindSelect2Pelanggan();
-    bindSelect2Jasa();
-    bindSelect2Barang();
+
+    $(".select2-jasa").each(function (i, el) {
+        $(el).select2({ width: "100%", placeholder: "Cari jasa..." });
+    });
+    $(".select2-barang").each(function (i, el) {
+        $(el).select2({ width: "100%", placeholder: "Cari barang..." });
+    });
 });

@@ -11,6 +11,7 @@ use App\Http\Controllers\JasaController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstimasiController;
+use App\Http\Controllers\SelfBillingController;
 
 
 
@@ -133,3 +134,20 @@ Route::get('/dashboard/absensi-rekap', [DashboardController::class, 'absensiReka
 //estimasi
 Route::get('/estimasi',        [EstimasiController::class, 'create'])->name('estimasi.create');
 Route::post('/estimasi/preview', [EstimasiController::class, 'preview'])->name('estimasi.preview');
+
+// routes/web.php
+Route::prefix('selfbilling')->name('selfbilling.')->group(function () {
+    Route::get('/',             [SelfBillingController::class, 'index'])->name('index');
+    Route::get('/create',       [SelfBillingController::class, 'create'])->name('create');
+    Route::post('/',            [SelfBillingController::class, 'store'])->name('store');
+
+    // Route untuk Detail (Halaman yang ada history bayar & form cicilan)
+    Route::get('/{id}',         [SelfBillingController::class, 'show'])->name('show');
+
+    // Route untuk Proses Simpan Cicilan (Bayar)
+    Route::post('/{id}/pay',    [SelfBillingController::class, 'storePayment'])->name('pay');
+
+    Route::patch('/{id}/notes', [SelfBillingController::class, 'updateNotes'])->name('notes');
+    Route::put('/{id}',         [SelfBillingController::class, 'update'])->name('update');
+    Route::delete('/{id}',      [SelfBillingController::class, 'destroy'])->name('destroy');
+});

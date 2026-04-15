@@ -1,0 +1,656 @@
+/* ═══════════════════════════════════════════════════════
+   selfbilling.css — Satu file, tidak ada deklarasi ganda
+════════════════════════════════════════════════════════ */
+
+/* ── Base reset untuk SVG ───────────────────────────────────────────────── */
+svg {
+    display: block;
+    flex-shrink: 0;
+    overflow: visible;
+}
+svg[viewBox] {
+    width: 24px;
+    height: 24px;
+}
+svg path,
+svg circle,
+svg rect {
+    transition: none !important;
+}
+
+/* ── Page header ────────────────────────────────────────────────────────── */
+.page-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    margin-bottom: 24px;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+.page-title-text {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    line-height: 1;
+}
+.page-subtitle {
+    font-size: 12px;
+    color: var(--muted);
+    margin-top: 5px;
+}
+.count-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    background: rgba(242, 108, 108, 0.12);
+    border: 1px solid rgba(242, 108, 108, 0.25);
+    border-radius: 20px;
+    padding: 5px 13px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #f26c6c;
+    margin-top: 10px;
+}
+.count-chip svg {
+    width: 12px;
+    height: 12px;
+    fill: #f26c6c;
+}
+
+/* ── Wrapper ─────────────────────────────────────────────────────────────── */
+.sb-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+
+/* ── Stat cards ─────────────────────────────────────────────────────────── */
+.sb-stats {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+.sb-stat-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+}
+.sb-stat-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sb-stat-icon svg {
+    fill: #fff;
+}
+.sb-icon-blue {
+    background: linear-gradient(135deg, #3b82f6, #6366f1);
+}
+.sb-icon-purple {
+    background: linear-gradient(135deg, #8b5cf6, #a855f7);
+}
+.sb-icon-yellow {
+    background: linear-gradient(135deg, #f59e0b, #fbbf24);
+}
+.sb-icon-red {
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+}
+.sb-stat-label {
+    font-size: 0.78rem;
+    color: var(--muted);
+    margin-bottom: 4px;
+}
+.sb-stat-value {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    font-family: "Rajdhani", sans-serif;
+}
+.sb-val-danger {
+    color: #f87171;
+}
+
+/* ── Alert ──────────────────────────────────────────────────────────────── */
+.sb-alert {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 16px;
+    background: rgba(34, 197, 94, 0.1);
+    border: 1px solid rgba(34, 197, 94, 0.2);
+    color: #4ade80;
+    font-size: 0.85rem;
+}
+.sb-alert svg {
+    fill: #4ade80;
+}
+
+/* ── Tombol Tambah ──────────────────────────────────────────────────────── */
+.sb-btn-add {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 20px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+}
+.sb-btn-add svg {
+    fill: #fff;
+}
+.sb-btn-add:hover {
+    opacity: 0.85;
+}
+
+/* ── Table card ─────────────────────────────────────────────────────────── */
+.table-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+}
+.table-card-header {
+    padding: 20px 24px;
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+.table-card-title {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.3px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.table-card-title span.dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #f26c6c;
+    display: inline-block;
+    box-shadow: 0 0 0 3px rgba(242, 108, 108, 0.2);
+    animation: pulse 2s infinite;
+}
+@keyframes pulse {
+    0%,
+    100% {
+        box-shadow: 0 0 0 3px rgba(242, 108, 108, 0.2);
+    }
+    50% {
+        box-shadow: 0 0 0 6px rgba(242, 108, 108, 0);
+    }
+}
+
+/* ── Search ─────────────────────────────────────────────────────────────── */
+.search-wrap {
+    position: relative;
+}
+.search-wrap svg {
+    position: absolute;
+    left: 11px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 14px;
+    height: 14px;
+    fill: var(--muted);
+    pointer-events: none;
+}
+.search-input {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--text);
+    font-family: "Inter", sans-serif;
+    font-size: 12.5px;
+    padding: 7px 12px 7px 32px;
+    width: 200px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+.search-input::placeholder {
+    color: var(--muted);
+}
+.search-input:focus {
+    border-color: #6366f1;
+}
+
+/* ── Table ──────────────────────────────────────────────────────────────── */
+.inv-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.inv-table thead tr {
+    background: var(--surface2);
+}
+.inv-table th {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--muted);
+    padding: 12px 20px;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+.inv-table th.text-right {
+    text-align: right;
+}
+.inv-table td {
+    padding: 14px 20px;
+    font-size: 13px;
+    color: var(--text-soft);
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s;
+}
+.inv-table tbody tr:last-child td {
+    border-bottom: none;
+}
+.inv-table tbody tr:hover td {
+    background: var(--surface2);
+}
+.inv-table td.text-right {
+    text-align: right;
+}
+
+/* ── Cell components ────────────────────────────────────────────────────── */
+.info-barang {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+}
+.info-tanggal {
+    font-size: 11px;
+    color: var(--muted);
+    margin-top: 2px;
+}
+
+.customer-cell {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+.avatar-circle {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: rgba(79, 142, 247, 0.15);
+    color: #4f8ef7;
+    font-family: "Rajdhani", sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border: 1px solid rgba(79, 142, 247, 0.2);
+}
+.customer-name {
+    font-weight: 600;
+    font-size: 13px;
+    color: var(--text);
+}
+
+.amount-muted {
+    font-size: 12px;
+    color: var(--muted);
+}
+.amount-sisa {
+    font-family: "Rajdhani", sans-serif;
+    font-weight: 700;
+    font-size: 15px;
+}
+.amount-sisa.lunas {
+    color: var(--mz-green, #4ade80);
+}
+.amount-sisa.hutang {
+    color: var(--mz-red, #f87171);
+}
+
+/* ── Status Badge ────────────────────────────────────────────────────────── */
+.status-badge {
+    display: inline-block;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    padding: 3px 10px;
+    border-radius: 6px;
+    border: 1px solid;
+    white-space: nowrap;
+}
+.status-lunas {
+    background: rgba(62, 240, 138, 0.1);
+    color: var(--mz-green, #4ade80);
+    border-color: var(--mz-green, #4ade80);
+}
+.status-cicil {
+    background: rgba(245, 197, 66, 0.1);
+    color: var(--mz-yellow, #fbbf24);
+    border-color: var(--mz-yellow, #fbbf24);
+}
+.status-hutang {
+    background: rgba(242, 108, 108, 0.1);
+    color: var(--mz-red, #f87171);
+    border-color: var(--mz-red, #f87171);
+}
+
+/* ── Empty state ─────────────────────────────────────────────────────────── */
+.empty-state {
+    text-align: center;
+    padding: 56px 20px;
+}
+.empty-state svg {
+    width: 48px;
+    height: 48px;
+    fill: var(--muted);
+    margin: 0 auto 14px;
+    opacity: 0.4;
+}
+.empty-state p {
+    color: var(--muted);
+    font-size: 13px;
+}
+
+/* ── Action buttons ─────────────────────────────────────────────────────── */
+.sb-actions {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+}
+.sb-act {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition:
+        background 0.18s,
+        transform 0.15s;
+    background: transparent;
+    padding: 0;
+    line-height: 1;
+    text-decoration: none;
+}
+.sb-act:active {
+    transform: scale(0.88);
+}
+.sb-act-view svg {
+    fill: #818cf8;
+}
+.sb-act-view:hover {
+    background: rgba(99, 102, 241, 0.15);
+}
+.sb-act-edit svg {
+    fill: #fbbf24;
+}
+.sb-act-edit:hover {
+    background: rgba(251, 191, 36, 0.15);
+}
+.sb-act-del svg {
+    fill: #f87171;
+}
+.sb-act-del:hover {
+    background: rgba(248, 113, 113, 0.15);
+}
+
+/* ── Overlay / Modal ──────────────────────────────────────────────────────
+   SATU definisi saja. Gunakan display + opacity + pointer-events dari JS.
+─────────────────────────────────────────────────────────────────────────── */
+.sb-overlay {
+    display: none; /* JS set ke "flex" saat buka */
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(6px);
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    opacity: 0; /* JS animasikan ke 1 */
+    pointer-events: none; /* JS set ke "all" saat buka */
+    transition: opacity 0.25s;
+}
+.sb-modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    width: 100%;
+    max-width: 500px;
+    box-shadow: 0 32px 64px rgba(0, 0, 0, 0.45);
+    transform: translateY(16px) scale(0.97);
+    transition: transform 0.25s;
+    overflow: hidden;
+    will-change: transform;
+}
+.sb-modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 22px;
+    border-bottom: 1px solid var(--border);
+}
+.sb-modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text);
+}
+.sb-modal-icon {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+.sb-modal-x {
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+.sb-modal-x:hover {
+    background: rgba(148, 163, 184, 0.12);
+}
+.sb-modal-body {
+    padding: 22px;
+}
+.sb-modal-foot {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 10px;
+    padding: 16px 22px;
+    border-top: 1px solid var(--border);
+}
+
+/* ── Form dalam modal ────────────────────────────────────────────────────── */
+.sb-form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+}
+.sb-form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+.sb-form-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--muted);
+}
+.sb-optional {
+    font-size: 0.68rem;
+    color: #818cf8;
+    background: rgba(99, 102, 241, 0.1);
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-weight: 500;
+}
+.sb-input {
+    padding: 9px 13px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    color: var(--text);
+    font-size: 0.88rem;
+    outline: none;
+    font-family: inherit;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+.sb-input:focus {
+    border-color: #6366f1;
+}
+.sb-input::placeholder {
+    color: var(--muted);
+    opacity: 0.6;
+}
+.sb-textarea {
+    resize: vertical;
+    min-height: 76px;
+    line-height: 1.6;
+}
+.sb-input-hint {
+    font-size: 0.78rem;
+    color: #818cf8;
+    margin-top: 2px;
+    min-height: 1em;
+}
+
+/* ── Delete body ─────────────────────────────────────────────────────────── */
+.sb-del-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 14px;
+}
+.sb-del-icon-wrap {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    background: rgba(239, 68, 68, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.sb-del-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 0;
+}
+.sb-del-desc {
+    font-size: 0.84rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.65;
+    max-width: 320px;
+}
+.sb-del-strong {
+    color: var(--text);
+}
+.sb-del-amount {
+    color: #f87171;
+}
+
+/* ── Modal buttons ────────────────────────────────────────────────────────── */
+.sb-btn-ghost {
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+    background: transparent;
+    color: var(--muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+.sb-btn-ghost:hover {
+    border-color: #6366f1;
+    color: var(--text);
+}
+
+.sb-btn-save {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #6366f1, #8b5cf6);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+.sb-btn-save:hover {
+    opacity: 0.85;
+}
+
+.sb-btn-del {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 20px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #ef4444, #dc2626);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: opacity 0.2s;
+    font-family: inherit;
+}
+.sb-btn-del:hover {
+    opacity: 0.85;
+}

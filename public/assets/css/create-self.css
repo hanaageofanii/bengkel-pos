@@ -1,0 +1,232 @@
+/* ── VARIABLE TOKENS ── */
+:root {
+    --mz-bg: #0f1117;
+    --mz-surface: #181c27;
+    --mz-surface2: #1e2333;
+    --mz-border: #262c3d;
+    --mz-text: #e4e8f0;
+    --mz-muted: #6b7694;
+}
+
+/* LIGHT MODE */
+[data-theme="light"] {
+    --mz-bg: #ffffff;
+    --mz-surface: #f9fafb;
+    --mz-surface2: #f1f5f9;
+    --mz-border: #e5e7eb;
+    --mz-text: #111827;
+    --mz-muted: #6b7280;
+    --mz-accent: #4f8ef7;
+    --mz-accent2: #1e90ff;
+    --mz-muted: #6b7694;
+    --mz-green: #3ef08a;
+    --mz-red: #f26c6c;
+    --mz-yellow: #f5c542;
+    --mz-orange: #f5923e;
+}
+
+.inv-wrap {
+    font-family: "Inter", sans-serif;
+    color: var(--mz-text);
+}
+
+/* breadcrumb & header */
+.inv-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--mz-muted);
+    margin-bottom: 10px;
+}
+.inv-breadcrumb a {
+    color: var(--mz-muted);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+.inv-breadcrumb a:hover {
+    color: var(--mz-accent);
+}
+.inv-breadcrumb span {
+    color: var(--mz-border);
+}
+.inv-title {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 26px;
+    font-weight: 700;
+    letter-spacing: 0.4px;
+    line-height: 1;
+}
+.inv-subtitle {
+    font-size: 12px;
+    color: var(--mz-muted);
+    margin-top: 4px;
+    margin-bottom: 24px;
+}
+
+/* ── WRAPPER (Sama dengan ukuran Invoice) ── */
+.sb-wrapper {
+    width: 100%;
+    margin: 0 auto;
+}
+
+.sb-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.85rem;
+    margin-bottom: 12px;
+    color: var(--sb-muted);
+    font-family: "Inter", sans-serif;
+}
+.sb-breadcrumb a {
+    color: var(--sb-accent);
+    text-decoration: none;
+}
+
+.sb-title-main {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--sb-text);
+    margin-bottom: 4px;
+}
+.sb-subtitle-main {
+    font-size: 0.9rem;
+    color: var(--sb-muted);
+    margin-bottom: 24px;
+    font-family: "Inter", sans-serif;
+}
+
+/* ── CARD STRUCTURE ── */
+.sb-card-full {
+    background: var(--sb-bg-card);
+    border: 1px solid var(--sb-border);
+    border-radius: 12px; /* Ukuran radius standard dashboard */
+    position: relative;
+    width: 100%;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.sb-card-stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--sb-accent), var(--sb-teal));
+    border-radius: 12px 12px 0 0;
+}
+
+.sb-card-body {
+    padding: 30px;
+}
+
+/* ── FORM LAYOUT ── */
+.sb-section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.sb-section-title {
+    font-family: "Inter", sans-serif;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--sb-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.sb-section-title svg {
+    width: 18px;
+    height: 18px;
+    fill: var(--sb-accent);
+}
+
+.sb-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.sb-field {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 20px;
+}
+
+.sb-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--sb-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.sb-input-style {
+    background: var(--sb-input-bg);
+    border: 1px solid var(--sb-border);
+    border-radius: 8px;
+    padding: 12px 15px;
+    color: var(--sb-text);
+    font-size: 0.95rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: 0.2s;
+}
+
+.sb-input-style:focus {
+    outline: none;
+    border-color: var(--sb-accent);
+}
+
+/* ── SUMMARY SECTION ── */
+.sb-summary-bar {
+    background: rgba(15, 23, 42, 0.4);
+    border-radius: 10px;
+    padding: 20px 25px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+}
+
+.sb-total-label {
+    color: var(--sb-muted);
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+.sb-total-val {
+    font-family: "Rajdhani", sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--sb-teal);
+}
+
+/* ── FOOTER ── */
+.sb-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 30px;
+}
+
+.btn-sb-back {
+    padding: 10px 20px;
+    border-radius: 8px;
+    color: var(--sb-muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+}
+
+.btn-sb-save {
+    background: linear-gradient(135deg, var(--sb-accent), #8b5cf6);
+    color: #fff;
+    border: none;
+    padding: 10px 30px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 0.9rem;
+}

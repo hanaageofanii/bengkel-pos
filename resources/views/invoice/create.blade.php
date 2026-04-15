@@ -5,10 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('assets/css/create-invoice.css') }}">
-<!-- jQuery -->
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<!-- Select2 -->
 <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
@@ -39,7 +36,7 @@
                 <div class="inv-grid">
                     <div class="mz-field">
                         <label class="mz-label">Pelanggan</label>
-                        <select name="pelanggan_id" class="mz-select select2" @change="setPelanggan($event)">
+                        <select name="pelanggan_id" class="mz-select select2">
                             <option value="">Pilih pelanggan</option>
                             @foreach($pelanggans as $p)
                                 <option value="{{ $p->id }}" data-tipe="{{ $p->tipe }}">
@@ -106,11 +103,9 @@
                         Tambah
                     </button>
                 </div>
-                <template x-for="(j,index) in jasa" :key="j.id + '-' + index">
+                <template x-for="(j,index) in jasa" :key="index">
                     <div class="row-item row-12" style="margin-bottom:10px">
-                        <select class="mz-select select2-jasa"
-                        x-model="j.id"
-                        @change="setJasa($event,index)">
+                        <select class="mz-select select2-jasa" :data-index="index">
                             <option value="">— Pilih Jasa —</option>
                             @foreach($jasas as $js)
                                 <option value="{{ $js->id }}"
@@ -141,21 +136,21 @@
                         Tambah
                     </button>
                 </div>
-                <template x-for="(b,index) in barang" :key="b.id + '-' + index">
+                <template x-for="(b,index) in barang" :key="index">
                     <div class="row-item row-part" style="margin-bottom:10px">
-                        <select class="mz-select select2-barang" @change="setBarang($event,index)">
-                                <option value="">— Pilih Barang —</option>
-                                @foreach($barangs as $br)
-                                    <option value="{{ $br->id }}"
-                                            data-nama="{{ $br->nama }}"
-                                            data-pribadi="{{ $br->harga_pribadi }}"
-                                            data-perusahaan="{{ $br->harga_perusahaan }}"
-                                            data-stock="{{ $br->stok }}"
-                                            {{ $br->stok <= 0 ? 'disabled' : '' }}>
-                                        {{ $br->nama }}{{ $br->stok <= 0 ? ' — Stok Habis' : '' }}
-                                    </option>
-                                @endforeach
-                            </select>
+                        <select class="mz-select select2-barang" :data-index="index">
+                            <option value="">— Pilih Barang —</option>
+                            @foreach($barangs as $br)
+                                <option value="{{ $br->id }}"
+                                        data-nama="{{ $br->nama }}"
+                                        data-pribadi="{{ $br->harga_pribadi }}"
+                                        data-perusahaan="{{ $br->harga_perusahaan }}"
+                                        data-stock="{{ $br->stok }}"
+                                        {{ $br->stok <= 0 ? 'disabled' : '' }}>
+                                    {{ $br->nama }}{{ $br->stok <= 0 ? ' — Stok Habis' : '' }}
+                                </option>
+                            @endforeach
+                        </select>
                         <input type="hidden" name="barang_id[]" :value="b.id">
                         <input type="hidden" name="barang_nama[]" :value="b.nama">
                         <input type="number" min="1" name="barang_qty[]" x-model="b.qty" placeholder="Qty" class="mz-input" style="text-align:center">
@@ -256,6 +251,17 @@
             </div>
         </div>
     </form>
+
+    {{-- Stock Popup — di luar form --}}
+    <div id="stock-popup" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;z-index:9999;align-items:center;justify-content:center;background:rgba(0,0,0,0.5)">
+        <div style="background:var(--mz-surface);border:1px solid var(--mz-border);border-radius:12px;padding:28px 32px;max-width:360px;width:90%;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,0.5)">
+            <div id="stock-popup-icon" style="font-size:40px;margin-bottom:12px"></div>
+            <div id="stock-popup-title" style="font-family:'Rajdhani',sans-serif;font-size:20px;font-weight:700;margin-bottom:8px"></div>
+            <div id="stock-popup-msg" style="font-size:13px;color:var(--mz-muted);margin-bottom:20px"></div>
+            <button onclick="closeStockPopup()" style="padding:8px 28px;border-radius:6px;background:linear-gradient(135deg,#1a6fe8,var(--mz-accent,#4f8ef7));border:none;color:#fff;font-family:'Rajdhani',sans-serif;font-size:14px;font-weight:700;letter-spacing:0.8px;cursor:pointer">OK</button>
+        </div>
+    </div>
+
 </div>
 <script src="{{ asset('assets/js/create.invoice.js') }}"></script>
 @endsection

@@ -1,6 +1,19 @@
 /* ══════════════════════════════════════
-           THEME VARIABLES
-        ══════════════════════════════════════ */
+   ANTI-FLASH: matikan semua transition
+   saat halaman pertama kali load.
+   Class ini di-remove oleh JS setelah
+   paint pertama selesai.
+══════════════════════════════════════ */
+.no-transition *,
+.no-transition *::before,
+.no-transition *::after {
+    transition: none !important;
+    animation: none !important;
+}
+
+/* ══════════════════════════════════════
+   THEME VARIABLES
+══════════════════════════════════════ */
 :root {
     --sidebar-w: 240px;
 }
@@ -17,7 +30,6 @@
     --muted: #6b7694;
     --red: #f26c6c;
     --green: #3ef08a;
-    --sidebar-bg: #13172100;
     --sidebar-surface: #181c27;
     --sidebar-border: #262c3d;
     --sidebar-text: #c8d0e8;
@@ -40,7 +52,6 @@
     --muted: #718096;
     --red: #e53e3e;
     --green: #38a169;
-    --sidebar-bg: #1b2a3b;
     --sidebar-surface: #1b2a3b;
     --sidebar-border: rgba(255, 255, 255, 0.1);
     --sidebar-text: #cbd5e1;
@@ -52,8 +63,8 @@
 }
 
 /* ══════════════════════════════════════
-           BASE
-        ══════════════════════════════════════ */
+   BASE
+══════════════════════════════════════ */
 *,
 *::before,
 *::after {
@@ -66,14 +77,26 @@ body {
     font-family: "Inter", sans-serif;
     background: var(--bg);
     color: var(--text);
+    /* transition dipasang HANYA saat user ganti tema manual,
+       bukan saat load — dihandle lewat .no-transition di atas */
     transition:
         background 0.25s,
         color 0.25s;
 }
 
+svg {
+    display: block;
+    flex-shrink: 0;
+    overflow: visible;
+}
+
+svg path {
+    transition: none !important;
+}
+
 /* ══════════════════════════════════════
-           SIDEBAR
-        ══════════════════════════════════════ */
+   SIDEBAR
+══════════════════════════════════════ */
 .sidebar {
     position: fixed;
     top: 0;
@@ -102,7 +125,7 @@ body {
     background: linear-gradient(90deg, #1e90ff, #4f8ef7, #8ab6ff);
 }
 
-/* ── logo area ── */
+/* ── logo ── */
 .sidebar-logo {
     padding: 20px 20px 16px;
     border-bottom: 1px solid var(--sidebar-border);
@@ -136,7 +159,7 @@ body {
     text-transform: uppercase;
 }
 
-/* ── nav section label ── */
+/* ── nav label ── */
 .nav-label {
     font-size: 9.5px;
     font-weight: 700;
@@ -199,10 +222,129 @@ body {
     opacity: 1;
 }
 
-/* ── theme toggle in sidebar ── */
+/* ── nav group (dropdown) ── */
+.nav-group {
+    margin-bottom: 2px;
+}
+
+.nav-group-toggle {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 12px;
+    border-radius: 7px;
+    cursor: pointer;
+    color: var(--sidebar-text);
+    font-size: 13px;
+    font-weight: 500;
+    transition:
+        background 0.15s,
+        color 0.15s;
+    user-select: none;
+    border-left: 3px solid transparent;
+}
+
+.nav-group-toggle:hover,
+.nav-group-toggle.active {
+    background: var(--sidebar-hover-bg);
+    color: #fff;
+}
+
+.nav-group-toggle.active {
+    background: var(--sidebar-active-bg);
+    border-left-color: var(--sidebar-active-border);
+    font-weight: 600;
+}
+
+.nav-group-left {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.nav-group-left svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+    flex-shrink: 0;
+    opacity: 0.75;
+}
+
+.nav-group-toggle.active .nav-group-left svg {
+    opacity: 1;
+}
+
+.chevron {
+    width: 14px;
+    height: 14px;
+    fill: currentColor;
+    opacity: 0.5;
+    transition: transform 0.25s;
+    flex-shrink: 0;
+}
+
+.nav-group-toggle.open .chevron {
+    transform: rotate(180deg);
+}
+
+/* ── nav sub ── */
+.nav-sub {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.nav-sub.open {
+    max-height: 300px;
+}
+
+.nav-sub-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 7px 12px 7px 38px;
+    border-radius: 7px;
+    font-size: 12.5px;
+    color: var(--sidebar-text);
+    text-decoration: none;
+    margin-bottom: 1px;
+    transition:
+        background 0.15s,
+        color 0.15s;
+    opacity: 0.8;
+}
+
+.nav-sub-item:hover {
+    background: var(--sidebar-hover-bg);
+    color: #fff;
+    opacity: 1;
+}
+
+.nav-sub-item.active {
+    color: #fff;
+    opacity: 1;
+    font-weight: 500;
+}
+
+.sub-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+    opacity: 0.5;
+    flex-shrink: 0;
+}
+
+.nav-sub-item.active .sub-dot {
+    opacity: 1;
+    background: var(--accent);
+}
+
+/* ── theme toggle ── */
 .sidebar-theme {
     padding: 10px 12px 4px;
 }
+
 .theme-label {
     font-size: 9.5px;
     font-weight: 700;
@@ -212,6 +354,7 @@ body {
     margin-bottom: 7px;
     padding-left: 2px;
 }
+
 .theme-toggle {
     display: flex;
     background: rgba(255, 255, 255, 0.06);
@@ -220,6 +363,7 @@ body {
     padding: 3px;
     gap: 3px;
 }
+
 .theme-btn {
     flex: 1;
     display: flex;
@@ -239,12 +383,14 @@ body {
         background 0.18s,
         color 0.18s;
 }
+
 .theme-btn svg {
     width: 13px;
     height: 13px;
     fill: currentColor;
     flex-shrink: 0;
 }
+
 .theme-btn.active {
     background: rgba(79, 142, 247, 0.2);
     color: #4f8ef7;
@@ -279,24 +425,19 @@ body {
     fill: #f26c6c;
     flex-shrink: 0;
 }
+
 .btn-logout:hover {
     background: rgba(242, 108, 108, 0.1);
 }
 
 /* ══════════════════════════════════════
-           MAIN CONTENT
-        ══════════════════════════════════════ */
+   MAIN CONTENT
+══════════════════════════════════════ */
 .main-content {
     margin-left: var(--sidebar-w);
     min-height: 100vh;
 }
 
 .content-inner {
-    padding: 28px 28px;
+    padding: 28px;
 }
-
-/* [data-theme="dark"] body {
-            background-image:
-                repeating-linear-gradient(0deg,   transparent, transparent 39px, rgba(38,44,61,.5) 39px, rgba(38,44,61,.5) 40px),
-                repeating-linear-gradient(90deg,  transparent, transparent 39px, rgba(38,44,61,.5) 39px, rgba(38,44,61,.5) 40px);
-        } */

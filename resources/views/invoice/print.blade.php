@@ -89,6 +89,12 @@
 </table>
 
 <!-- JASA -->
+@php
+    $minJasaRows = 10;
+    $jasaCount   = count($invoice->jasa);
+    $totalJasaRows = max($jasaCount, $minJasaRows);
+@endphp
+
 <table>
     <tr class="bold text-center">
         <td width="5%">No</td>
@@ -98,17 +104,19 @@
         <td width="15%">Harga Jasa</td>
     </tr>
 
-    @php $no = 1; @endphp
-    @foreach($invoice->jasa as $j)
-    <tr>
-        <td class="text-center">{{ $no }}</td>
-        <td>{{ $invoice->keluhan[$no-1] ?? '' }}</td>
-        <td class="text-center">{{ $no }}</td>
-        <td>{{ $j['nama'] }}</td>
-        <td class="text-right">Rp {{ number_format($j['harga']) }}</td>
+    @for($i = 0; $i < $totalJasaRows; $i++)
+    <tr style="{{ !isset($invoice->jasa[$i]) ? 'height: 14px;' : '' }}">
+        <td class="text-center">{{ isset($invoice->jasa[$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $invoice->keluhan[$i] ?? '' }}</td>
+        <td class="text-center">{{ isset($invoice->jasa[$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $invoice->jasa[$i]['nama'] ?? '' }}</td>
+        <td class="text-right">
+            @if(isset($invoice->jasa[$i]))
+                Rp {{ number_format($invoice->jasa[$i]['harga']) }}
+            @endif
+        </td>
     </tr>
-    @php $no++; @endphp
-    @endforeach
+    @endfor
 
     <tr class="bold">
         <td colspan="3" style="border: none;"></td>
@@ -118,6 +126,12 @@
 </table>
 
 <!-- SPAREPART -->
+@php
+    $minBarangRows = 10;
+    $barangCount   = count($invoice->barang);
+    $totalBarangRows = max($barangCount, $minBarangRows);
+@endphp
+
 <table>
     <tr class="bold text-center">
         <td>No</td>
@@ -127,15 +141,23 @@
         <td>Total</td>
     </tr>
 
-    @foreach($invoice->barang as $i => $b)
-    <tr>
-        <td class="text-center">{{ $i+1 }}</td>
-        <td>{{ $b['nama'] }}</td>
-        <td class="text-center">{{ $b['qty'] }}</td>
-        <td class="text-right">Rp {{ number_format($b['harga']) }}</td>
-        <td class="text-right">Rp {{ number_format($b['total']) }}</td>
+    @for($i = 0; $i < $totalBarangRows; $i++)
+    <tr style="{{ !isset($invoice->barang[$i]) ? 'height: 14px;' : '' }}">
+        <td class="text-center">{{ isset($invoice->barang[$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $invoice->barang[$i]['nama'] ?? '' }}</td>
+        <td class="text-center">{{ isset($invoice->barang[$i]) ? $i + 1 : '' }}</td>
+        <td class="text-right">
+            @if(isset($invoice->barang[$i]))
+                Rp {{ number_format($invoice->barang[$i]['harga']) }}
+            @endif
+        </td>
+        <td class="text-right">
+            @if(isset($invoice->barang[$i]))
+                Rp {{ number_format($invoice->barang[$i]['total']) }}
+            @endif
+        </td>
     </tr>
-    @endforeach
+    @endfor
 
     <tr class="bold">
         <td colspan="3" rowspan="2" class="note-cell" style="border:none; vertical-align:top; padding:4px 6px;">
@@ -197,43 +219,41 @@
 <!-- TTD FOOTER + Rekening -->
 <table class="no-border" style="margin-top: 2px;">
     <tr>
-  <td style="vertical-align: top; padding-top: 0; width: 50%; padding-left: 40px; text-align: left;">
+        <td style="vertical-align: top; padding-top: 0; width: 50%; padding-left: 40px; text-align: left;">
 
-    <div style="font-weight: bold;">
-        Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
-    </div>
+            <div style="font-weight: bold;">
+                Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
+            </div>
 
-    <div style="margin-left: 20px;">
-        Hormat Kami,
-    </div>
+            <div style="margin-left: 20px;">
+                Hormat Kami,
+            </div>
 
-    <div style="position: relative; height: 60px;">
-        <img src="{{ asset('assets/images/ttd.png') }}"
-             style="position: absolute; top: -80px; left: 0; height: 220px;">
-    </div>
+            <div style="position: relative; height: 60px;">
+                <img src="{{ asset('assets/images/ttd.png') }}"
+                     style="position: absolute; top: -80px; left: 0; height: 220px;">
+            </div>
 
-</td>
+        </td>
 
-</div>
-</td>
-    <td style="vertical-align: top; width: 25%; padding: 0 0 0 10px;">
-    <div class="rekening-box">
-        Pembayaran melalui Rekening :
-        <table class="rek-table">
-            <tr>
-                <td class="rek-label">Mandiri</td>
-                <td>: </td>
-                <td class="rek-num"> 1560010520965</td>
-            </tr>
-            <tr>
-                <td class="rek-label">BCA</td>
-                <td>: </td>
-                <td class="rek-num"> 5315064497</td>
-            </tr>
-        </table>
-        <div class="rek-nama">a.n Hari Kuswanto</div>
-    </div>
-</td>
+        <td style="vertical-align: top; width: 25%; padding: 0 0 0 10px;">
+            <div class="rekening-box">
+                Pembayaran melalui Rekening :
+                <table class="rek-table">
+                    <tr>
+                        <td class="rek-label">Mandiri</td>
+                        <td>: </td>
+                        <td class="rek-num"> 1560010520965</td>
+                    </tr>
+                    <tr>
+                        <td class="rek-label">BCA</td>
+                        <td>: </td>
+                        <td class="rek-num"> 5315064497</td>
+                    </tr>
+                </table>
+                <div class="rek-nama">a.n Hari Kuswanto</div>
+            </div>
+        </td>
     </tr>
 </table>
 

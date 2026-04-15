@@ -25,7 +25,7 @@ table {
 
 th,
 td {
-    padding: 6px;
+    padding: 1px;
     border: 1px solid black;
 }
 
@@ -94,7 +94,7 @@ td {
 
 .inner-table td {
     border: 1px solid black;
-    padding: 4px 6px;
+    padding: 1px 2px;
 }
 
 .inner-table td:first-child {
