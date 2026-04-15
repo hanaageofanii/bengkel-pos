@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id" data-theme="dark">
+<html lang="id" data-theme="dark" class="no-transition">
 <head>
     <meta charset="UTF-8">
     <title>@yield('title', 'Dashboard') | 5a Auto Service</title>
@@ -13,7 +13,15 @@
 
 <body>
 
-    <aside class="sidebar">
+    {{-- Overlay mobile --}}
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+
+    {{-- Hamburger (mobile only) --}}
+    <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()" aria-label="Toggle menu">
+        <svg viewBox="0 0 24 24"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+    </button>
+
+    <aside class="sidebar" id="sidebar">
 
         {{-- Logo --}}
         <div class="sidebar-logo">
@@ -35,43 +43,45 @@
                 Dashboard
             </a>
 
-<div class="nav-group {{ request()->routeIs(['invoice.*','estimasi.*','selfbilling.*']) ? 'active' : '' }}">
-<div class="nav-group-toggle {{ request()->routeIs(['invoice.*','estimasi.*','selfbilling.*']) ? 'active' : '' }}"
-     onclick="toggleNavGroup(this)">
-        <div class="nav-group-left">
-            <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H8.3c.12 2.19 1.76 3.42 3.7 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-            Transaksi
-        </div>
-        <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
-    </div>
+            {{-- Transaksi group --}}
+            @php
+                $transaksiActive = request()->routeIs(['invoice.*','estimasi.*','selfbilling.*']);
+            @endphp
+            <div class="nav-group">
+                <div class="nav-group-toggle {{ $transaksiActive ? 'active open' : '' }}"
+                     onclick="toggleNavGroup(this)"
+                     role="button"
+                     aria-expanded="{{ $transaksiActive ? 'true' : 'false' }}">
+                    <div class="nav-group-left">
+                        <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H8.3c.12 2.19 1.76 3.42 3.7 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                        Transaksi
+                    </div>
+                    <svg class="chevron" viewBox="0 0 24 24"><path d="M7.41 8.59L12 13.17l4.59-4.58L18 10l-6 6-6-6z"/></svg>
+                </div>
 
-    <div class="nav-sub {{ request()->routeIs(['invoice.*','estimasi.*','selfbilling.*']) ? 'open' : '' }}">
-            <a href="{{ route('estimasi.create') }}"
-            class="nav-sub-item {{ request()->routeIs('estimasi.*') ? 'active' : '' }}">
-                <span class="sub-dot"></span>
-                Estimasi Harga
-            </a>
-
-            <a href="{{ route('invoice.index') }}"
-            class="nav-sub-item {{ request()->routeIs('invoice.index') || request()->routeIs('invoice.create') ? 'active' : '' }}">
-                <span class="sub-dot"></span>
-                Invoice
-            </a>
-
-            <a href="{{ route('invoice.outstanding') }}"
-            class="nav-sub-item {{ request()->routeIs('invoice.outstanding') ? 'active' : '' }}">
-                <span class="sub-dot"></span>
-                Outstanding
-            </a>
-
-        <a href="{{ route('selfbilling.index') }}"
-           class="nav-sub-item {{ request()->routeIs('selfbilling.*') ? 'active' : '' }}">
-            <span class="sub-dot"></span>
-            Self Billing
-        </a>
-
-    </div>
-</div>
+                <div class="nav-sub {{ $transaksiActive ? 'open' : '' }}">
+                    <a href="{{ route('estimasi.create') }}"
+                       class="nav-sub-item {{ request()->routeIs('estimasi.*') ? 'active' : '' }}">
+                        <span class="sub-dot"></span>
+                        Estimasi Harga
+                    </a>
+                    <a href="{{ route('invoice.index') }}"
+                       class="nav-sub-item {{ request()->routeIs('invoice.index') || request()->routeIs('invoice.create') ? 'active' : '' }}">
+                        <span class="sub-dot"></span>
+                        Invoice
+                    </a>
+                    <a href="{{ route('invoice.outstanding') }}"
+                       class="nav-sub-item {{ request()->routeIs('invoice.outstanding') ? 'active' : '' }}">
+                        <span class="sub-dot"></span>
+                        Outstanding
+                    </a>
+                    <a href="{{ route('selfbilling.index') }}"
+                       class="nav-sub-item {{ request()->routeIs('selfbilling.*') ? 'active' : '' }}">
+                        <span class="sub-dot"></span>
+                        Self Billing
+                    </a>
+                </div>
+            </div>
 
             <div class="nav-label">SDM</div>
 
@@ -109,10 +119,11 @@
 
         </nav>
 
+        {{-- Theme toggle --}}
         <div class="sidebar-theme">
             <div class="theme-label">Tampilan</div>
             <div class="theme-toggle">
-                <button class="theme-btn active" id="btnDark" onclick="setTheme('dark')" title="Dark mode">
+                <button class="theme-btn" id="btnDark" onclick="setTheme('dark')" title="Dark mode">
                     <svg viewBox="0 0 24 24"><path d="M12 3a9 9 0 1 0 9 9c0-.46-.04-.92-.1-1.36a5.389 5.389 0 0 1-4.4 2.26 5.403 5.403 0 0 1-3.14-9.8c-.44-.06-.9-.1-1.36-.1z"/></svg>
                     Gelap
                 </button>
@@ -123,12 +134,20 @@
             </div>
         </div>
 
+        {{-- Footer: profile + logout --}}
         <div class="sidebar-footer">
-            <form method="POST" action="{{ route('logout') }}">
+            <a href="{{ route('profile.edit') }}"
+               class="sidebar-profile {{ request()->routeIs('profile.*') ? 'active' : '' }}">
+                <div class="profile-avatar">
+                    <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                </div>
+                <span class="profile-name">{{ Auth::user()->name }}</span>
+            </a>
+
+            <form method="POST" action="{{ route('logout') }}" class="logout-form">
                 @csrf
-                <button type="submit" class="btn-logout">
+                <button type="submit" class="btn-logout-icon" title="Logout">
                     <svg viewBox="0 0 24 24"><path d="M17 7l-1.41 1.41L18.17 11H8v2h10.17l-2.58 2.58L17 17l5-5-5-5zM4 5h8V3H4c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h8v-2H4V5z"/></svg>
-                    Logout
                 </button>
             </form>
         </div>
@@ -155,28 +174,75 @@
     @endif
 
     <script>
+    /* ══════════════════════════════════════
+       THEME — init sebelum paint pertama
+    ══════════════════════════════════════ */
+    (function () {
+        const saved = localStorage.getItem('theme') || 'dark';
+        document.documentElement.setAttribute('data-theme', saved);
+
+        // Sync tombol setelah DOM siap
+        document.addEventListener('DOMContentLoaded', function () {
+            syncThemeButtons(saved);
+            // Hapus no-transition setelah 1 frame agar tidak flash
+            requestAnimationFrame(function () {
+                requestAnimationFrame(function () {
+                    document.documentElement.classList.remove('no-transition');
+                });
+            });
+        });
+    })();
+
     function setTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         localStorage.setItem('theme', theme);
-        document.getElementById('btnDark').classList.toggle('active', theme === 'dark');
-        document.getElementById('btnLight').classList.toggle('active', theme === 'light');
+        syncThemeButtons(theme);
     }
 
-    (function() {
-        const saved = localStorage.getItem('theme') || 'dark';
-        document.documentElement.setAttribute('data-theme', saved);
-        if (saved === 'light') {
-            document.getElementById('btnDark').classList.remove('active');
-            document.getElementById('btnLight').classList.add('active');
-        }
-    })();
+    function syncThemeButtons(theme) {
+        var btnDark  = document.getElementById('btnDark');
+        var btnLight = document.getElementById('btnLight');
+        if (!btnDark || !btnLight) return;
+        btnDark.classList.toggle('active',  theme === 'dark');
+        btnLight.classList.toggle('active', theme === 'light');
+    }
 
-    // Tambah di app.js / script sidebar
-function toggleNavGroup(el) {
-    el.classList.toggle('open');
-    const sub = el.nextElementSibling;
-    sub.classList.toggle('open');
-}
+    /* ══════════════════════════════════════
+       NAV GROUP DROPDOWN
+    ══════════════════════════════════════ */
+    function toggleNavGroup(toggleEl) {
+        var isOpen = toggleEl.classList.contains('open');
+        toggleEl.classList.toggle('open', !isOpen);
+        toggleEl.setAttribute('aria-expanded', !isOpen);
+
+        var sub = toggleEl.nextElementSibling;
+        if (sub && sub.classList.contains('nav-sub')) {
+            sub.classList.toggle('open', !isOpen);
+        }
+    }
+
+    /* ══════════════════════════════════════
+       MOBILE SIDEBAR
+    ══════════════════════════════════════ */
+    function toggleSidebar() {
+        var sidebar  = document.getElementById('sidebar');
+        var overlay  = document.getElementById('sidebarOverlay');
+        var isOpen   = sidebar.classList.contains('open');
+        sidebar.classList.toggle('open', !isOpen);
+        overlay.classList.toggle('show', !isOpen);
+    }
+
+    function closeSidebar() {
+        document.getElementById('sidebar').classList.remove('open');
+        document.getElementById('sidebarOverlay').classList.remove('show');
+    }
+
+    // Tutup sidebar mobile saat resize ke desktop
+    window.addEventListener('resize', function () {
+        if (window.innerWidth >= 769) {
+            closeSidebar();
+        }
+    });
     </script>
 </body>
 </html>

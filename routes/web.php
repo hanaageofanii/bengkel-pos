@@ -12,7 +12,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\EstimasiController;
 use App\Http\Controllers\SelfBillingController;
-
+use App\Http\Controllers\ProfileController;
 
 
 /*
@@ -151,3 +151,6 @@ Route::prefix('selfbilling')->name('selfbilling.')->group(function () {
     Route::put('/{id}',         [SelfBillingController::class, 'update'])->name('update');
     Route::delete('/{id}',      [SelfBillingController::class, 'destroy'])->name('destroy');
 });
+
+Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+Route::put('/profile', [ProfileController::class, 'update'])->name('profile.update');
