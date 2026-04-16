@@ -30,9 +30,9 @@
 
 <table class="outer-table">
     <colgroup>
-        <col style="width: 47%">
-        <col style="width: 6%">   {{-- spacer --}}
-        <col style="width: 47%">
+        <col style="width: 51%">
+        <col style="width: 5%">   {{-- spacer --}}
+        <col style="width: 46%">   {{-- kanan --}}
     </colgroup>
     <tbody>
         <tr>
@@ -60,11 +60,10 @@
                 </table>
             </td>
 
-            <!-- SPACER — tidak ada border, tidak ada padding -->
             <td class="spacer-col"></td>
 
             <!-- KANAN -->
-            <td style="padding: 0; border: none; vertical-align: top;">
+            <td style="padding: 0; border: none; vertical-align: top; ">
                 <table class="inner-table">
                     <tr>
                         <td>Date</td>
@@ -134,11 +133,11 @@
 
 <table>
     <tr class="bold text-center">
-        <td>No</td>
-        <td>Spare Part</td>
-        <td>Qty</td>
-        <td>Harga</td>
-        <td>Total</td>
+        <td width="5%">No</td>
+        <td width="45%">Spare Part</td>
+        <td width="5%">Qty</td>
+        <td width="30%">Harga</td>
+        <td width="15%">Total</td>
     </tr>
 
     @for($i = 0; $i < $totalBarangRows; $i++)
@@ -236,24 +235,23 @@
 
         </td>
 
-        <td style="vertical-align: top; width: 25%; padding: 0 0 0 10px;">
-            <div class="rekening-box">
-                Pembayaran melalui Rekening :
-                <table class="rek-table">
-                    <tr>
-                        <td class="rek-label">Mandiri</td>
-                        <td>: </td>
-                        <td class="rek-num"> 1560010520965</td>
-                    </tr>
-                    <tr>
-                        <td class="rek-label">BCA</td>
-                        <td>: </td>
-                        <td class="rek-num"> 5315064497</td>
-                    </tr>
-                </table>
-                <div class="rek-nama">a.n Hari Kuswanto</div>
-            </div>
-        </td>
+        <td style="vertical-align: top; width: 43%; padding: 0 0 0 10px;">
+    <div class="rekening-box">Pembayaran Transfer melalalui Rekening :
+    <table class="rek-table">
+        <tr>
+            <td class="rek-label">Mandiri</td>
+            <td class="rek-separator">:</td>
+            <td class="rek-num">1560010520965</td>
+        </tr>
+        <tr>
+            <td class="rek-label">BCA</td>
+            <td class="rek-separator">:</td>
+            <td class="rek-num">5315064497</td>
+        </tr>
+    </table>
+    <div class="rek-nama">a.n Hari Kuswanto</div>
+</div>
+</td>
     </tr>
 </table>
 

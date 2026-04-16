@@ -10,250 +10,280 @@
     : strtoupper(substr(Auth::user()->name,0,2));
 @endphp
 
-<style>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ asset('assets/css/edit-profile.css') }}">
 
-:root {
-    --sidebar-w: 240px;
-}
+<div class="ep-wrap">
 
-[data-theme="dark"] {
-    --bg: #0f1117;
-    --surface: #181c27;
-    --surface2: #1e2333;
-    --border: #262c3d;
-    --accent: #4f8ef7;
-    --accent2: #1e90ff;
-    --text: #e4e8f0;
-    --text-soft: #b0b8d0;
-    --muted: #6b7694;
-    --red: #f26c6c;
-    --green: #3ef08a;
-    --sidebar-surface: #181c27;
-    --sidebar-border: #262c3d;
-    --sidebar-text: #c8d0e8;
-    --sidebar-muted: #6b7694;
-    --sidebar-active-bg: rgba(79, 142, 247, 0.15);
-    --sidebar-active-border: #4f8ef7;
-    --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
-    --logo-filter: none;
-}
-
-[data-theme="light"] {
-    --bg: #f0f4f8;
-    --surface: #ffffff;
-    --surface2: #f5f7fa;
-    --border: #dde3ed;
-    --accent: #2563eb;
-    --accent2: #1d4ed8;
-    --text: #1a202c;
-    --text-soft: #4a5568;
-    --muted: #718096;
-    --red: #e53e3e;
-    --green: #38a169;
-    --sidebar-surface: #1b2a3b;
-    --sidebar-border: rgba(255, 255, 255, 0.1);
-    --sidebar-text: #cbd5e1;
-    --sidebar-muted: #94a3b8;
-    --sidebar-active-bg: rgba(255, 255, 255, 0.15);
-    --sidebar-active-border: #ffffff;
-    --sidebar-hover-bg: rgba(255, 255, 255, 0.07);
-    --logo-filter: none;
-}
-.ep-breadcrumb{font-size:.75rem;color:var(--text-muted,#64748b);margin-bottom:.4rem;display:flex;align-items:center;gap:.4rem}
-.ep-breadcrumb span{color:var(--accent,#f97316)}
-.ep-title{font-family:'Rajdhani',sans-serif;font-size:1.75rem;font-weight:700;letter-spacing:.03em;color:var(--text-primary,#f1f5f9);margin-bottom:2rem}
-.ep-grid{display:grid;grid-template-columns:1fr 260px;gap:1.25rem;align-items:start}
-@media(max-width:680px){.ep-grid{grid-template-columns:1fr}}
-
-.ep-card{background:var(--card-bg,#1c2333);border:1px solid var(--border,rgba(255,255,255,.07));border-radius:12px;padding:1.5rem}
-.ep-card-title{font-family:'Rajdhani',sans-serif;font-size:1rem;font-weight:600;letter-spacing:.05em;color:var(--text-primary,#fff);display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;padding-bottom:1rem;border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
-.ep-card-title svg{width:18px;height:18px;fill:var(--accent,#f97316);flex-shrink:0}
-
-.ep-avatar-wrap{display:flex;align-items:center;gap:1rem;margin-bottom:1.75rem;padding:1rem;background:rgba(249,115,22,.1);border-radius:10px;border:1px solid rgba(249,115,22,.25)}
-.ep-avatar{width:52px;height:52px;border-radius:50%;background:var(--accent,#f97316);display:flex;align-items:center;justify-content:center;font-family:'Rajdhani',sans-serif;font-size:1.25rem;font-weight:700;color:#fff;flex-shrink:0;border:2px solid rgba(249,115,22,.5)}
-.ep-avatar-name{font-weight:500;font-size:.9rem;color:var(--text-primary,#fff)}
-.ep-avatar-role{font-size:.75rem;color:var(--accent,#f97316);margin-top:2px}
-
-.ep-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-@media(max-width:480px){.ep-row{grid-template-columns:1fr}}
-.ep-fg{margin-bottom:1.1rem}
-.ep-label{display:block;font-size:.72rem;font-weight:500;color:var(--text-muted,#64748b);margin-bottom:.35rem;letter-spacing:.05em;text-transform:uppercase}
-.ep-input{width:100%;background:rgba(0,0,0,.25);border:1px solid var(--border,rgba(255,255,255,.1));border-radius:8px;padding:.6rem .85rem;color:var(--text-primary,#f1f5f9);font-size:.875rem;transition:border-color .2s,box-shadow .2s;outline:none;box-sizing:border-box}
-.ep-input:focus{border-color:var(--accent,#f97316);box-shadow:0 0 0 3px rgba(249,115,22,.12)}
-.ep-input.is-error{border-color:#ef4444}
-.ep-error{font-size:.72rem;color:#ef4444;margin-top:.3rem;display:block}
-
-.ep-divider{border:none;border-top:1px solid var(--border,rgba(255,255,255,.07));margin:1.25rem 0}
-.ep-section{font-size:.7rem;font-weight:600;color:var(--text-muted,#64748b);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;display:flex;align-items:center;gap:.5rem}
-.ep-section::after{content:'';flex:1;height:1px;background:var(--border,rgba(255,255,255,.07))}
-
-.ep-pw-wrap{position:relative}
-.ep-pw-toggle{position:absolute;right:.7rem;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;padding:.2rem;color:var(--text-muted,#64748b)}
-.ep-pw-toggle svg{width:16px;height:16px;fill:currentColor;display:block}
-.ep-pw-toggle:hover{color:var(--text-primary,#f1f5f9)}
-
-.ep-strength{display:flex;gap:4px;margin-top:6px}
-.ep-strength span{height:3px;flex:1;border-radius:2px;background:rgba(255,255,255,.08);transition:background .3s}
-
-.ep-btn{display:inline-flex;align-items:center;gap:.5rem;padding:.65rem 1.5rem;background:var(--accent,#f97316);color:#fff;border:none;border-radius:8px;font-size:.875rem;font-weight:500;cursor:pointer;transition:all .2s;margin-top:.5rem;letter-spacing:.02em}
-.ep-btn:hover{opacity:.88;transform:translateY(-1px)}
-.ep-btn svg{width:15px;height:15px;fill:#fff}
-
-.ep-alert-ok{display:flex;align-items:center;gap:.5rem;background:rgba(16,185,129,.1);color:#10b981;border:1px solid rgba(16,185,129,.25);border-radius:8px;padding:.7rem 1rem;margin-bottom:1.5rem;font-size:.85rem}
-.ep-alert-ok svg{width:16px;height:16px;fill:#10b981;flex-shrink:0}
-
-.ep-meta-row{display:flex;flex-direction:column;gap:.15rem;padding:.7rem 0;border-bottom:1px solid var(--border,rgba(255,255,255,.07))}
-.ep-meta-row:last-child{border-bottom:none}
-.ep-meta-label{font-size:.7rem;color:var(--text-muted,#64748b);text-transform:uppercase;letter-spacing:.05em}
-.ep-meta-val{font-size:.8rem;color:var(--text-primary,#f1f5f9);font-weight:500;margin-top:2px}
-.ep-status{display:flex;align-items:center;gap:5px;color:#10b981}
-.ep-dot{width:7px;height:7px;border-radius:50%;background:#10b981;display:inline-block}
-
-.ep-stat-row{display:grid;grid-template-columns:1fr 1fr;gap:.75rem;margin-top:1.25rem}
-.ep-stat{background:rgba(0,0,0,.2);border-radius:8px;padding:.75rem;text-align:center}
-.ep-stat-num{font-family:'Rajdhani',sans-serif;font-size:1.5rem;font-weight:700;color:var(--accent,#f97316)}
-.ep-stat-lbl{font-size:.65rem;color:var(--text-muted,#64748b);margin-top:2px;text-transform:uppercase;letter-spacing:.04em}
-</style>
-
-<div class="ep-breadcrumb">Dashboard <span>›</span> Edit Profil</div>
-<div class="ep-title">Edit Profil</div>
-
-@if(session('success'))
-<div class="ep-alert-ok">
-  <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
-  {{ session('success') }}
-</div>
-@endif
-
-<div class="ep-grid">
-  <div class="ep-card">
-    <div class="ep-card-title">
-      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-      Informasi Akun
+  {{-- ── Header ── --}}
+  <div class="ep-header">
+    <div class="ep-breadcrumb">
+      <a href="{{ route('dashboard') }}">Dashboard</a>
+      <span class="sep">/</span>
+      <span class="active">Edit Profil</span>
     </div>
-
-    <div class="ep-avatar-wrap">
-      <div class="ep-avatar">{{ $initials }}</div>
-      <div>
-        <div class="ep-avatar-name">{{ Auth::user()->name }}</div>
-        <div class="ep-avatar-role">Admin Portal · 5A Auto Service</div>
-      </div>
-    </div>
-
-    <form action="{{ route('profile.update') }}" method="POST">
-      @csrf @method('PUT')
-
-      <div class="ep-row">
-        <div class="ep-fg">
-          <label class="ep-label">Nama Lengkap</label>
-          <input type="text" name="name" class="ep-input @error('name') is-error @enderror"
-                 value="{{ old('name', $user->name) }}" required>
-          @error('name')<span class="ep-error">{{ $message }}</span>@enderror
-        </div>
-        <div class="ep-fg">
-          <label class="ep-label">Username</label>
-          <input type="text" name="username" class="ep-input @error('username') is-error @enderror"
-                 value="{{ old('username', $user->username) }}" required>
-          @error('username')<span class="ep-error">{{ $message }}</span>@enderror
-        </div>
-      </div>
-
-      <div class="ep-divider"></div>
-      <div class="ep-section">Ganti Password</div>
-
-      <div class="ep-fg">
-        <label class="ep-label">Password Lama</label>
-        <div class="ep-pw-wrap">
-          <input type="password" name="current_password" id="curPw"
-                 class="ep-input @error('current_password') is-error @enderror"
-                 placeholder="Isi jika ingin ganti password">
-          <button type="button" class="ep-pw-toggle" onclick="epToggle('curPw')">
-            <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-          </button>
-        </div>
-        @error('current_password')<span class="ep-error">{{ $message }}</span>@enderror
-      </div>
-
-      <div class="ep-row">
-        <div class="ep-fg">
-          <label class="ep-label">Password Baru</label>
-          <div class="ep-pw-wrap">
-            <input type="password" name="password" id="newPw"
-                   class="ep-input @error('password') is-error @enderror"
-                   placeholder="Min. 8 karakter" oninput="epStrength(this.value)">
-            <button type="button" class="ep-pw-toggle" onclick="epToggle('newPw')">
-              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-            </button>
-          </div>
-          <div class="ep-strength" id="epBar">
-            <span id="ep1"></span><span id="ep2"></span><span id="ep3"></span><span id="ep4"></span>
-          </div>
-          @error('password')<span class="ep-error">{{ $message }}</span>@enderror
-        </div>
-        <div class="ep-fg">
-          <label class="ep-label">Konfirmasi Password</label>
-          <div class="ep-pw-wrap">
-            <input type="password" name="password_confirmation" id="confPw"
-                   class="ep-input" placeholder="Ulangi password baru">
-            <button type="button" class="ep-pw-toggle" onclick="epToggle('confPw')">
-              <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button type="submit" class="ep-btn">
-        <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
-        Simpan Perubahan
-      </button>
-    </form>
-  </div>
-
-  <div class="ep-card">
-    <div class="ep-card-title">
-      <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
-      Info Akun
-    </div>
-    <div class="ep-meta-row">
-      <div class="ep-meta-label">Status</div>
-      <div class="ep-meta-val ep-status"><span class="ep-dot"></span> Aktif</div>
-    </div>
-    <div class="ep-meta-row">
-      <div class="ep-meta-label">Role</div>
-      <div class="ep-meta-val">{{ $user->role ?? 'Administrator' }}</div>
-    </div>
-    <div class="ep-meta-row">
-      <div class="ep-meta-label">Bergabung Sejak</div>
-      <div class="ep-meta-val">{{ $user->created_at->format('d M Y') }}</div>
-    </div>
-    <div class="ep-meta-row">
-      <div class="ep-meta-label">Login Terakhir</div>
-      <div class="ep-meta-val">{{ now()->format('d M Y, H:i') }}</div>
-    </div>
-    <div class="ep-stat-row">
-      <div class="ep-stat">
-        <div class="ep-stat-num">—</div>
-        <div class="ep-stat-lbl">Invoice</div>
-      </div>
-      <div class="ep-stat">
-        <div class="ep-stat-num">—</div>
-        <div class="ep-stat-lbl">Bulan Ini</div>
-      </div>
+    <div class="ep-title">Edit Profil</div>
+    <div class="ep-subtitle">Kelola informasi akun dan keamanan Anda</div>
+    <div class="ep-edit-badge">
+      <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.21a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+      Mode Edit — {{ Auth::user()->name }}
     </div>
   </div>
-</div>
+
+  {{-- ── Alert Success ── --}}
+  @if(session('success'))
+  <div class="ep-alert-ok">
+    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>
+    {{ session('success') }}
+  </div>
+  @endif
+
+  <div class="ep-grid-outer">
+
+    {{-- ── Main Card ── --}}
+    <div class="ep-card">
+      <div class="ep-card-bar"></div>
+
+      <div class="ep-card-head">
+        <div class="ep-card-icon">
+          <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zm17.71-10.21a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+        </div>
+        <div class="ep-card-head-text">
+          <div class="cht">Informasi Akun</div>
+          <div class="chs">Perbarui nama dan email Anda</div>
+        </div>
+        <div class="ep-role-chip">
+          <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          {{ $user->role ?? 'Administrator' }}
+        </div>
+      </div>
+
+      <form method="POST" action="{{ route('profile.update') }}">
+        @csrf
+        @method('PUT')
+
+        <div class="ep-form-body">
+
+          {{-- ── Avatar Preview ── --}}
+          <div class="ep-avatar-wrap">
+            <div class="ep-avatar" id="avatarCircle">{{ $initials }}</div>
+            <div>
+              <div class="ep-avatar-name" id="avatarName">{{ Auth::user()->name }}</div>
+              <div class="ep-avatar-role">{{ $user->role ?? 'Administrator' }} · 5A Auto Service</div>
+            </div>
+          </div>
+
+          {{-- ── Identitas ── --}}
+          <div class="ep-section-label">Identitas</div>
+
+          <div class="ep-form-row">
+
+            {{-- Nama --}}
+            <div class="mz-field">
+              <label class="mz-label">Nama Lengkap</label>
+              <div class="mz-input-wrap">
+                <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <input type="text" name="name" id="nameInput"
+                       class="mz-input @error('name') is-error @enderror"
+                       value="{{ old('name', $user->name) }}"
+                       data-original="{{ $user->name }}"
+                       oninput="markChanged(this); updateAvatar()"
+                       placeholder="Nama lengkap"
+                       required>
+              </div>
+              @error('name')<span class="mz-error">{{ $message }}</span>@enderror
+            </div>
+
+            {{-- Email --}}
+            <div class="mz-field">
+              <label class="mz-label">Alamat Email</label>
+              <div class="mz-input-wrap">
+                <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <input type="email" name="email"
+                       class="mz-input @error('email') is-error @enderror"
+                       value="{{ old('email', $user->email) }}"
+                       data-original="{{ $user->email }}"
+                       oninput="markChanged(this)"
+                       placeholder="email@domain.com"
+                       required>
+              </div>
+              @error('email')<span class="mz-error">{{ $message }}</span>@enderror
+            </div>
+
+          </div>
+
+          {{-- Role read-only --}}
+          <div class="mz-field" style="margin-top: 4px">
+            <label class="mz-label">Role</label>
+            <div class="mz-input-wrap">
+              <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/></svg>
+              <input type="text" class="mz-input mz-input-readonly"
+                     value="{{ $user->role ?? 'Administrator' }}" readonly>
+            </div>
+            <div class="mz-hint">Role tidak dapat diubah melalui halaman ini</div>
+          </div>
+
+          <hr class="ep-sep">
+
+          {{-- ── Password ── --}}
+          <div class="ep-section-label">Ganti Password</div>
+          <p class="mz-hint" style="margin-bottom: 14px; margin-top: -6px">
+            Kosongkan semua field password jika tidak ingin menggantinya
+          </p>
+
+          <div class="mz-field" style="margin-bottom: 14px">
+            <label class="mz-label">Password Lama</label>
+            <div class="mz-input-wrap">
+              <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              <input type="password" name="current_password" id="curPw"
+                     class="mz-input mz-input-pw @error('current_password') is-error @enderror"
+                     placeholder="Masukkan password lama">
+              <button type="button" class="pw-toggle" onclick="epToggle('curPw', this)">
+                <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+              </button>
+            </div>
+            @error('current_password')<span class="mz-error">{{ $message }}</span>@enderror
+          </div>
+
+          <div class="ep-form-row">
+
+            <div class="mz-field">
+              <label class="mz-label">Password Baru</label>
+              <div class="mz-input-wrap">
+                <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input type="password" name="password" id="newPw"
+                       class="mz-input mz-input-pw @error('password') is-error @enderror"
+                       placeholder="Min. 8 karakter"
+                       oninput="epStrength(this.value)">
+                <button type="button" class="pw-toggle" onclick="epToggle('newPw', this)">
+                  <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </button>
+              </div>
+              <div class="ep-strength" id="epBar">
+                <span id="ep1"></span><span id="ep2"></span>
+                <span id="ep3"></span><span id="ep4"></span>
+              </div>
+              <div class="strength-label" id="strengthLabel"></div>
+              @error('password')<span class="mz-error">{{ $message }}</span>@enderror
+            </div>
+
+            <div class="mz-field">
+              <label class="mz-label">Konfirmasi Password Baru</label>
+              <div class="mz-input-wrap">
+                <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input type="password" name="password_confirmation" id="confPw"
+                       class="mz-input mz-input-pw"
+                       placeholder="Ulangi password baru">
+                <button type="button" class="pw-toggle" onclick="epToggle('confPw', this)">
+                  <svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>
+                </button>
+              </div>
+            </div>
+
+          </div>
+
+        </div>{{-- /ep-form-body --}}
+
+        {{-- ── Footer ── --}}
+        <div class="ep-footer">
+          <div class="ep-footer-hint">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+            Perubahan akan langsung tersimpan ke database
+          </div>
+          <div class="ep-actions">
+            <a href="{{ url()->previous() }}" class="btn-cancel">Batal</a>
+            <button type="submit" class="btn-submit">
+              <svg viewBox="0 0 24 24"><path d="M17 3H5c-1.11 0-2 .9-2 2v14c0 1.1.89 2 2 2h14c1.1 0 2-.9 2-2V7l-4-4zm-5 16c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zm3-10H5V5h10v4z"/></svg>
+              Simpan Perubahan
+            </button>
+          </div>
+        </div>
+
+      </form>
+    </div>{{-- /ep-card --}}
+
+    {{-- ── Side Info Card ── --}}
+    <div class="ep-side-card">
+      <div class="ep-card-bar"></div>
+      <div class="ep-card-head" style="padding: 14px 18px">
+        <div class="ep-card-icon ep-card-icon--teal">
+          <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+        </div>
+        <div class="ep-card-head-text">
+          <div class="cht">Info Akun</div>
+          <div class="chs">Detail &amp; statistik</div>
+        </div>
+      </div>
+
+      <div class="ep-meta-list">
+        <div class="ep-meta-row">
+          <div class="ep-meta-label">Status</div>
+          <div class="ep-meta-val ep-status">
+            <span class="ep-dot"></span> Aktif
+          </div>
+        </div>
+        <div class="ep-meta-row">
+          <div class="ep-meta-label">Role</div>
+          <div class="ep-meta-val">{{ $user->role ?? 'Administrator' }}</div>
+        </div>
+        <div class="ep-meta-row">
+          <div class="ep-meta-label">Email</div>
+          <div class="ep-meta-val">{{ $user->email }}</div>
+        </div>
+        <div class="ep-meta-row">
+          <div class="ep-meta-label">Bergabung Sejak</div>
+          <div class="ep-meta-val">{{ $user->created_at->format('d M Y') }}</div>
+        </div>
+        <div class="ep-meta-row">
+          <div class="ep-meta-label">Login Terakhir</div>
+          <div class="ep-meta-val">{{ now()->format('d M Y, H:i') }}</div>
+        </div>
+      </div>
+
+    </div>{{-- /ep-side-card --}}
+
+  </div>{{-- /ep-grid-outer --}}
+</div>{{-- /ep-wrap --}}
 
 <script>
-function epToggle(id){
-  const i=document.getElementById(id);
-  i.type=i.type==='password'?'text':'password';
+function epToggle(id, btn) {
+  const el = document.getElementById(id);
+  const isText = el.type === 'text';
+  el.type = isText ? 'password' : 'text';
+  btn.style.color = isText ? '' : 'var(--mz-orange)';
 }
-function epStrength(v){
-  const checks=[v.length>=8,/[A-Z]/.test(v),/[0-9]/.test(v),/[^A-Za-z0-9]/.test(v)];
-  const score=checks.filter(Boolean).length;
-  const c=['','#ef4444','#f97316','#eab308','#10b981'];
-  for(let i=1;i<=4;i++)
-    document.getElementById('ep'+i).style.background=i<=score?c[score]:'rgba(255,255,255,.08)';
+
+function epStrength(v) {
+  const checks = [
+    v.length >= 8,
+    /[A-Z]/.test(v),
+    /[0-9]/.test(v),
+    /[^A-Za-z0-9]/.test(v)
+  ];
+  const score = checks.filter(Boolean).length;
+  const colors = ['', '#e24b4a', '#d85a30', '#ba7517', '#1d9e75'];
+  const labels = ['', 'Lemah', 'Cukup', 'Baik', 'Kuat'];
+  for (let i = 1; i <= 4; i++) {
+    document.getElementById('ep' + i).style.background =
+      i <= score ? colors[score] : 'var(--mz-border)';
+  }
+  const lbl = document.getElementById('strengthLabel');
+  lbl.textContent = v.length ? labels[score] : '';
+  lbl.style.color = colors[score];
+}
+
+function markChanged(el) {
+  el.classList.toggle('is-changed', el.value !== el.dataset.original);
+}
+
+function updateAvatar() {
+  const name = document.getElementById('nameInput').value.trim();
+  const parts = name.split(' ').filter(Boolean);
+  const initials = parts.length >= 2
+    ? (parts[0][0] + parts[1][0]).toUpperCase()
+    : name.slice(0, 2).toUpperCase();
+  document.getElementById('avatarCircle').textContent = initials || '??';
+  document.getElementById('avatarName').textContent = name || '—';
 }
 </script>
 

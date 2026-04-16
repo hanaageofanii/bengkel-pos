@@ -16,13 +16,13 @@ class ProfileController extends Controller
     }
 
     public function update(Request $request)
-{
-    /** @var User $user */
-    $user = Auth::user();
+    {
+        /** @var User $user */
+        $user = Auth::user();
 
         $rules = [
-            'name'     => 'required|string|max:255',
-            'username' => 'required|string|max:255|unique:users,username,' . $user->id,
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255|unique:users,email,' . $user->id,
         ];
 
         // Hanya validasi password kalau diisi
@@ -36,13 +36,15 @@ class ProfileController extends Controller
         // Cek current password kalau mau ganti password
         if ($request->filled('password')) {
             if (!Hash::check($request->current_password, $user->password)) {
-                return back()->withErrors(['current_password' => 'Password lama tidak sesuai.'])->withInput();
+                return back()
+                    ->withErrors(['current_password' => 'Password lama tidak sesuai.'])
+                    ->withInput();
             }
             $user->password = Hash::make($request->password);
         }
 
-        $user->name     = $request->name;
-        $user->username = $request->username;
+        $user->name  = $request->name;
+        $user->email = $request->email;
         $user->save();
 
         return back()->with('success', 'Profil berhasil diperbarui!');
