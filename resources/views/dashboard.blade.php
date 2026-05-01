@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.11/dist/cdn.min.js"></script>
-    <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
+    <link rel="icon" type="image/png" sizes="42X42" href="{{ asset('logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
 </head>
@@ -24,15 +24,17 @@
     <aside class="sidebar" id="sidebar">
 
         {{-- Logo --}}
-        <div class="sidebar-logo">
-            <img src="{{ asset('assets/images/logo.png') }}" alt="5A Auto Service">
-            <div class="sidebar-logo-text">
-                <div class="brand">5A AUTO SERVICE</div>
-                <div class="sub">Admin Portal</div>
-            </div>
-        </div>
+<div class="sidebar-logo" style="flex-direction: column; align-items: center; padding: 0 16px 4px; gap: 0; margin-top: -45px;">
+    <img src="{{ asset('assets/images/logo.png') }}" 
+         alt="5A Auto Service"
+         style="width: 200px; height: 200px; object-fit: contain;">
+    <div class="sidebar-logo-text" style="text-align: center; margin-top: -45px;">
+        <div class="brand">5A AUTO SERVICE</div>
+        <div class="sub">Admin Portal</div>
+    </div>
+</div>
 
-        {{-- Nav --}}
+{{-- Nav --}}
         <nav class="sidebar-nav">
 
             <div class="nav-label">Menu Utama</div>

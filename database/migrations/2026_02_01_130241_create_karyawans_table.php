@@ -14,6 +14,7 @@ return new class extends Migration
             $table->string('jabatan')->nullable();
             $table->string('no_hp')->nullable();
             $table->string('email')->nullable();
+            $table->integer('salary')->nullable();
             $table->enum('status', ['aktif', 'cuti', 'resign', 'nonaktif'])->default('aktif');
             $table->timestamps();
         });

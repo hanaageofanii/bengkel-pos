@@ -79,7 +79,7 @@ $stokHabis           = Barang::where('stok',0)->count();
 $stokMenipis         = Barang::where('stok','>',0)->where('stok','<=',5)->count();
 $stokAman            = Barang::where('stok','>',5)->count();
 $nilaiStokPribadi    = Barang::selectRaw('SUM(harga_pribadi * stok) as total')->value('total') ?? 0;
-$nilaiStokPerusahaan = Barang::selectRaw('SUM(harga_perusahaan * stok) as total')->value('total') ?? 0;
+// $nilaiStokPerusahaan = Barang::selectRaw('SUM(harga_perusahaan * stok) as total')->value('total') ?? 0;
 $topStok             = Barang::orderByDesc('stok')->limit(5)->get();
 $barangKritis        = Barang::where('stok','<=',5)->orderBy('stok')->limit(8)->get();
 
@@ -579,7 +579,7 @@ for ($i = 4; $i >= 0; $i--) {
 
     <div class="grid-3" style="margin-bottom:12px">
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-text)"></div><div class="mz-stat-label">Total</div><div class="mz-stat-val">{{ $totalPelanggan }}</div><div class="mz-stat-sub">terdaftar</div></div>
-        <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-teal)"></div><div class="mz-stat-label">Pribadi</div><div class="mz-stat-val" style="color:var(--mz-teal)">{{ $totalPribadi }}</div><div class="mz-stat-sub">pelanggan</div></div>
+        <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-teal)"></div><div class="mz-stat-label">Umum</div><div class="mz-stat-val" style="color:var(--mz-teal)">{{ $totalPribadi }}</div><div class="mz-stat-sub">pelanggan</div></div>
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-yellow)"></div><div class="mz-stat-label">Perusahaan</div><div class="mz-stat-val" style="color:var(--mz-yellow)">{{ $totalPerusahaan }}</div><div class="mz-stat-sub">pelanggan</div></div>
     </div>
     <div class="grid-3" style="margin-bottom:16px">
@@ -604,7 +604,7 @@ for ($i = 4; $i >= 0; $i--) {
                         <td class="mono">{{ $p->plat_nomor }}</td>
                         <td style="color:var(--mz-muted)">{{ $p->merk_mobil }} {{ $p->model_mobil }}</td>
                         <td>
-                            @if($p->tipe === 'pribadi') <span class="mz-badge badge-pribadi">Pribadi</span>
+                            @if($p->tipe === 'pribadi') <span class="mz-badge badge-pribadi">Umum</span>
                             @else <span class="mz-badge badge-perusahaan">Perusahaan</span>
                             @endif
                         </td>
@@ -659,11 +659,11 @@ for ($i = 4; $i >= 0; $i--) {
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-yellow)"></div><div class="mz-stat-label">Stok Menipis</div><div class="mz-stat-val" style="color:var(--mz-yellow)">{{ $stokMenipis }}</div><div class="mz-stat-sub">≤ 5 unit</div></div>
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-red)"></div><div class="mz-stat-label">Stok Habis</div><div class="mz-stat-val" style="color:var(--mz-red)">{{ $stokHabis }}</div><div class="mz-stat-sub">jenis</div></div>
     </div>
-    <div class="grid-3" style="margin-bottom:16px">
+    {{-- <div class="grid-3" style="margin-bottom:16px">
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-accent)"></div><div class="mz-stat-label">Total Unit Stok</div><div class="mz-stat-val" style="color:var(--mz-accent)">{{ number_format($totalStok) }}</div><div class="mz-stat-sub">unit</div></div>
-        <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-teal)"></div><div class="mz-stat-label">Nilai Stok (Pribadi)</div><div class="mz-stat-val sm" style="color:var(--mz-teal)">Rp {{ number_format($nilaiStokPribadi,0,',','.') }}</div><div class="mz-stat-sub">estimasi</div></div>
+        <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-teal)"></div><div class="mz-stat-label">Nilai Stok (Umum)</div><div class="mz-stat-val sm" style="color:var(--mz-teal)">Rp {{ number_format($nilaiStokPribadi,0,',','.') }}</div><div class="mz-stat-sub">estimasi</div></div>
         <div class="mz-stat"><div class="mz-stat-bar" style="background:var(--mz-teal)"></div><div class="mz-stat-label">Nilai Stok (Perusahaan)</div><div class="mz-stat-val sm" style="color:var(--mz-teal)">Rp {{ number_format($nilaiStokPerusahaan,0,',','.') }}</div><div class="mz-stat-sub">estimasi</div></div>
-    </div>
+    </div> --}}
 
     <div class="grid-2">
         <div class="mz-box">

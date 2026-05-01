@@ -34,6 +34,7 @@ class KaryawanController extends Controller
             'jabatan' => 'nullable|string|max:255',
             'no_hp'  => 'nullable|string|max:20',
             'email'  => 'nullable|email|max:255',
+            'salary' => 'required|integer|min:0',
             'status' => 'required|in:aktif,cuti,resign,nonaktif',
         ]);
 
@@ -41,6 +42,7 @@ class KaryawanController extends Controller
              'nama'    => $request->nama,
             'jabatan' => $request->jabatan,
             'no_hp'   => $request->no_hp,
+            'salary' => $request->salary,
             'email'   => $request->email,
             'aktif'   => true,
         ]);
@@ -65,6 +67,7 @@ class KaryawanController extends Controller
             'jabatan' => 'nullable|string|max:255',
             'no_hp'  => 'nullable|string|max:20',
             'email'  => 'nullable|email|max:255',
+            'salary' => 'required|integer|min:0',
             'status' => 'required|in:aktif,cuti,resign,nonaktif',
         ]);
 
@@ -74,6 +77,7 @@ class KaryawanController extends Controller
             'status'  => $request->status,
             'no_hp'   => $request->no_hp,
             'email'   => $request->email,
+            'salary'  => $request->salary,
         ]);
 
         return redirect()
