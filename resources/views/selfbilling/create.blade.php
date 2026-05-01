@@ -20,8 +20,9 @@
     <div class="inv-title">Buat Self Billing</div>
     <div class="inv-subtitle">Input tagihan catatan dari vendor barang/jasa</div>
 
-    <form action="{{ route('selfbilling.store') }}" method="POST">
-        @csrf
+    <form action="{{ route('selfbilling.store') }}" method="POST"
+      onsubmit="document.querySelectorAll('.rupiah-field').forEach(i=>i.value=i.value.replace(/[^0-9]/g,''))">
+    @csrf
         <div class="inv-card">
             <div class="inv-card-bar"></div>
 
@@ -64,9 +65,18 @@
                 </div>
                 <div class="mz-field">
                     <label class="mz-label">Total Tagihan (Rp)</label>
-                    <input type="number" name="total_tagihan" id="input-harga" class="mz-input"
-                           style="font-size: 1.5rem; font-weight: 700; color: var(--mz-accent); text-align: left;"
-                           placeholder="0" required>
+                    <input
+    type="text"
+    name="total_tagihan"
+    id="input-harga"
+    class="mz-input rupiah-field"
+    style="font-size:1.5rem;font-weight:700;color:var(--mz-accent);text-align:left;"
+    placeholder="Rp. 0"
+    required
+    onfocus="this.value=this.value.replace(/[^0-9]/g,'')"
+    oninput="let r=this.value.replace(/[^0-9]/g,''); this.value=r?'Rp. '+Number(r).toLocaleString('id-ID'):'';"
+    onblur="if(this.value) this.value='Rp. '+Number(this.value.replace(/[^0-9]/g,'')).toLocaleString('id-ID')"
+>
                 </div>
             </div>
 
@@ -100,14 +110,5 @@
         </div>
     </form>
 </div>
-
-<script>
-    // Script tetap sama untuk update preview rupiah secara live
-    document.getElementById('input-harga').addEventListener('input', function(e) {
-        const val = e.target.value;
-        document.getElementById('total-preview').innerText = val ?
-            new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(val) : 'Rp 0';
-    });
-</script>
 
 @endsection

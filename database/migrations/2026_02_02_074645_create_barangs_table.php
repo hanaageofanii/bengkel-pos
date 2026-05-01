@@ -13,7 +13,7 @@ return new class extends Migration
 
             $table->string('nama');
             $table->integer('harga_pribadi');
-            $table->integer('harga_perusahaan');
+            // $table->integer('harga_perusahaan');
             $table->integer('stok')->default(0);
             $table->string('satuan')->default('pcs');
 

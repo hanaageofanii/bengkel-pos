@@ -46,7 +46,7 @@
             </div>
             <div>
                 <div class="stat-val">{{ $pelanggans->where('tipe','pribadi')->count() }}</div>
-                <div class="stat-lbl">Pelanggan Pribadi</div>
+                <div class="stat-lbl">Pelanggan Umum</div>
             </div>
         </div>
         <div class="stat-card">
@@ -69,6 +69,8 @@
                 <tr>
                     <th class="th-nama">Nama Pelanggan</th>
                     <th class="th-center">Plat Nomor</th>
+                    <th class="th-center">No. Chasis</th>
+                    <th class="th-center">No. Mesin</th>
                     <th class="th-center">Mobil</th>
                     <th class="th-center">Tipe</th>
                     <th class="th-aksi">Aksi</th>
@@ -91,6 +93,14 @@
                         <span class="plat-badge">{{ $p->plat_nomor }}</span>
                     </td>
 
+                    <td style="text-align:center">
+                        <span class="plat-badge">{{ $p->no_chasis }}</span>
+                    </td>
+
+                    <td style="text-align:center">
+                        <span class="plat-badge">{{ $p->no_mesin }}</span>
+                    </td>
+
                     <td class="td-mobil">
                         <div class="mobil-name">{{ $p->merk_mobil }} {{ $p->model_mobil }}</div>
                         @if($p->tahun_mobil)
@@ -102,7 +112,7 @@
                         @if($p->tipe === 'pribadi')
                             <span class="tipe-pribadi">
                                 <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                                Pribadi
+                                Umum
                             </span>
                         @else
                             <span class="tipe-perusahaan">

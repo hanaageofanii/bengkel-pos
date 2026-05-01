@@ -85,7 +85,7 @@
                         <div class="mz-select-wrap">
                             <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
                             <select name="tipe" class="mz-select" id="tipeSelect" onchange="updateTipePreview()">
-                                <option value="pribadi"    {{ old('tipe', $pelanggan->tipe) === 'pribadi'    ? 'selected' : '' }}>Pribadi</option>
+                                <option value="pribadi"    {{ old('tipe', $pelanggan->tipe) === 'pribadi'    ? 'selected' : '' }}>Umum</option>
                                 <option value="perusahaan" {{ old('tipe', $pelanggan->tipe) === 'perusahaan' ? 'selected' : '' }}>Perusahaan</option>
                             </select>
                             <svg class="mz-select-caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
@@ -115,6 +115,33 @@
                                    id="platInput">
                         </div>
                     </div>
+
+                    <div class="mz-field">
+                        <label class="mz-label">No. Chasis </label>
+                        <div class="mz-input-wrap">
+                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 11h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+                            <input name="no_chasis" required
+                                   value="{{ old('no_chasis', $pelanggan->no_chasis) }}"
+                                   data-original="{{ $pelanggan->no_chasis }}"
+                                   oninput="markChanged(this); updateCarVisual()"
+                                   class="mz-input uppercase-input"
+                                   id="noChasisInput">
+                        </div>
+                    </div>
+
+                    <div class="mz-field">
+                        <label class="mz-label">No. Mesin</label>
+                        <div class="mz-input-wrap">
+                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 11h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+                            <input name="no_mesin" required
+                                   value="{{ old('no_mesin', $pelanggan->no_mesin) }}"
+                                   data-original="{{ $pelanggan->no_mesin }}"
+                                   oninput="markChanged(this); updateCarVisual()"
+                                   class="mz-input uppercase-input"
+                                   id="noMesinInput">
+                        </div>
+                    </div>
+
 
                     {{-- Merk --}}
                     <div class="mz-field">

@@ -54,16 +54,10 @@ function invoiceForm() {
 
         updateAllPrices() {
             this.jasa.forEach((j) => {
-                j.harga =
-                    this.tipePelanggan === "perusahaan"
-                        ? j.harga_perusahaan
-                        : j.harga_pribadi;
+                j.harga = j.harga_pribadi;
             });
             this.barang.forEach((b) => {
-                b.harga =
-                    this.tipePelanggan === "perusahaan"
-                        ? b.harga_perusahaan
-                        : b.harga_pribadi;
+                b.harga = b.harga_pribadi;
             });
         },
 
@@ -105,10 +99,7 @@ function invoiceForm() {
 
             if (!o) return;
 
-            let hargaDipakai =
-                this.tipePelanggan === "perusahaan"
-                    ? +o.dataset.perusahaan
-                    : +o.dataset.pribadi;
+            let hargaDipakai = +o.dataset.pribadi;
 
             this.jasa[i].id = o.value;
             this.jasa[i].nama = o.dataset.nama;
@@ -175,10 +166,7 @@ function invoiceForm() {
                 );
             }
 
-            let hargaDipakai =
-                this.tipePelanggan === "perusahaan"
-                    ? +o.dataset.perusahaan
-                    : +o.dataset.pribadi;
+            let hargaDipakai = +o.dataset.pribadi;
 
             this.barang[i].id = o.value;
             this.barang[i].nama = o.dataset.nama;

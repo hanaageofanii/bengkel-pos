@@ -20,9 +20,9 @@
     <div class="inv-title">Buat Invoice</div>
     <div class="inv-subtitle">Input transaksi servis & perbaikan kendaraan</div>
 
-    <form method="POST" action="{{ route('invoice.store') }}">
-        @csrf
-        <div class="inv-card">
+<form method="POST" action="{{ route('invoice.store') }}"
+      @submit="if($refs.paymentAwalInput) $refs.paymentAwalInput.value = paymentAwal">
+    @csrf        <div class="inv-card">
             <div class="inv-card-bar"></div>
 
             {{-- ── Pelanggan ── --}}
@@ -40,7 +40,7 @@
                             <option value="">Pilih pelanggan</option>
                             @foreach($pelanggans as $p)
                                 <option value="{{ $p->id }}" data-tipe="{{ $p->tipe }}">
-                                    {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
+                                    {{ $p->nama }}  {{ strtoupper($p->plat_nomor) }}
                                 </option>
                             @endforeach
                         </select>
@@ -118,7 +118,17 @@
                         </select>
                         <input type="hidden" name="jasa_id[]" :value="j.id">
                         <input type="hidden" name="jasa_nama[]" :value="j.nama">
-                        <input name="jasa_harga[]" x-model="j.harga" placeholder="Harga" class="mz-input" style="text-align:right">
+                        <input type="hidden" name="jasa_harga[]" :value="j.harga">
+                        <input
+                            type="text"
+                            :value="j.harga ? 'Rp. ' + Number(j.harga).toLocaleString('id-ID') : ''"
+                            placeholder="Rp. 0"
+                            class="mz-input"
+                            style="text-align:right"
+                            @focus="$event.target.value = j.harga || ''"
+                            @input="j.harga = $event.target.value.replace(/[^0-9]/g, '')"
+                            @blur="$event.target.value = j.harga ? 'Rp. ' + Number(j.harga).toLocaleString('id-ID') : ''"
+                        >
                         <button type="button" @click="jasa.splice(index,1)" class="btn-remove">Hapus</button>
                     </div>
                 </template>
@@ -154,64 +164,84 @@
                         <input type="hidden" name="barang_id[]" :value="b.id">
                         <input type="hidden" name="barang_nama[]" :value="b.nama">
                         <input type="number" min="1" name="barang_qty[]" x-model="b.qty" placeholder="Qty" class="mz-input" style="text-align:center">
-                        <input name="barang_harga[]" x-model="b.harga" placeholder="Harga" class="mz-input" style="text-align:right">
+                        <input type="hidden" name="barang_harga[]" :value="b.harga">
+                        <input
+                            type="text"
+                            :value="b.harga ? 'Rp. ' + Number(b.harga).toLocaleString('id-ID') : ''"
+                            placeholder="Rp. 0"
+                            class="mz-input"
+                            style="text-align:right"
+                            @focus="$event.target.value = b.harga || ''"
+                            @input="b.harga = $event.target.value.replace(/[^0-9]/g, '')"
+                            @blur="$event.target.value = b.harga ? 'Rp. ' + Number(b.harga).toLocaleString('id-ID') : ''"
+                        >
                         <button type="button" @click="barang.splice(index,1)" class="btn-remove">Hapus</button>
                     </div>
                 </template>
             </div>
 
             {{-- ── Pembayaran ── --}}
-            <div class="inv-section">
-                <div class="inv-section-head">
-                    <div class="inv-section-title">
-                        <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
-                        Pembayaran
-                    </div>
+<div class="inv-section">
+    <div class="inv-section-head">
+        <div class="inv-section-title">
+            <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.11 0-2 .89-2 2v12c0 1.11.89 2 2 2h16c1.11 0 2-.89 2-2V6c0-1.11-.89-2-2-2zm0 14H4v-6h16v6zm0-10H4V6h16v2z"/></svg>
+            Pembayaran
+        </div>
+    </div>
+    <div class="inv-grid" style="margin-bottom:16px">
+        <div class="mz-field">
+            <label class="mz-label">Status Pembayaran</label>
+            <select name="status_bayar" x-model="statusBayar"
+                    @change="if(statusBayar==='sudah'){ paymentAwal = grandTotal }"
+                    class="mz-select">
+                <option value="belum">Belum Lunas</option>
+                <option value="sudah">Lunas</option>
+            </select>
+        </div>
+        <div class="mz-field">
+            <label class="mz-label">Metode Pembayaran</label>
+            <select name="metode_bayar" class="mz-select">
+                <option value="">— Pilih Metode —</option>
+                <option value="cash">Cash</option>
+                <option value="bca">Debit</option>
+                <option value="mandiri">Transfer Bank</option>
+            </select>
+        </div>
+    </div>
+    <div class="inv-grid">
+        <div class="mz-field">
+            <label class="mz-label">Payment Awal (DP)</label>
+            <template x-if="statusBayar === 'belum'">
+                <input
+                    type="text"
+                    name="payment_awal"
+                    x-ref="paymentAwalInput"
+                    placeholder="Rp. 0"
+                    class="mz-input"
+                    :value="paymentAwal ? 'Rp. ' + Number(paymentAwal).toLocaleString('id-ID') : ''"
+                    @focus="$event.target.value = paymentAwal || ''"
+                    @input="paymentAwal = $event.target.value.replace(/[^0-9]/g,''); $event.target.value = paymentAwal"
+                    @blur="$event.target.value = paymentAwal ? 'Rp. ' + Number(paymentAwal).toLocaleString('id-ID') : ''"
+                >
+            </template>
+            <template x-if="statusBayar === 'sudah'">
+                <div>
+                    <div class="lunas-box">LUNAS</div>
+                    <input type="hidden" name="payment_awal" :value="grandTotal">
                 </div>
-                <div class="inv-grid" style="margin-bottom:16px">
-                    <div class="mz-field">
-                        <label class="mz-label">Status Pembayaran</label>
-                        <select name="status_bayar" x-model="statusBayar"
-                                @change="if(statusBayar==='sudah'){ paymentAwal = grandTotal }"
-                                class="mz-select">
-                            <option value="belum">Belum Lunas</option>
-                            <option value="sudah">Lunas</option>
-                        </select>
-                    </div>
-                    <div class="mz-field">
-                        <label class="mz-label">Metode Pembayaran</label>
-                        <select name="metode_bayar" class="mz-select">
-                            <option value="">— Pilih Metode —</option>
-                            <option value="cash">Cash</option>
-                            <option value="bca">Transfer BCA</option>
-                            <option value="mandiri">Transfer Mandiri</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="inv-grid">
-                    <div class="mz-field">
-                        <label class="mz-label">Payment Awal (DP)</label>
-                        <template x-if="statusBayar === 'belum'">
-                            <input type="number" name="payment_awal" x-model="paymentAwal" min="0" class="mz-input">
-                        </template>
-                        <template x-if="statusBayar === 'sudah'">
-                            <div>
-                                <div class="lunas-box">LUNAS</div>
-                                <input type="hidden" name="payment_awal" :value="grandTotal">
-                            </div>
-                        </template>
-                    </div>
-                    <div class="mz-field">
-                        <label class="mz-label">Sisa Tagihan</label>
-                        <template x-if="statusBayar === 'belum'">
-                            <div class="sisa-display" x-text="formatRupiah(sisa)"></div>
-                        </template>
-                        <template x-if="statusBayar === 'sudah'">
-                            <div class="lunas-box">LUNAS</div>
-                        </template>
-                    </div>
-                </div>
-            </div>
+            </template>
+        </div>
+        <div class="mz-field">
+            <label class="mz-label">Sisa Tagihan</label>
+            <template x-if="statusBayar === 'belum'">
+                <div class="sisa-display" x-text="formatRupiah(sisa)"></div>
+            </template>
+            <template x-if="statusBayar === 'sudah'">
+                <div class="lunas-box">LUNAS</div>
+            </template>
+        </div>
+    </div>
+</div>
 
             {{-- ── Notes ── --}}
             <div class="inv-section">

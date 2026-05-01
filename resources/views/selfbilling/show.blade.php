@@ -45,7 +45,8 @@
                 Input Pembayaran Baru
             </div>
 
-            <form action="{{ route('selfbilling.pay', $selfbilling->id) }}" method="POST">
+            <form action="{{ route('selfbilling.pay', $selfbilling->id) }}" method="POST"
+                onsubmit="document.querySelectorAll('.rupiah-field').forEach(i=>i.value=i.value.replace(/[^0-9]/g,''))">
                 @csrf
                 <div class="inv-grid" style="margin-top: 15px;">
                     <div class="mz-field">
@@ -53,15 +54,24 @@
                         <input type="date" name="tanggal_bayar" class="mz-input" value="{{ date('Y-m-d') }}" required>
                     </div>
                     <div class="mz-field">
-                        <label class="mz-label">Nominal Bayar (Rp)</label>
-                        <input type="number" name="nominal_bayar" class="mz-input" max="{{ $selfbilling->sisa_tagihan }}" placeholder="Contoh: 500000" required>
-                    </div>
+                    <label class="mz-label">Nominal Bayar (Rp)</label>
+                    <input
+                        type="text"
+                        name="nominal_bayar"
+                        class="mz-input rupiah-field"
+                        placeholder="Rp. 0"
+                        required
+                        onfocus="this.value=this.value.replace(/[^0-9]/g,'')"
+                        oninput="let r=this.value.replace(/[^0-9]/g,''); this.value=r?'Rp. '+Number(r).toLocaleString('id-ID'):'';"
+                        onblur="if(this.value) this.value='Rp. '+Number(this.value.replace(/[^0-9]/g,'')).toLocaleString('id-ID')"
+                    >
+                </div>
                     <div class="mz-field">
                         <label class="mz-label">Metode</label>
                         <select name="metode_bayar" class="mz-select" required>
                             <option value="cash">Cash</option>
-                            <option value="bca">Transfer BCA</option>
-                            <option value="mandiri">Transfer Mandiri</option>
+                            <option value="bca">Debit</option>
+                            <option value="mandiri">Transfer Bank</option>
                         </select>
                     </div>
                     <div class="mz-field">
@@ -87,7 +97,18 @@
                 <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid var(--mz-border);">
                     <div>
                         <div style="font-size: 13px; font-weight: 600;">{{ date('d F Y', strtotime($pay->tanggal_bayar)) }}</div>
-                        <div style="font-size: 11px; color: var(--mz-muted);">Metode: {{ strtoupper($pay->metode_bayar) }}</div>
+                        <div style="font-size: 11px; color: var(--mz-muted);">
+                            Metode:
+                            @if($pay->metode_bayar == 'bca')
+                                Debit
+                            @elseif($pay->metode_bayar == 'mandiri')
+                                Transfer Bank
+                            @elseif($pay->metode_bayar == 'cash')
+                                Cash
+                            @else
+                                {{ strtoupper($pay->metode_bayar) }}
+                            @endif
+                        </div>
                     </div>
                     <div style="font-family: 'Rajdhani'; font-weight: 700; color: var(--mz-green); font-size: 18px;">
                         + Rp {{ number_format($pay->nominal_bayar, 0, ',', '.') }}

@@ -5,7 +5,7 @@
     <title>@yield('title', 'Dashboard') | 5a Auto Service</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://cdn.tailwindcss.com"></script>
-    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.15.11/dist/cdn.min.js"></script>
     <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('logo.png') }}">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ asset('assets/css/dashboard.css') }}">
@@ -60,7 +60,7 @@
                 </div>
 
                 <div class="nav-sub {{ $transaksiActive ? 'open' : '' }}">
-                    <a href="{{ route('estimasi.create') }}"
+                    <a href="{{ route('estimasi.index') }}"
                        class="nav-sub-item {{ request()->routeIs('estimasi.*') ? 'active' : '' }}">
                         <span class="sub-dot"></span>
                         Estimasi Harga

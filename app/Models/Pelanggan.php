@@ -14,5 +14,6 @@ class Pelanggan extends Model
         'merk_mobil',
         'model_mobil',
         'tahun_mobil',
+        'no_chasis','no_mesin'
     ];
 }

@@ -29,8 +29,10 @@
     <div class="sb-stats">
         <div class="sb-stat-card">
             <div class="sb-stat-icon sb-icon-red">
-                <svg viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1h-2.2c.12 2.19 1.76 3.42 3.68 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
-            </div>
+                <svg class="mz-input-icon" viewBox="0 0 24 24">
+    <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+</svg>            </div>
+
             <div>
                 <div class="sb-stat-label">Total Sisa Hutang</div>
                 <div class="sb-stat-value sb-val-danger">Rp {{ number_format($totalSisaHutang, 0, ',', '.') }}</div>
@@ -182,9 +184,10 @@
                 <svg viewBox="0 0 24 24" style="width:16px;height:16px;fill:var(--muted)"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
             </button>
         </div>
-        <form id="editForm" method="POST">
-            @csrf
-            @method('PUT')
+        <form id="editForm" method="POST"
+      onsubmit="document.querySelectorAll('.rupiah-modal').forEach(i=>i.value=i.value.replace(/[^0-9]/g,''))">
+    @csrf
+    @method('PUT')
             <div class="sb-modal-body">
                 <div class="sb-form-grid">
                     <div class="sb-form-group">
@@ -205,7 +208,18 @@
                     </div>
                     <div class="sb-form-group" style="grid-column:span 2">
                         <label class="sb-form-label">Total Tagihan (Rp)</label>
-                        <input type="number" name="total_tagihan" id="e-total" class="sb-input" placeholder="0" min="0" required>
+                        <input
+                            type="text"
+                            name="total_tagihan"
+                            id="e-total"
+                            class="sb-input rupiah-modal"
+                            placeholder="Rp. 0"
+                            min="0"
+                            required
+                            onfocus="this.value=this.value.replace(/[^0-9]/g,'')"
+                            oninput="let r=this.value.replace(/[^0-9]/g,''); this.value=r?'Rp. '+Number(r).toLocaleString('id-ID'):'';"
+                            onblur="if(this.value) this.value='Rp. '+Number(this.value.replace(/[^0-9]/g,'')).toLocaleString('id-ID')"
+                        >
                         <span class="sb-input-hint" id="e-total-hint"></span>
                     </div>
                     <div class="sb-form-group" style="grid-column:span 2">

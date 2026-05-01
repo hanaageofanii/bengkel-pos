@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Estimasi — {{ $data['pelanggan']->nama }}</title>
+    <title>Estimasi — {{ $estimasi->pelanggan->nama }}</title>
     <link rel="stylesheet" href="{{ asset('assets/css/print-inv.css') }}">
     <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
     <style>
@@ -70,7 +70,7 @@
 
 {{-- Tombol aksi (tidak ikut print) --}}
 <div class="no-print">
-    <a href="{{ route('estimasi.create') }}" class="btn-back-est">← Ubah</a>
+    <a href="{{ route('estimasi.index', $estimasi) }}" class="btn-back-est">← Kembali</a>
     <button class="btn-print-est" onclick="window.print()">🖨 Print Estimasi</button>
 </div>
 
@@ -92,27 +92,28 @@
 
 <table class="outer-table">
     <colgroup>
-        <col style="width: 47%">
-        <col style="width: 6%">
-        <col style="width: 47%">
+        <col style="width: 51%">
+        <col style="width: 5%">
+        <col style="width: 46%">
     </colgroup>
     <tbody>
         <tr>
-            <td style="padding:0;border:none;vertical-align:top;">
+            <!-- KIRI -->
+            <td style="padding: 0; border: none; vertical-align: top;">
                 <table class="inner-table">
                     <tr>
                         <td>Nama</td>
-                        <td></td>
+                        <td>{{ $estimasi->pelanggan->nama }}</td>
                     </tr>
                     <tr>
                         <td>Merk / Type</td>
                         <td>
-                            {{ $data['pelanggan']->merk_mobil }} {{ $data['pelanggan']->model_mobil }}
+                            {{ $estimasi->pelanggan->merk_mobil }} {{ $estimasi->pelanggan->model_mobil }}
                         </td>
                     </tr>
                     <tr>
                         <td>No. Polisi</td>
-                        <td>{{ strtoupper($data['pelanggan']->plat_nomor) }}</td>
+                        <td>{{ strtoupper($estimasi->pelanggan->plat_nomor) }}</td>
                     </tr>
                     <tr>
                         <td>KM</td>
@@ -120,8 +121,11 @@
                     </tr>
                 </table>
             </td>
+
             <td class="spacer-col"></td>
-            <td style="padding:0;border:none;vertical-align:top;">
+
+            <!-- KANAN -->
+            <td style="padding: 0; border: none; vertical-align: top;">
                 <table class="inner-table">
                     <tr>
                         <td>Date</td>
@@ -146,6 +150,12 @@
 </table>
 
 <!-- JASA -->
+@php
+    $minJasaRows   = 10;
+    $jasaCount     = count($data['jasa']);
+    $totalJasaRows = max($jasaCount, $minJasaRows);
+@endphp
+
 <table>
     <tr class="bold text-center">
         <td width="5%">No</td>
@@ -154,80 +164,112 @@
         <td width="30%">Pekerjaan</td>
         <td width="15%">Harga Jasa</td>
     </tr>
-    @php $no = 1; @endphp
-    @foreach($data['jasa'] as $j)
-    <tr>
-        <td class="text-center">{{ $no }}</td>
-        <td>{{ $data['keluhan'][$no-1] ?? '' }}</td>
-        <td class="text-center">{{ $no }}</td>
-        <td>{{ $j['nama'] }}</td>
-        <td class="text-right">Rp {{ number_format($j['harga']) }}</td>
+
+    @for($i = 0; $i < $totalJasaRows; $i++)
+    <tr style="{{ !isset($data['jasa'][$i]) ? 'height: 14px;' : '' }}">
+        <td class="text-center">{{ isset($data['jasa'][$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $data['keluhan'][$i] ?? '' }}</td>
+        <td class="text-center">{{ isset($data['jasa'][$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $data['jasa'][$i]['nama'] ?? '' }}</td>
+        <td class="text-right">
+            @if(isset($data['jasa'][$i]))
+                Rp {{ number_format($data['jasa'][$i]['harga']) }}
+            @endif
+        </td>
     </tr>
-    @php $no++; @endphp
-    @endforeach
+    @endfor
+
     <tr class="bold">
-        <td colspan="3" style="border:none;"></td>
+        <td colspan="3" style="border: none;"></td>
         <td class="text-right total-label">Total Jasa</td>
         <td class="text-right total-amount">Rp {{ number_format($data['total_jasa']) }}</td>
     </tr>
 </table>
 
 <!-- SPARE PART -->
+@php
+    $minBarangRows   = 10;
+    $barangCount     = count($data['barang']);
+    $totalBarangRows = max($barangCount, $minBarangRows);
+@endphp
+
 <table>
     <tr class="bold text-center">
-        <td>No</td>
-        <td>Spare Part</td>
-        <td>Qty</td>
-        <td>Harga</td>
-        <td>Total</td>
+        <td width="5%">No</td>
+        <td width="45%">Spare Part</td>
+        <td width="5%">Qty</td>
+        <td width="30%">Harga</td>
+        <td width="15%">Total</td>
     </tr>
-    @foreach($data['barang'] as $i => $b)
-    <tr>
-        <td class="text-center">{{ $i+1 }}</td>
-        <td>{{ $b['nama'] }}</td>
-        <td class="text-center">{{ $b['qty'] }}</td>
-        <td class="text-right">Rp {{ number_format($b['harga']) }}</td>
-        <td class="text-right">Rp {{ number_format($b['total']) }}</td>
+
+    @for($i = 0; $i < $totalBarangRows; $i++)
+    <tr style="{{ !isset($data['barang'][$i]) ? 'height: 14px;' : '' }}">
+        <td class="text-center">{{ isset($data['barang'][$i]) ? $i + 1 : '' }}</td>
+        <td>{{ $data['barang'][$i]['nama'] ?? '' }}</td>
+        <td class="text-center">{{ isset($data['barang'][$i]) ? $data['barang'][$i]['qty'] ?? '' : '' }}</td>
+        <td class="text-right">
+            @if(isset($data['barang'][$i]))
+                Rp {{ number_format($data['barang'][$i]['harga']) }}
+            @endif
+        </td>
+        <td class="text-right">
+            @if(isset($data['barang'][$i]))
+                Rp {{ number_format($data['barang'][$i]['total']) }}
+            @endif
+        </td>
     </tr>
-    @endforeach
+    @endfor
+
     <tr class="bold">
-        <td colspan="3" rowspan="2" class="note-cell" style="border:none;vertical-align:top;padding:4px 6px;">NOTE:</td>
+        <td colspan="3" rowspan="2" class="note-cell" style="border: none; vertical-align: top; padding: 4px 6px;">
+            <span style="font-weight: bold;">NOTE:</span><br>
+            {{ $data['notes'] ?? '' }}
+        </td>
         <td class="text-right total-label">Total Part</td>
         <td class="text-right total-amount">Rp {{ number_format($data['total_part']) }}</td>
     </tr>
+
     <tr class="bold">
         <td class="text-right total-label double-line">Estimasi Total</td>
-        <td class="text-right total-amount double-line" style="color:#d97706;">
+        <td class="text-right total-amount double-line" style="color: #d97706;">
             Rp {{ number_format($data['grand_total']) }}
         </td>
     </tr>
 </table>
 
 <!-- FOOTER TTD + Rekening -->
-<table class="no-border" style="margin-top:2px;">
+<table class="no-border" style="margin-top: 2px;">
     <tr>
-        <td style="vertical-align:top;padding-top:0;width:50%;padding-left:40px;text-align:left;">
-            <div style="font-weight:bold;">
-                Bekasi, {{ \Carbon\Carbon::parse($data['tanggal'])->format('d F Y') }}
-            </div>
-            <div style="margin-left:20px;">Hormat Kami,</div>
-            <div style="position:relative;height:60px;">
-                <img src="{{ asset('assets/images/ttd.png') }}"
-                     style="position:absolute;top:-80px;left:0;height:220px;">
-            </div>
+        <td style="vertical-align: top; width: 50%; padding-left: 40px; border: none;">
+
+    <div style="width: 150px; margin-left: 0px; text-align: center;">
+
+        <div style="font-weight: bold;">
+            Bekasi, {{ \Carbon\Carbon::parse($data['tanggal'])->format('d F Y') }}
+        </div>
+
+        <div>
+            Hormat Kami,
+        </div>
+
+    <div style="margin-top: -90px;">
+        <img src="{{ asset('assets/images/ttd.png') }}"
+             style="height: 210px; width: -30px;">
+    </div>
+
         </td>
-        <td style="vertical-align:top;width:25%;padding:0 0 0 10px;">
+        <td style="vertical-align: top; width: 43%; padding: 0 0 0 10px;">
             <div class="rekening-box">
-                Pembayaran melalui Rekening :
+                Pembayaran Transfer melalui Rekening :
                 <table class="rek-table">
                     <tr>
                         <td class="rek-label">Mandiri</td>
-                        <td>: </td>
+                        <td class="rek-separator">:</td>
                         <td class="rek-num">1560010520965</td>
                     </tr>
                     <tr>
                         <td class="rek-label">BCA</td>
-                        <td>: </td>
+                        <td class="rek-separator">:</td>
                         <td class="rek-num">5315064497</td>
                     </tr>
                 </table>

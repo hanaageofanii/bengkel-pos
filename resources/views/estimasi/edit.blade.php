@@ -1,6 +1,6 @@
 @extends('dashboard')
 
-@section('title','Buat Estimasi')
+@section('title','Edit Estimasi')
 
 @section('content')
 
@@ -10,18 +10,37 @@
 <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
 
+@php
+    $existingJasa = collect($estimasi->jasa ?? [])->map(fn($j) => [
+        'id'    => $j['id']    ?? '',
+        'nama'  => $j['nama']  ?? '',
+        'harga' => $j['harga'] ?? 0,
+    ])->values()->toArray();
+
+    $existingBarang = collect($estimasi->barang ?? [])->map(fn($b) => [
+        'id'    => $b['id']    ?? '',
+        'nama'  => $b['nama']  ?? '',
+        'qty'   => $b['qty']   ?? 1,
+        'harga' => $b['harga'] ?? 0,
+    ])->values()->toArray();
+
+    $existingKeluhan = $estimasi->keluhan ?? [''];
+    $tipePelanggan   = $estimasi->pelanggan->tipe ?? 'pribadi';
+@endphp
+
 <div class="inv-wrap">
 
     <div class="inv-breadcrumb">
         <a href="{{ route('estimasi.index') }}">Estimasi</a>
         <span>/</span>
-        <span style="color:var(--mz-text)">Buat</span>
+        <span style="color:var(--mz-text)">Edit</span>
     </div>
-    <div class="inv-title">Buat Estimasi</div>
-    <div class="inv-subtitle">Estimasi biaya servis & perbaikan kendaraan</div>
+    <div class="inv-title">Edit Estimasi</div>
+    <div class="inv-subtitle">Perbarui data estimasi lalu simpan</div>
 
-    <form method="POST" action="{{ route('estimasi.store') }}" id="estimasiForm">
+    <form method="POST" action="{{ route('estimasi.update', $estimasi) }}" id="estimasiForm">
         @csrf
+        @method('PUT')
         <div class="inv-card">
             <div class="inv-card-bar" style="background: linear-gradient(90deg, #f5c542, #f59e0b, #fbbf24);"></div>
 
@@ -39,34 +58,36 @@
                         <select name="pelanggan_id" id="pelangganSelect" class="mz-select select2">
                             <option value="">Pilih pelanggan</option>
                             @foreach($pelanggans as $p)
-                                <option value="{{ $p->id }}" data-tipe="{{ $p->tipe }}">
+                                <option value="{{ $p->id }}"
+                                        data-tipe="{{ $p->tipe }}"
+                                        {{ $estimasi->pelanggan_id == $p->id ? 'selected' : '' }}>
                                     {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
                                 </option>
                             @endforeach
                         </select>
                         <p class="tipe-text" style="color:var(--mz-teal,#2dd4bf)">
-                            Tipe: <span id="tipePelangganText" style="text-transform:uppercase">-</span>
+                            Tipe: <span id="tipePelangganText" style="text-transform:uppercase">{{ strtoupper($tipePelanggan) }}</span>
                         </p>
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">Tanggal</label>
-                        <input type="date" name="tanggal" value="{{ date('Y-m-d') }}" class="mz-input">
+                        <input type="date" name="tanggal" value="{{ $estimasi->tanggal }}" class="mz-input">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">KM</label>
-                        <input name="km" class="mz-input" placeholder="Odometer">
+                        <input name="km" value="{{ $estimasi->km }}" class="mz-input" placeholder="Odometer">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Telp</label>
-                        <input name="no_telp" class="mz-input" placeholder="08xxxxxxxxxx">
+                        <input name="no_telp" value="{{ $estimasi->no_telp }}" class="mz-input" placeholder="08xxxxxxxxxx">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Chasis</label>
-                        <input name="no_chasis" class="mz-input">
+                        <input name="no_chasis" value="{{ $estimasi->no_chasis }}" class="mz-input">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Mesin</label>
-                        <input name="no_mesin" class="mz-input">
+                        <input name="no_mesin" value="{{ $estimasi->no_mesin }}" class="mz-input">
                     </div>
                 </div>
             </div>
@@ -115,8 +136,7 @@
                 </div>
                 <div id="barangContainer"></div>
             </div>
-
-            {{-- ── Catatan ── --}}
+ {{-- ── Catatan ── --}}
 <div class="inv-section">
     <div class="inv-section-head">
         <div class="inv-section-title">
@@ -128,10 +148,9 @@
         <textarea name="notes"
                   class="mz-textarea"
                   rows="3"
-                  placeholder="Tambahkan catatan estimasi..."></textarea>
+                  placeholder="Tambahkan catatan estimasi...">{{ $estimasi->notes }}</textarea>
     </div>
 </div>
-
             {{-- Summary --}}
             <div class="inv-summary">
                 <div class="sum-item">
@@ -150,6 +169,8 @@
                 </div>
             </div>
 
+
+
             {{-- Footer --}}
             <div class="inv-footer">
                 <a href="{{ route('estimasi.index') }}" class="btn-cancel">Batal</a>
@@ -165,7 +186,12 @@
 // ── Data dari PHP ─────────────────────────────────────────────────────────────
 const JASA_OPTIONS   = @json($jasas);
 const BARANG_OPTIONS = @json($barangs);
-let tipePelanggan    = 'pribadi';
+let tipePelanggan    = '{{ $tipePelanggan }}';
+
+// Data existing
+const existingKeluhan = @json($existingKeluhan);
+const existingJasa    = @json($existingJasa);
+const existingBarang  = @json($existingBarang);
 
 // ── Counter row ───────────────────────────────────────────────────────────────
 let jasaIdx   = 0;
@@ -186,7 +212,7 @@ function updateSummary() {
     let totalPart = 0;
     document.querySelectorAll('.barang-row').forEach(row => {
         const harga = Number(row.querySelector('.barang-harga-hidden').value || 0);
-        const qty   = Number(row.querySelector('.barang-qty-input').value   || 0);
+        const qty   = Number(row.querySelector('.barang-qty-input').value || 0);
         totalPart += harga * qty;
     });
 
@@ -228,8 +254,8 @@ function addJasa(data = null) {
     const harga     = data?.harga || 0;
 
     const div = document.createElement('div');
-    div.className   = 'row-item row-12 jasa-row';
-    div.dataset.idx  = idx;
+    div.className  = 'row-item row-12 jasa-row';
+    div.dataset.idx = idx;
     div.style.marginBottom = '10px';
     div.innerHTML = `
         <select class="mz-select select2-jasa" id="jasaSelect_${idx}" data-index="${idx}">
@@ -247,6 +273,7 @@ function addJasa(data = null) {
     `;
     container.appendChild(div);
 
+    // Bind display input
     const display = div.querySelector('.jasa-harga-display');
     const hidden  = div.querySelector('.jasa-harga-hidden');
     display.addEventListener('focus', () => { display.value = hidden.value || ''; });
@@ -258,6 +285,7 @@ function addJasa(data = null) {
         display.value = hidden.value ? 'Rp. ' + Number(hidden.value).toLocaleString('id-ID') : '';
     });
 
+    // Select2
     const $sel = $(`#jasaSelect_${idx}`);
     $sel.select2({ width: '100%' });
     $sel.on('change', function () {
@@ -267,10 +295,10 @@ function addJasa(data = null) {
             ? (opt.dataset.perusahaan || 0)
             : (opt.dataset.pribadi    || 0);
 
-        div.querySelector('.jasa-id-hidden').value   = opt.value;
-        div.querySelector('.jasa-nama-hidden').value = opt.dataset.nama || '';
-        hidden.value  = price;
-        display.value = price ? 'Rp. ' + Number(price).toLocaleString('id-ID') : '';
+        div.querySelector('.jasa-id-hidden').value    = opt.value;
+        div.querySelector('.jasa-nama-hidden').value  = opt.dataset.nama || '';
+        hidden.value   = price;
+        display.value  = price ? 'Rp. ' + Number(price).toLocaleString('id-ID') : '';
         updateSummary();
     });
 
@@ -326,8 +354,10 @@ function addBarang(data = null) {
     `;
     container.appendChild(div);
 
+    // Qty change
     div.querySelector('.barang-qty-input').addEventListener('input', updateSummary);
 
+    // Display harga
     const display = div.querySelector('.barang-harga-display');
     const hidden  = div.querySelector('.barang-harga-hidden');
     display.addEventListener('focus', () => { display.value = hidden.value || ''; });
@@ -339,6 +369,7 @@ function addBarang(data = null) {
         display.value = hidden.value ? 'Rp. ' + Number(hidden.value).toLocaleString('id-ID') : '';
     });
 
+    // Select2
     const $sel = $(`#barangSelect_${idx}`);
     $sel.select2({ width: '100%' });
     $sel.on('change', function () {
@@ -365,12 +396,24 @@ document.getElementById('pelangganSelect').addEventListener('change', function (
     document.getElementById('tipePelangganText').textContent = tipePelanggan.toUpperCase();
 });
 
-// ── Init ──────────────────────────────────────────────────────────────────────
+// ── Init Select2 pelanggan ────────────────────────────────────────────────────
 $(document).ready(function () {
     $('#pelangganSelect').select2({ width: '100%' });
 
-    // Satu keluhan kosong di awal
-    addKeluhan();
+    // Load existing keluhan
+    if (existingKeluhan.length > 0) {
+        existingKeluhan.forEach(k => addKeluhan(k));
+    } else {
+        addKeluhan();
+    }
+
+    // Load existing jasa
+    existingJasa.forEach(j => addJasa(j));
+
+    // Load existing barang
+    existingBarang.forEach(b => addBarang(b));
+
+    updateSummary();
 });
 </script>
 

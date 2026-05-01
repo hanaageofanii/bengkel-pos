@@ -21,7 +21,7 @@ class PelangganController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'nama'        => 'required|string|max:255',
+            'nama'        => 'nullable|string|max:255',
             'no_hp'       => 'nullable|string|max:20',
             'tipe'        => 'required|in:pribadi,perusahaan',
             'plat_nomor'  => 'required|string|max:15|unique:pelanggans,plat_nomor',
@@ -44,7 +44,7 @@ class PelangganController extends Controller
     public function update(Request $request, Pelanggan $pelanggan)
     {
         $request->validate([
-            'nama'        => 'required|string|max:255',
+            'nama'        => 'nullable|string|max:255',
             'no_hp'       => 'nullable|string|max:20',
             'tipe'        => 'required|in:pribadi,perusahaan',
             'plat_nomor'  => 'required|string|max:15|unique:pelanggans,plat_nomor,' . $pelanggan->id,

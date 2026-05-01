@@ -49,7 +49,7 @@
                         <label class="mz-label">Nama Pelanggan / Perusahaan</label>
                         <div class="mz-input-wrap">
                             <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                            <input name="nama" required value="{{ old('nama') }}"
+                            <input name="nama" value="{{ old('nama') }}"
                                    placeholder="Contoh: Andi Pratama / PT Maju Jaya"
                                    class="mz-input">
                         </div>
@@ -72,14 +72,13 @@
                         <div class="mz-select-wrap">
                             <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/></svg>
                             <select name="tipe" class="mz-select" id="tipeSelect" onchange="updateTipePreview()">
-                                <option value="pribadi"    {{ old('tipe') == 'pribadi'    ? 'selected' : '' }}>Pribadi</option>
+                                <option value="pribadi"    {{ old('tipe') == 'pribadi'    ? 'selected' : '' }}>Umum</option>
                                 <option value="perusahaan" {{ old('tipe') == 'perusahaan' ? 'selected' : '' }}>Perusahaan</option>
                             </select>
                             <svg class="mz-select-caret" viewBox="0 0 24 24"><path d="M7 10l5 5 5-5z"/></svg>
                         </div>
                         <div class="tipe-preview" id="tipePreview">
                             <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-                            Pelanggan Pribadi
                         </div>
                     </div>
 
@@ -106,11 +105,37 @@
                         <div class="plat-preview" id="platPreview"></div>
                     </div>
 
+                    <div class="mz-field">
+                        <label class="mz-label">No. Chasis</label>
+                        <div class="mz-input-wrap">
+                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 11h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+                            <input name="no_chasis" required value="{{ old('no_chasis') }}"
+                                   placeholder="No. Chasis"
+                                   class="mz-input uppercase-input"
+                                   id="noChasisInput"
+                                   oninput="updateCarVisual()">
+                        </div>
+                        <div class="no-chasis-preview" id="noChasisPreview"></div>
+                    </div>
+
+                    <div class="mz-field">
+                        <label class="mz-label">No. Mesin</label>
+                        <div class="mz-input-wrap">
+                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-7 11h-2v-2h2v2zm0-4h-2V7h2v4z"/></svg>
+                            <input name="no_mesin" required value="{{ old('no_mesin') }}"
+                                   placeholder="No. Mesin"
+                                   class="mz-input uppercase-input"
+                                   id="noMesinInput"
+                                   oninput="updateCarVisual()">
+                        </div>
+                        <div class="no-mesin-preview" id="noMesinPreview"></div>
+                    </div>
+
                     {{-- Merk --}}
                     <div class="mz-field">
                         <label class="mz-label">Merk Mobil</label>
                         <div class="mz-input-wrap">
-                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM5 11l1.5-4.5h11L19 11H5z"/></svg>
+                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M18.92 6.01C18.72 5.42 18.16 5 17.5 5h-11c-.66 0-1.21.42-1.42 1.01L3 12v8c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-1h12v1c0 .55.45 1 1 1h1c.55 0 1-.45 1-1v-8l-2.08-5.99zM6.5 16c-.83 0-1.5-.67-1.5-1.5S5.67 13 6.5 13s1.5.67 1.5 1.5S7.33 16 6.5 16zm11 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 １.５.67 １.５ １.５-.67 １.５-１.５ １.５zM５ １１l１.５-４.５h１１L１９ １１H５z"/></svg>
                             <input name="merk_mobil" required value="{{ old('merk_mobil') }}"
                                    placeholder="Toyota, Honda, Mitsubishi"
                                    class="mz-input"

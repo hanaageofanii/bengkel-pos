@@ -27,3 +27,20 @@ function countChars() {
 document.addEventListener("DOMContentLoaded", function () {
     countChars();
 });
+
+function formatRupiah(input, hiddenId, previewId) {
+    let raw = input.value.replace(/[^0-9]/g, "");
+
+    if (raw === "") {
+        input.value = "";
+        document.getElementById(hiddenId).value = "";
+        document.getElementById(previewId).textContent = "";
+        return;
+    }
+
+    let formatted = parseInt(raw, 10).toLocaleString("id-ID");
+
+    input.value = "Rp. " + formatted;
+    document.getElementById(hiddenId).value = raw;
+    document.getElementById(previewId).textContent = "→ Rp. " + formatted;
+}

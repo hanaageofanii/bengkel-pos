@@ -77,20 +77,22 @@
 
                 <div class="tb-grid">
                     {{-- Harga Pribadi --}}
-                    <div class="mz-field">
-                        <label class="mz-label">Harga Pribadi</label>
+                    <div class="mz-field col-full">
+                        <label class="mz-label">Harga Modal</label>
                         <div class="mz-input-wrap">
-                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H8.3c.12 2.19 1.76 3.42 3.7 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                        <svg class="mz-input-icon" viewBox="0 0 24 24">
+                            <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+                        </svg>
+                        <input type="hidden" name="harga_pribadi" id="harga_pribadi_val" value="{{ old('harga_pribadi', $barang->harga_pribadi) }}">
                             <input
-                                name="harga_pribadi"
-                                type="number"
-                                required
+                                type="text"
                                 id="harga_pribadi"
-                                value="{{ old('harga_pribadi', $barang->harga_pribadi) }}"
+                                value="Rp. {{ number_format(old('harga_pribadi', $barang->harga_pribadi), 0, ',', '.') }}"
                                 class="mz-input"
                                 data-original="{{ $barang->harga_pribadi }}"
-                                oninput="previewHarga('harga_pribadi','prev_pribadi'); markChanged(this)"
+                                oninput="formatRupiah(this, 'harga_pribadi_val', 'prev_pribadi'); markChanged(this)"
                             >
+
                         </div>
                         <div class="price-preview" id="prev_pribadi">
                             → Rp {{ number_format($barang->harga_pribadi, 0, ',', '.') }}
@@ -98,25 +100,26 @@
                     </div>
 
                     {{-- Harga Perusahaan --}}
-                    <div class="mz-field">
+                    {{-- <div class="mz-field">
                         <label class="mz-label">Harga Perusahaan</label>
                         <div class="mz-input-wrap">
-                            <svg class="mz-input-icon" viewBox="0 0 24 24"><path d="M11.8 10.9c-2.27-.59-3-1.2-3-2.15 0-1.09 1.01-1.85 2.7-1.85 1.78 0 2.44.85 2.5 2.1h2.21c-.07-1.72-1.12-3.3-3.21-3.81V3h-3v2.16c-1.94.42-3.5 1.68-3.5 3.61 0 2.31 1.91 3.46 4.7 4.13 2.5.6 3 1.48 3 2.41 0 .69-.49 1.79-2.7 1.79-2.06 0-2.87-.92-2.98-2.1H8.3c.12 2.19 1.76 3.42 3.7 3.83V21h3v-2.15c1.95-.37 3.5-1.5 3.5-3.55 0-2.84-2.43-3.81-4.7-4.4z"/></svg>
+                        <svg class="mz-input-icon" viewBox="0 0 24 24">
+                            <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+                        </svg>
+                        <input type="hidden" name="harga_perusahaan" id="harga_perusahaan_val" value="{{ old('harga_perusahaan', $barang->harga_perusahaan) }}">
                             <input
-                                name="harga_perusahaan"
-                                type="number"
-                                required
+                                type="text"
                                 id="harga_perusahaan"
-                                value="{{ old('harga_perusahaan', $barang->harga_perusahaan) }}"
+                                value="Rp. {{ number_format(old('harga_perusahaan', $barang->harga_perusahaan), 0, ',', '.') }}"
                                 class="mz-input"
                                 data-original="{{ $barang->harga_perusahaan }}"
-                                oninput="previewHarga('harga_perusahaan','prev_perusahaan'); markChanged(this)"
+                                oninput="formatRupiah(this, 'harga_perusahaan_val', 'prev_perusahaan'); markChanged(this)"
                             >
                         </div>
                         <div class="price-preview" id="prev_perusahaan">
                             → Rp {{ number_format($barang->harga_perusahaan, 0, ',', '.') }}
                         </div>
-                    </div>
+                    </div> --}}
                 </div>
 
                 <hr class="tb-sep">

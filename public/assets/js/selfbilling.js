@@ -68,7 +68,9 @@ function openEdit(btn) {
     document.getElementById("e-tanggal").value = tanggal;
     document.getElementById("e-barang").value = barang;
     document.getElementById("e-jumlah").value = jumlah;
-    document.getElementById("e-total").value = total;
+    document.getElementById("e-total").value = total
+        ? "Rp. " + Number(total).toLocaleString("id-ID")
+        : "";
     document.getElementById("e-notes").value = notes || "";
 
     // Update hint total dalam format rupiah
@@ -93,17 +95,16 @@ document.addEventListener("DOMContentLoaded", () => {
 function updateTotalHint(val) {
     const hint = document.getElementById("e-total-hint");
     if (!hint) return;
-    hint.textContent = val
+    const raw = String(val).replace(/[^0-9]/g, "");
+    hint.textContent = raw
         ? "= " +
           new Intl.NumberFormat("id-ID", {
               style: "currency",
               currency: "IDR",
               minimumFractionDigits: 0,
-          }).format(val)
+          }).format(raw)
         : "";
 }
-
-// ── Open Delete (ambil data dari data-* attribute tombol) ─────────────────────
 
 function openDelete(btn) {
     const id = btn.dataset.id;

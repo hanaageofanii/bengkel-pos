@@ -130,10 +130,19 @@ Route::delete(
 Route::get('/dashboard/absensi-rekap', [DashboardController::class, 'absensiRekap'])
         ->name('dashboard.absensiRekap');
 
-
 //estimasi
-Route::get('/estimasi',        [EstimasiController::class, 'create'])->name('estimasi.create');
-Route::post('/estimasi/preview', [EstimasiController::class, 'preview'])->name('estimasi.preview');
+Route::get('/estimasi',                        [EstimasiController::class, 'index'])->name('estimasi.index');
+Route::get('/estimasi/create',                 [EstimasiController::class, 'create'])->name('estimasi.create');
+Route::post('/estimasi',                       [EstimasiController::class, 'store'])->name('estimasi.store');
+Route::get('/estimasi/{estimasi}',             [EstimasiController::class, 'show'])->name('estimasi.show');
+Route::get('/estimasi/{estimasi}/print',       [EstimasiController::class, 'print'])->name('estimasi.print');
+Route::get('/estimasi/{estimasi}/edit',        [EstimasiController::class, 'edit'])->name('estimasi.edit');
+Route::put('/estimasi/{estimasi}',             [EstimasiController::class, 'update'])->name('estimasi.update');
+Route::delete('/estimasi/{estimasi}',          [EstimasiController::class, 'destroy'])->name('estimasi.destroy');
+
+Route::post('estimasi/{estimasi}/approve', [EstimasiController::class, 'approve'])
+    ->name('estimasi.approve');
+Route::resource('estimasi', EstimasiController::class);
 
 // routes/web.php
 Route::prefix('selfbilling')->name('selfbilling.')->group(function () {

@@ -23,7 +23,7 @@ class BarangController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'harga_pribadi' => 'required|integer|min:0',
-            'harga_perusahaan' => 'required|integer|min:0',
+            // 'harga_perusahaan' => 'required|integer|min:0',
             'stok' => 'required|integer|min:0',
             'satuan' => 'required|string|max:20',
         ]);
@@ -44,7 +44,7 @@ class BarangController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'harga_pribadi' => 'required|integer|min:0',
-            'harga_perusahaan' => 'required|integer|min:0',
+            // 'harga_perusahaan' => 'required|integer|min:0',
             'stok' => 'required|integer|min:0',
             'satuan' => 'required|string|max:20',
         ]);

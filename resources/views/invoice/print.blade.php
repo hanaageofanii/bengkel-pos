@@ -218,20 +218,22 @@
 <!-- TTD FOOTER + Rekening -->
 <table class="no-border" style="margin-top: 2px;">
     <tr>
-        <td style="vertical-align: top; padding-top: 0; width: 50%; padding-left: 40px; text-align: left;">
+      <td style="vertical-align: top; width: 50%; padding-left: 40px; border: none;">
 
-            <div style="font-weight: bold;">
-                Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
-            </div>
+    <div style="width: 150px; margin-left: 0px; text-align: center;">
 
-            <div style="margin-left: 20px;">
-                Hormat Kami,
-            </div>
+        <div style="font-weight: bold;">
+            Bekasi, {{ \Carbon\Carbon::parse($invoice->tanggal)->format('d F Y') }}
+        </div>
 
-            <div style="position: relative; height: 60px;">
-                <img src="{{ asset('assets/images/ttd.png') }}"
-                     style="position: absolute; top: -80px; left: 0; height: 220px;">
-            </div>
+        <div>
+            Hormat Kami,
+        </div>
+
+    <div style="margin-top: -90px;">
+        <img src="{{ asset('assets/images/ttd.png') }}"
+             style="height: 210px; width: -30px;">
+    </div>
 
         </td>
 

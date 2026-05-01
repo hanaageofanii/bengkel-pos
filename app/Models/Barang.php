@@ -9,7 +9,7 @@ class Barang extends Model
     protected $fillable = [
         'nama',
         'harga_pribadi',
-        'harga_perusahaan',
+        // 'harga_perusahaan',
         'stok',
         'satuan',
     ];
