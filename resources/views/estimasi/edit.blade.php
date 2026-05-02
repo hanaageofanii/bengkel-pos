@@ -60,6 +60,9 @@
                             @foreach($pelanggans as $p)
                                 <option value="{{ $p->id }}"
                                         data-tipe="{{ $p->tipe }}"
+                                        data-notelp="{{ $p->no_hp }}"
+                                        data-nochasis="{{ $p->no_chasis }}"
+                                        data-nomesin="{{ $p->no_mesin }}"
                                         {{ $estimasi->pelanggan_id == $p->id ? 'selected' : '' }}>
                                     {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
                                 </option>
@@ -79,15 +82,15 @@
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Telp</label>
-                        <input name="no_telp" value="{{ $estimasi->no_telp }}" class="mz-input" placeholder="08xxxxxxxxxx">
+                        <input name="no_telp" id="inputNoTelp" value="{{ $estimasi->no_telp }}" class="mz-input" placeholder="08xxxxxxxxxx">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Chasis</label>
-                        <input name="no_chasis" value="{{ $estimasi->no_chasis }}" class="mz-input">
+                        <input name="no_chasis" id="inputNoChasis" value="{{ $estimasi->no_chasis }}" class="mz-input">
                     </div>
                     <div class="mz-field">
                         <label class="mz-label">No Mesin</label>
-                        <input name="no_mesin" value="{{ $estimasi->no_mesin }}" class="mz-input">
+                        <input name="no_mesin" id="inputNoMesin" value="{{ $estimasi->no_mesin }}" class="mz-input">
                     </div>
                 </div>
             </div>
@@ -136,21 +139,22 @@
                 </div>
                 <div id="barangContainer"></div>
             </div>
- {{-- ── Catatan ── --}}
-<div class="inv-section">
-    <div class="inv-section-head">
-        <div class="inv-section-title">
-            Catatan Tambahan
-        </div>
-    </div>
 
-    <div class="mz-field">
-        <textarea name="notes"
-                  class="mz-textarea"
-                  rows="3"
-                  placeholder="Tambahkan catatan estimasi...">{{ $estimasi->notes }}</textarea>
-    </div>
-</div>
+            {{-- ── Catatan ── --}}
+            <div class="inv-section">
+                <div class="inv-section-head">
+                    <div class="inv-section-title">
+                        Catatan Tambahan
+                    </div>
+                </div>
+                <div class="mz-field">
+                    <textarea name="notes"
+                              class="mz-textarea"
+                              rows="3"
+                              placeholder="Tambahkan catatan estimasi...">{{ $estimasi->notes }}</textarea>
+                </div>
+            </div>
+
             {{-- Summary --}}
             <div class="inv-summary">
                 <div class="sum-item">
@@ -168,8 +172,6 @@
                     <div class="sum-val grand" id="grandTotal">Rp 0</div>
                 </div>
             </div>
-
-
 
             {{-- Footer --}}
             <div class="inv-footer">
@@ -242,7 +244,6 @@ function buildJasaOptions(selectedId = '') {
         opts += `<option value="${js.id}"
                     data-nama="${js.nama}"
                     data-pribadi="${js.harga_pribadi}"
-                    data-perusahaan="${js.harga_perusahaan}"
                     ${sel}>${js.nama}</option>`;
     });
     return opts;
@@ -254,7 +255,7 @@ function addJasa(data = null) {
     const harga     = data?.harga || 0;
 
     const div = document.createElement('div');
-    div.className  = 'row-item row-12 jasa-row';
+    div.className   = 'row-item row-12 jasa-row';
     div.dataset.idx = idx;
     div.style.marginBottom = '10px';
     div.innerHTML = `
@@ -273,7 +274,6 @@ function addJasa(data = null) {
     `;
     container.appendChild(div);
 
-    // Bind display input
     const display = div.querySelector('.jasa-harga-display');
     const hidden  = div.querySelector('.jasa-harga-hidden');
     display.addEventListener('focus', () => { display.value = hidden.value || ''; });
@@ -285,20 +285,19 @@ function addJasa(data = null) {
         display.value = hidden.value ? 'Rp. ' + Number(hidden.value).toLocaleString('id-ID') : '';
     });
 
-    // Select2
     const $sel = $(`#jasaSelect_${idx}`);
     $sel.select2({ width: '100%' });
     $sel.on('change', function () {
         const opt = this.options[this.selectedIndex];
         if (!opt.value) return;
-        const price = tipePelanggan === 'perusahaan'
-            ? (opt.dataset.perusahaan || 0)
-            : (opt.dataset.pribadi    || 0);
 
-        div.querySelector('.jasa-id-hidden').value    = opt.value;
-        div.querySelector('.jasa-nama-hidden').value  = opt.dataset.nama || '';
-        hidden.value   = price;
-        display.value  = price ? 'Rp. ' + Number(price).toLocaleString('id-ID') : '';
+        // selalu pakai harga_pribadi
+        const price = opt.dataset.pribadi || 0;
+
+        div.querySelector('.jasa-id-hidden').value   = opt.value;
+        div.querySelector('.jasa-nama-hidden').value = opt.dataset.nama || '';
+        hidden.value  = price;
+        display.value = price ? 'Rp. ' + Number(price).toLocaleString('id-ID') : '';
         updateSummary();
     });
 
@@ -316,7 +315,6 @@ function buildBarangOptions(selectedId = '') {
         opts += `<option value="${br.id}"
                     data-nama="${br.nama}"
                     data-pribadi="${br.harga_pribadi}"
-                    data-perusahaan="${br.harga_perusahaan}"
                     data-stock="${br.stok}"
                     ${disabled} ${sel}>${label}</option>`;
     });
@@ -331,7 +329,7 @@ function addBarang(data = null) {
 
     const div = document.createElement('div');
     div.className   = 'row-item row-part barang-row';
-    div.dataset.idx  = idx;
+    div.dataset.idx = idx;
     div.style.marginBottom = '10px';
     div.innerHTML = `
         <select class="mz-select select2-barang" id="barangSelect_${idx}" data-index="${idx}">
@@ -354,10 +352,8 @@ function addBarang(data = null) {
     `;
     container.appendChild(div);
 
-    // Qty change
     div.querySelector('.barang-qty-input').addEventListener('input', updateSummary);
 
-    // Display harga
     const display = div.querySelector('.barang-harga-display');
     const hidden  = div.querySelector('.barang-harga-hidden');
     display.addEventListener('focus', () => { display.value = hidden.value || ''; });
@@ -369,15 +365,14 @@ function addBarang(data = null) {
         display.value = hidden.value ? 'Rp. ' + Number(hidden.value).toLocaleString('id-ID') : '';
     });
 
-    // Select2
     const $sel = $(`#barangSelect_${idx}`);
     $sel.select2({ width: '100%' });
     $sel.on('change', function () {
         const opt = this.options[this.selectedIndex];
         if (!opt.value) return;
-        const price = tipePelanggan === 'perusahaan'
-            ? (opt.dataset.perusahaan || 0)
-            : (opt.dataset.pribadi    || 0);
+
+        // selalu pakai harga_pribadi
+        const price = opt.dataset.pribadi || 0;
 
         div.querySelector('.barang-id-hidden').value   = opt.value;
         div.querySelector('.barang-nama-hidden').value = opt.dataset.nama || '';
@@ -389,16 +384,23 @@ function addBarang(data = null) {
     updateSummary();
 }
 
-// ── Pelanggan change ──────────────────────────────────────────────────────────
-document.getElementById('pelangganSelect').addEventListener('change', function () {
-    const opt = this.options[this.selectedIndex];
-    tipePelanggan = opt.dataset.tipe || 'pribadi';
-    document.getElementById('tipePelangganText').textContent = tipePelanggan.toUpperCase();
-});
-
-// ── Init Select2 pelanggan ────────────────────────────────────────────────────
+// ── Init ──────────────────────────────────────────────────────────────────────
 $(document).ready(function () {
     $('#pelangganSelect').select2({ width: '100%' });
+
+    // ── Pelanggan change — update tipe + autofill no telp, chasis, mesin ─────
+    $('#pelangganSelect').on('change', function () {
+        const opt = this.options[this.selectedIndex];
+
+        // update tipe (untuk tampilan label saja)
+        tipePelanggan = opt.dataset.tipe || 'pribadi';
+        document.getElementById('tipePelangganText').textContent = tipePelanggan.toUpperCase();
+
+        // autofill field kendaraan dari data pelanggan
+        document.getElementById('inputNoTelp').value   = opt.dataset.notelp   || '';
+        document.getElementById('inputNoChasis').value = opt.dataset.nochasis || '';
+        document.getElementById('inputNoMesin').value  = opt.dataset.nomesin  || '';
+    });
 
     // Load existing keluhan
     if (existingKeluhan.length > 0) {

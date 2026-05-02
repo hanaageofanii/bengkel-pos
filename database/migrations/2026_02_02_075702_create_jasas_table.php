@@ -12,7 +12,6 @@ return new class extends Migration
             $table->id();
             $table->string('nama');
             $table->integer('harga_pribadi');
-            $table->integer('harga_perusahaan');
             $table->text('keterangan')->nullable();
             $table->timestamps();
         });

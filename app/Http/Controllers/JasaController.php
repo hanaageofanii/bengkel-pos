@@ -23,7 +23,7 @@ class JasaController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'harga_pribadi' => 'required|integer|min:0',
-            'harga_perusahaan' => 'required|integer|min:0',
+            // 'harga_perusahaan' => 'required|integer|min:0',
             'keterangan' => 'nullable|string',
         ]);
 
@@ -43,7 +43,7 @@ class JasaController extends Controller
         $request->validate([
             'nama' => 'required|string|max:255',
             'harga_pribadi' => 'required|integer|min:0',
-            'harga_perusahaan' => 'required|integer|min:0',
+            // 'harga_perusahaan' => 'required|integer|min:0',
             'keterangan' => 'nullable|string',
         ]);
 
