@@ -222,7 +222,18 @@ function bindSelect2Pelanggan() {
     $('[name="pelanggan_id"]')
         .off("change.s2")
         .on("change.s2", function () {
-            let tipe = $(this).find(":selected").data("tipe") || "pribadi";
+            const opt = $(this).find(":selected")[0];
+
+            // ── autofill kendaraan ──────────────────────────
+            const noTelp = document.querySelector('[name="no_telp"]');
+            const noChasis = document.querySelector('[name="no_chasis"]');
+            const noMesin = document.querySelector('[name="no_mesin"]');
+            if (noTelp) noTelp.value = opt.dataset.notelp || "";
+            if (noChasis) noChasis.value = opt.dataset.nochasis || "";
+            if (noMesin) noMesin.value = opt.dataset.nomesin || "";
+
+            // ── update tipe Alpine ──────────────────────────
+            let tipe = opt.dataset.tipe || "pribadi";
             let alpine = getAlpine();
             if (alpine) {
                 alpine.tipePelanggan = tipe;

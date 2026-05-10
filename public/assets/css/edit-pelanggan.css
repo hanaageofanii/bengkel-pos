@@ -425,3 +425,55 @@ body {
 .btn-submit:active {
     transform: scale(0.98);
 }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .ep-grid {
+        grid-template-columns: 1fr;
+    }
+    .col-full {
+        grid-column: 1;
+    }
+    .ep-form-body {
+        padding: 18px;
+    }
+    .ep-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 18px;
+    }
+    .ep-actions {
+        flex-direction: column;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+    }
+    .car-visual {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+    .ep-card-head {
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .ep-item-chip {
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .ep-title {
+        font-size: 20px;
+    }
+    .ep-card-head {
+        padding: 14px 16px;
+    }
+    .ep-form-body {
+        padding: 14px;
+    }
+}

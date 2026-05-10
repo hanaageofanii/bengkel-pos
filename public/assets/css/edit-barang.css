@@ -1,3 +1,6 @@
+/* ══════════════════════════════════════
+   THEME VARIABLES
+══════════════════════════════════════ */
 :root {
     --mz-bg: #0f1117;
     --mz-surface: #181c27;
@@ -12,20 +15,6 @@
     --mz-orange: #f5923e;
 }
 
-body {
-    color: var(--mz-text);
-}
-/* DEFAULT DARK */
-:root {
-    --mz-bg: #0f1117;
-    --mz-surface: #181c27;
-    --mz-surface2: #1e2333;
-    --mz-border: #262c3d;
-    --mz-text: #e4e8f0;
-    --mz-muted: #6b7694;
-}
-
-/* LIGHT MODE */
 [data-theme="light"] {
     --mz-bg: #ffffff;
     --mz-surface: #f9fafb;
@@ -35,10 +24,13 @@ body {
     --mz-muted: #6b7280;
     --mz-accent: #4f8ef7;
     --mz-accent2: #1e90ff;
-    --mz-muted: #6b7694;
     --mz-green: #3ef08a;
     --mz-yellow: #f5c542;
     --mz-orange: #f5923e;
+}
+
+body {
+    color: var(--mz-text);
 }
 
 .tb-wrap {
@@ -46,10 +38,13 @@ body {
     color: var(--mz-text);
 }
 
-/* ── header ── */
+/* ══════════════════════════════════════
+   HEADER
+══════════════════════════════════════ */
 .tb-header {
     margin-bottom: 28px;
 }
+
 .tb-breadcrumb {
     display: flex;
     align-items: center;
@@ -57,6 +52,7 @@ body {
     font-size: 11px;
     color: var(--mz-muted);
     margin-bottom: 10px;
+    flex-wrap: wrap;
 }
 .tb-breadcrumb a {
     color: var(--mz-muted);
@@ -69,9 +65,10 @@ body {
 .tb-breadcrumb span {
     color: var(--mz-border);
 }
+
 .tb-title {
     font-family: "Rajdhani", sans-serif;
-    font-size: 26px;
+    font-size: clamp(20px, 4vw, 26px);
     font-weight: 700;
     letter-spacing: 0.4px;
     line-height: 1;
@@ -102,7 +99,9 @@ body {
     fill: var(--mz-orange);
 }
 
-/* ── card ── */
+/* ══════════════════════════════════════
+   CARD
+══════════════════════════════════════ */
 .tb-card {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -113,20 +112,19 @@ body {
         0 20px 48px rgba(0, 0, 0, 0.4);
 }
 
-/* orange accent bar for edit mode */
 .tb-card-bar {
     height: 3px;
     background: linear-gradient(90deg, #e05c00, var(--mz-orange), #f5c542);
 }
 
 .tb-card-head {
-    padding: 18px 28px;
+    padding: 18px 24px;
     border-bottom: 1px solid var(--mz-border);
     display: flex;
     align-items: center;
     gap: 12px;
+    flex-wrap: wrap;
 }
-
 .tb-card-icon {
     width: 36px;
     height: 36px;
@@ -155,7 +153,6 @@ body {
     margin-top: 1px;
 }
 
-/* item name chip */
 .tb-item-chip {
     margin-left: auto;
     background: var(--mz-surface2);
@@ -175,9 +172,11 @@ body {
     fill: var(--mz-yellow);
 }
 
-/* ── form body ── */
+/* ══════════════════════════════════════
+   FORM BODY
+══════════════════════════════════════ */
 .tb-form-body {
-    padding: 28px;
+    padding: 24px;
 }
 
 .tb-grid {
@@ -185,7 +184,6 @@ body {
     grid-template-columns: 1fr 1fr;
     gap: 20px;
 }
-
 .col-full {
     grid-column: 1 / -1;
 }
@@ -196,7 +194,6 @@ body {
     flex-direction: column;
     gap: 6px;
 }
-
 .mz-label {
     font-size: 10.5px;
     font-weight: 600;
@@ -204,11 +201,9 @@ body {
     text-transform: uppercase;
     color: var(--mz-muted);
 }
-
 .mz-input-wrap {
     position: relative;
 }
-
 .mz-input-icon {
     position: absolute;
     left: 13px;
@@ -220,7 +215,6 @@ body {
     pointer-events: none;
     transition: fill 0.15s;
 }
-
 .mz-input {
     width: 100%;
     background: var(--mz-bg);
@@ -250,8 +244,6 @@ body {
 .mz-input-wrap:focus-within .mz-input-icon {
     fill: var(--mz-orange);
 }
-
-/* changed indicator */
 .mz-input.is-changed {
     border-color: rgba(245, 197, 66, 0.4);
 }
@@ -261,8 +253,6 @@ body {
     color: var(--mz-muted);
     margin-top: 2px;
 }
-
-/* price preview */
 .price-preview {
     font-size: 11px;
     color: var(--mz-green);
@@ -298,16 +288,19 @@ body {
     background: var(--mz-border);
 }
 
-/* ── footer ── */
+/* ══════════════════════════════════════
+   FOOTER
+══════════════════════════════════════ */
 .tb-footer {
-    padding: 18px 28px;
+    padding: 16px 24px;
     border-top: 1px solid var(--mz-border);
     display: flex;
     align-items: center;
     justify-content: space-between;
     background: var(--mz-surface2);
+    gap: 12px;
+    flex-wrap: wrap;
 }
-
 .tb-footer-hint {
     font-size: 11px;
     color: var(--mz-muted);
@@ -341,6 +334,7 @@ body {
         border-color 0.15s,
         color 0.15s;
     display: inline-block;
+    white-space: nowrap;
 }
 .btn-cancel:hover {
     border-color: var(--mz-muted);
@@ -364,6 +358,7 @@ body {
         transform 0.1s;
     position: relative;
     overflow: hidden;
+    white-space: nowrap;
 }
 .btn-submit::after {
     content: "";
@@ -386,4 +381,81 @@ body {
 }
 .btn-submit:active {
     transform: scale(0.98);
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 768px (tablet)
+══════════════════════════════════════ */
+@media (max-width: 768px) {
+    .tb-form-body {
+        padding: 20px 18px;
+    }
+
+    .tb-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+    .col-full {
+        grid-column: 1;
+    }
+
+    .tb-card-head {
+        padding: 14px 18px;
+    }
+
+    .tb-item-chip {
+        margin-left: 0;
+        margin-top: 8px;
+        width: 100%;
+    }
+
+    .tb-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 14px 18px;
+    }
+    .tb-actions {
+        width: 100%;
+    }
+    .btn-cancel,
+    .btn-submit {
+        flex: 1;
+        text-align: center;
+    }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 480px (small phone)
+══════════════════════════════════════ */
+@media (max-width: 480px) {
+    .tb-header {
+        margin-bottom: 20px;
+    }
+    .tb-form-body {
+        padding: 16px 14px;
+    }
+    .tb-card-head {
+        padding: 12px 14px;
+    }
+    .tb-footer {
+        padding: 12px 14px;
+    }
+
+    .tb-title {
+        font-size: 20px;
+    }
+
+    .tb-footer-hint {
+        display: none;
+    }
+
+    .tb-actions {
+        flex-direction: column;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        padding: 11px 20px;
+    }
 }

@@ -471,3 +471,64 @@ body {
 .btn-hapus-cicilan:hover {
     background: rgba(242, 108, 108, 0.1);
 }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .inv-grid {
+        grid-template-columns: 1fr;
+    }
+    .row-12 {
+        grid-template-columns: 1fr 1fr;
+    }
+    .row-part {
+        grid-template-columns: 1fr 1fr;
+    }
+    .row-keluhan {
+        grid-template-columns: 1fr;
+    }
+    .inv-section {
+        padding: 16px;
+    }
+    .inv-summary {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 16px;
+    }
+    .inv-footer {
+        flex-direction: column;
+        align-items: stretch;
+        padding: 14px 16px;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .cicilan-form {
+        grid-template-columns: 1fr 1fr;
+        padding: 0 16px 16px;
+    }
+    .btn-cicilan {
+        grid-column: 1 / -1;
+    }
+}
+
+@media (max-width: 480px) {
+    .inv-title {
+        font-size: 20px;
+    }
+    .row-12,
+    .row-part {
+        grid-template-columns: 1fr;
+    }
+    .cicilan-form {
+        grid-template-columns: 1fr;
+    }
+    .mz-table th,
+    .mz-table td {
+        padding: 8px 10px;
+        font-size: 11px;
+    }
+}

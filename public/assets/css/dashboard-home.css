@@ -1,10 +1,8 @@
 /* ══════════════════════════════════════
-   MAZER DASHBOARD VARIABLES
+   MAZER DASHBOARD — RESPONSIVE CSS
 ══════════════════════════════════════ */
-body {
-    color: var(--mz-text);
-}
-/* DEFAULT DARK */
+
+/* ── variables ── */
 :root {
     --mz-bg: #0f1117;
     --mz-surface: #181c27;
@@ -12,19 +10,8 @@ body {
     --mz-border: #262c3d;
     --mz-text: #e4e8f0;
     --mz-muted: #6b7694;
-}
-
-/* LIGHT MODE */
-[data-theme="light"] {
-    --mz-bg: #ffffff;
-    --mz-surface: #f9fafb;
-    --mz-surface2: #f1f5f9;
-    --mz-border: #e5e7eb;
-    --mz-text: #111827;
-    --mz-muted: #6b7280;
     --mz-accent: #4f8ef7;
     --mz-accent2: #1e90ff;
-    --mz-muted: #6b7694;
     --mz-green: #3ef08a;
     --mz-red: #f26c6c;
     --mz-yellow: #f5c542;
@@ -34,12 +21,36 @@ body {
     --mz-emerald: #10b981;
 }
 
+[data-theme="light"] {
+    --mz-bg: #ffffff;
+    --mz-surface: #f9fafb;
+    --mz-surface2: #f1f5f9;
+    --mz-border: #e5e7eb;
+    --mz-text: #111827;
+    --mz-muted: #6b7280;
+    --mz-accent: #4f8ef7;
+    --mz-accent2: #1e90ff;
+    --mz-green: #3ef08a;
+    --mz-red: #f26c6c;
+    --mz-yellow: #f5c542;
+    --mz-orange: #f5923e;
+    --mz-purple: #a78bfa;
+    --mz-teal: #2dd4bf;
+    --mz-emerald: #10b981;
+}
+
+body {
+    color: var(--mz-text);
+}
+
 .db-wrap {
     font-family: "Inter", sans-serif;
     color: var(--mz-text);
 }
 
-/* ── greeting ── */
+/* ══════════════════════════════════════
+   GREETING
+══════════════════════════════════════ */
 .db-greeting {
     margin-bottom: 28px;
     padding-bottom: 20px;
@@ -47,6 +58,8 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
 }
 .db-greeting-left .db-sup {
     font-size: 10px;
@@ -58,7 +71,7 @@ body {
 }
 .db-greeting-left .db-title {
     font-family: "Rajdhani", sans-serif;
-    font-size: 28px;
+    font-size: clamp(20px, 4vw, 28px);
     font-weight: 700;
     color: var(--mz-text);
     line-height: 1;
@@ -82,6 +95,8 @@ body {
     padding: 10px 16px;
     font-size: 12px;
     color: var(--mz-muted);
+    flex-shrink: 0;
+    white-space: nowrap;
 }
 .db-date-chip svg {
     width: 14px;
@@ -92,7 +107,9 @@ body {
     color: var(--mz-text);
 }
 
-/* ── section heading ── */
+/* ══════════════════════════════════════
+   SECTION HEADING
+══════════════════════════════════════ */
 .db-section {
     margin-bottom: 20px;
     margin-top: 32px;
@@ -132,7 +149,9 @@ body {
     margin-bottom: 14px;
 }
 
-/* ── stat card ── */
+/* ══════════════════════════════════════
+   STAT CARD
+══════════════════════════════════════ */
 .mz-stat {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -166,7 +185,7 @@ body {
 }
 .mz-stat-val {
     font-family: "Rajdhani", sans-serif;
-    font-size: 28px;
+    font-size: clamp(20px, 3vw, 28px);
     font-weight: 700;
     line-height: 1;
 }
@@ -179,7 +198,9 @@ body {
     margin-top: 5px;
 }
 
-/* revenue dark cards */
+/* ══════════════════════════════════════
+   REVENUE DARK CARDS
+══════════════════════════════════════ */
 .mz-rev {
     border-radius: 8px;
     padding: 18px 20px;
@@ -224,7 +245,9 @@ body {
     margin-top: 5px;
 }
 
-/* trend badges */
+/* ══════════════════════════════════════
+   TREND BADGES
+══════════════════════════════════════ */
 .tren-up {
     display: inline-flex;
     align-items: center;
@@ -262,7 +285,9 @@ body {
     border-radius: 20px;
 }
 
-/* alert banners */
+/* ══════════════════════════════════════
+   ALERT BANNERS
+══════════════════════════════════════ */
 .mz-alert-warn {
     display: flex;
     align-items: center;
@@ -316,7 +341,9 @@ body {
     }
 }
 
-/* ── card box ── */
+/* ══════════════════════════════════════
+   CARD BOX
+══════════════════════════════════════ */
 .mz-box {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -345,11 +372,18 @@ body {
     padding: 16px 20px;
 }
 
-/* ── table ── */
+/* ══════════════════════════════════════
+   TABLE
+══════════════════════════════════════ */
+.mz-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
 .mz-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 12px;
+    min-width: 420px;
 }
 .mz-table thead tr {
     background: var(--mz-surface2);
@@ -363,6 +397,7 @@ body {
     color: var(--mz-muted);
     text-align: left;
     border-bottom: 1px solid var(--mz-border);
+    white-space: nowrap;
 }
 .mz-table td {
     padding: 10px 14px;
@@ -376,7 +411,9 @@ body {
     background: var(--mz-surface2);
 }
 
-/* badge */
+/* ══════════════════════════════════════
+   BADGE
+══════════════════════════════════════ */
 .mz-badge {
     display: inline-block;
     padding: 2px 9px;
@@ -384,6 +421,7 @@ body {
     font-size: 10.5px;
     font-weight: 600;
     border: 1px solid;
+    white-space: nowrap;
 }
 .badge-lunas {
     background: rgba(62, 240, 138, 0.1);
@@ -421,7 +459,9 @@ body {
     border-color: rgba(245, 197, 66, 0.2);
 }
 
-/* ── bar chart ── */
+/* ══════════════════════════════════════
+   BAR CHART
+══════════════════════════════════════ */
 .bar-row {
     display: flex;
     align-items: center;
@@ -461,11 +501,14 @@ body {
     text-align: right;
 }
 
-/* ── tab buttons ── */
+/* ══════════════════════════════════════
+   TAB BUTTONS
+══════════════════════════════════════ */
 .mz-tabs {
     display: flex;
     gap: 6px;
     margin-bottom: 16px;
+    flex-wrap: wrap;
 }
 .mz-tab {
     padding: 6px 14px;
@@ -489,140 +532,15 @@ body {
     color: var(--mz-text);
 }
 
-.abs-grid {
-    display: none;
-}
-.abs-grid.active {
-    display: grid;
-}
-
-/* ── absensi status badges ── */
-.abs-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 10.5px;
-    font-weight: 600;
-    border: 1px solid;
-}
-
-/* ── status karyawan ── */
-.ky-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 2px 9px;
-    border-radius: 20px;
-    font-size: 10.5px;
-    font-weight: 600;
-    border: 1px solid;
-}
-.ky-dot {
-    width: 5px;
-    height: 5px;
-    border-radius: 50%;
-}
-
-/* mono */
-.mono {
-    font-family: "Courier New", monospace;
-    font-size: 11px;
-    color: var(--mz-muted);
-}
-
-/* ── metode bar ── */
-.met-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 12px;
-}
-.met-row:last-child {
-    margin-bottom: 0;
-}
-.met-label {
-    font-size: 11px;
-    color: var(--mz-muted);
-    width: 60px;
-    flex-shrink: 0;
-}
-.met-bg {
-    flex: 1;
-    background: var(--mz-surface2);
-    border: 1px solid var(--mz-border);
-    border-radius: 99px;
-    height: 7px;
-    overflow: hidden;
-}
-.met-fill {
-    height: 100%;
-    border-radius: 99px;
-}
-.met-val {
-    font-size: 10.5px;
-    font-weight: 600;
-    color: var(--mz-text);
-    width: 100px;
-    text-align: right;
-    white-space: nowrap;
-}
-
-/* grid helpers */
-.grid-4 {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-}
-.grid-3 {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 12px;
-}
-.grid-5 {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 12px;
-}
-.grid-2 {
-    display: grid;
-    grid-template-columns: 1fr 2fr;
-    gap: 14px;
-}
-.grid-2s {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 14px;
-}
-
-/* chart canvas wrapper */
-.chart-wrap {
-    position: relative;
-    height: 220px;
-}
-.chart-panel {
-    display: none;
-}
-.chart-panel.active {
-    display: block;
-}
-
-.abs-panel {
-    display: none;
-}
-.abs-panel.active {
-    display: block;
-}
-
+/* ══════════════════════════════════════
+   ABSENSI
+══════════════════════════════════════ */
 .abs-layout {
     display: grid;
     grid-template-columns: 160px 1fr;
     gap: 14px;
     align-items: stretch;
 }
-
-/* Card besar kiri — angka hadir */
 .abs-main-card {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -656,8 +574,6 @@ body {
     text-transform: uppercase;
     color: var(--mz-muted);
 }
-
-/* Daftar kanan */
 .abs-side-list {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -668,7 +584,6 @@ body {
     justify-content: space-around;
     gap: 10px;
 }
-
 .abs-item {
     display: flex;
     align-items: center;
@@ -715,6 +630,9 @@ body {
     flex-shrink: 0;
 }
 
+/* ══════════════════════════════════════
+   SELECT
+══════════════════════════════════════ */
 .mz-select {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
@@ -734,8 +652,234 @@ body {
     background: var(--mz-surface);
 }
 
+/* ══════════════════════════════════════
+   METODE BAR
+══════════════════════════════════════ */
+.met-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+.met-row:last-child {
+    margin-bottom: 0;
+}
+.met-label {
+    font-size: 11px;
+    color: var(--mz-muted);
+    width: 60px;
+    flex-shrink: 0;
+}
+.met-bg {
+    flex: 1;
+    background: var(--mz-surface2);
+    border: 1px solid var(--mz-border);
+    border-radius: 99px;
+    height: 7px;
+    overflow: hidden;
+}
+.met-fill {
+    height: 100%;
+    border-radius: 99px;
+}
+.met-val {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--mz-text);
+    width: 100px;
+    text-align: right;
+    white-space: nowrap;
+}
+
+/* ══════════════════════════════════════
+   STATUS / KY BADGE
+══════════════════════════════════════ */
+.abs-badge,
+.ky-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 10.5px;
+    font-weight: 600;
+    border: 1px solid;
+}
+.ky-dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+}
+
+/* ══════════════════════════════════════
+   MISC
+══════════════════════════════════════ */
+.mono {
+    font-family: "Courier New", monospace;
+    font-size: 11px;
+    color: var(--mz-muted);
+}
+.abs-grid {
+    display: none;
+}
+.abs-grid.active {
+    display: grid;
+}
+.abs-panel {
+    display: none;
+}
+.abs-panel.active {
+    display: block;
+}
+.chart-panel {
+    display: none;
+}
+.chart-panel.active {
+    display: block;
+}
+.chart-wrap {
+    position: relative;
+    height: 220px;
+}
+
 #abs-bulan-side.abs-loading {
     opacity: 0.4;
     pointer-events: none;
     transition: opacity 0.2s;
+}
+
+/* ══════════════════════════════════════
+   GRID HELPERS
+══════════════════════════════════════ */
+.grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 14px;
+}
+.grid-2s {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 14px;
+}
+.grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+.grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+.grid-5 {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 1200px
+══════════════════════════════════════ */
+@media (max-width: 1200px) {
+    .grid-5 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 900px (tablet landscape)
+══════════════════════════════════════ */
+@media (max-width: 900px) {
+    .grid-4 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-5 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-3 {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .grid-2s {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 600px (tablet portrait / large phone)
+══════════════════════════════════════ */
+@media (max-width: 600px) {
+    /* greeting */
+    .db-greeting {
+        align-items: flex-start;
+    }
+    .db-date-chip {
+        display: none;
+    }
+
+    /* absensi */
+    .abs-layout {
+        grid-template-columns: 1fr;
+    }
+    .abs-main-card {
+        flex-direction: row;
+        text-align: left;
+        padding: 14px 16px;
+        gap: 14px;
+        border-top: none;
+        border-left: 3px solid var(--abs-color);
+    }
+    .abs-main-val {
+        font-size: 36px;
+    }
+
+    /* table */
+    .mz-table {
+        font-size: 11px;
+    }
+    .mz-table th,
+    .mz-table td {
+        padding: 7px 10px;
+    }
+
+    /* bar label */
+    .bar-label {
+        width: 72px;
+    }
+
+    /* met-val */
+    .met-val {
+        width: 80px;
+        font-size: 10px;
+    }
+
+    /* stat val */
+    .mz-stat-val {
+        font-size: 22px;
+    }
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — 400px (small phone)
+══════════════════════════════════════ */
+@media (max-width: 400px) {
+    .grid-4,
+    .grid-3,
+    .grid-5 {
+        grid-template-columns: 1fr;
+    }
+
+    .mz-tabs {
+        gap: 4px;
+    }
+    .mz-tab {
+        padding: 5px 10px;
+        font-size: 11px;
+    }
+
+    .abs-main-val {
+        font-size: 28px;
+    }
 }

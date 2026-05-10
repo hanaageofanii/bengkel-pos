@@ -79,7 +79,8 @@
             <tbody>
                 @forelse($pelanggans as $p)
                 <tr>
-                    <td class="td-nama">
+                    {{-- Nama --}}
+                    <td class="td-nama" data-label="Pelanggan">
                         {{ $p->nama }}
                         @if($p->no_hp)
                             <div class="td-hp">
@@ -89,26 +90,31 @@
                         @endif
                     </td>
 
-                    <td style="text-align:center">
+                    {{-- Plat --}}
+                    <td data-label="Plat Nomor" style="text-align:center">
                         <span class="plat-badge">{{ $p->plat_nomor }}</span>
                     </td>
 
-                    <td style="text-align:center">
+                    {{-- Chasis --}}
+                    <td data-label="No. Chasis" style="text-align:center">
                         <span class="plat-badge">{{ $p->no_chasis }}</span>
                     </td>
 
-                    <td style="text-align:center">
+                    {{-- Mesin --}}
+                    <td data-label="No. Mesin" style="text-align:center">
                         <span class="plat-badge">{{ $p->no_mesin }}</span>
                     </td>
 
-                    <td class="td-mobil">
+                    {{-- Mobil --}}
+                    <td class="td-mobil" data-label="Mobil">
                         <div class="mobil-name">{{ $p->merk_mobil }} {{ $p->model_mobil }}</div>
                         @if($p->tahun_mobil)
                             <div class="mobil-tahun">{{ $p->tahun_mobil }}</div>
                         @endif
                     </td>
 
-                    <td class="td-tipe">
+                    {{-- Tipe --}}
+                    <td class="td-tipe" data-label="Tipe">
                         @if($p->tipe === 'pribadi')
                             <span class="tipe-pribadi">
                                 <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
@@ -122,7 +128,8 @@
                         @endif
                     </td>
 
-                    <td class="td-aksi">
+                    {{-- Aksi --}}
+                    <td class="td-aksi" data-label="Aksi">
                         <div class="action-group">
                             <a href="{{ route('pelanggan.edit', $p->id) }}" class="btn-edit">
                                 <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
@@ -137,7 +144,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5">
+                    <td colspan="7">
                         <div class="empty-state">
                             <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                             <p>Belum ada data pelanggan</p>

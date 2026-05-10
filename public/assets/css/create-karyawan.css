@@ -367,3 +367,150 @@ body {
 .btn-submit:active {
     transform: scale(0.98);
 }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — tk-responsive.css
+   Breakpoints: md ≤ 768px, sm ≤ 480px
+   ══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .tk-header {
+        margin-bottom: 20px;
+    }
+    .tk-title {
+        font-size: 22px;
+    }
+
+    /* Card head */
+    .tk-card-head {
+        padding: 14px 18px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    /* Status chip pindah ke baris baru jika sempit */
+    .tk-status-chip {
+        margin-left: 0;
+    }
+
+    /* Form body */
+    .tk-form-body {
+        padding: 18px;
+    }
+
+    /* Grid 2 → 1 kolom */
+    .tk-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .col-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Avatar preview */
+    .avatar-preview {
+        padding: 12px 14px;
+        gap: 12px;
+    }
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        font-size: 17px;
+    }
+
+    /* Footer */
+    .tk-footer {
+        padding: 14px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .tk-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Sep */
+    .tk-sep {
+        margin: 18px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .tk-title {
+        font-size: 19px;
+    }
+    .tk-breadcrumb {
+        font-size: 10px;
+    }
+
+    /* Card head compact */
+    .tk-card-head {
+        padding: 12px 14px;
+        gap: 8px;
+    }
+    .tk-card-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .tk-card-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+    .tk-card-head-text .cht {
+        font-size: 13px;
+    }
+    .tk-status-chip {
+        font-size: 10px;
+        padding: 3px 10px;
+    }
+
+    /* Form body */
+    .tk-form-body {
+        padding: 14px;
+    }
+
+    /* Input */
+    .mz-input {
+        font-size: 12px;
+        padding: 10px 12px 10px 34px;
+    }
+    .mz-label {
+        font-size: 10px;
+    }
+
+    /* Avatar preview */
+    .avatar-preview {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .avatar-circle {
+        width: 36px;
+        height: 36px;
+        font-size: 15px;
+    }
+    .avatar-info .av-name {
+        font-size: 14px;
+    }
+    .avatar-info .av-jabatan {
+        font-size: 10px;
+    }
+
+    /* Footer */
+    .tk-footer {
+        padding: 12px 14px;
+    }
+    .tk-footer-hint {
+        font-size: 10px;
+    }
+    .tk-actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        padding: 10px 16px;
+    }
+}

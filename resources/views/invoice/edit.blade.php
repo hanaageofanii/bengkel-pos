@@ -44,9 +44,13 @@
                 <div class="mz-field">
                     <label class="mz-label">Pelanggan</label>
                     <select name="pelanggan_id" class="mz-select" @change="setPelanggan($event)">
-                        @foreach($pelanggans as $p)
-                            <option value="{{ $p->id }}" data-tipe="{{ $p->tipe }}"
-                                {{ $invoice->pelanggan_id == $p->id ? 'selected':'' }}>
+                       @foreach($pelanggans as $p)
+                            <option value="{{ $p->id }}"
+                                    data-tipe="{{ $p->tipe }}"
+                                    data-notelp="{{ $p->no_hp }}"
+                                    data-nochasis="{{ $p->no_chasis }}"
+                                    data-nomesin="{{ $p->no_mesin }}"
+                                    {{ $invoice->pelanggan_id == $p->id ? 'selected':'' }}>
                                 {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
                             </option>
                         @endforeach
@@ -431,8 +435,17 @@ function invoiceEditForm() {
         },
 
         setPelanggan(e) {
-            this.tipePelanggan = e.target.selectedOptions[0].dataset.tipe || 'pribadi'
+            const opt = e.target.selectedOptions[0]
+            this.tipePelanggan = opt.dataset.tipe || 'pribadi'
             this.updateHargaByTipe()
+
+            // Autofill field kendaraan
+            const noTelp   = document.querySelector('[name="no_telp"]')
+            const noChasis = document.querySelector('[name="no_chasis"]')
+            const noMesin  = document.querySelector('[name="no_mesin"]')
+            if (noTelp)   noTelp.value   = opt.dataset.notelp   || ''
+            if (noChasis) noChasis.value = opt.dataset.nochasis || ''
+            if (noMesin)  noMesin.value  = opt.dataset.nomesin  || ''
         },
 
         updateHargaByTipe() {

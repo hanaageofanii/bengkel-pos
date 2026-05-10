@@ -189,18 +189,27 @@ body {
     background: var(--mz-surface);
     border: 1px solid var(--mz-border);
     border-radius: 10px;
-    overflow: hidden;
+    overflow: visible;
     box-shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
 }
 .sb-card-bar {
     height: 3px;
     background: linear-gradient(90deg, #1e90ff, var(--mz-accent), #8ab6ff);
+    border-radius: 10px 10px 0 0;
+}
+
+/* ── table wrap (scroll container) ── */
+.sb-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 0 0 10px 10px;
 }
 
 .sb-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 12.5px;
+    min-width: 580px;
 }
 
 .sb-table thead tr {
@@ -476,4 +485,46 @@ body {
 }
 .del-btn-confirm:hover {
     opacity: 0.88;
+}
+
+/* ═══════════════════════════════
+   RESPONSIVE
+═══════════════════════════════ */
+@media (max-width: 768px) {
+    .sb-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
+    .sb-stats {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .sb-table th,
+    .sb-table td {
+        padding: 9px 12px;
+        font-size: 11px;
+    }
+    .action-group {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 4px;
+    }
+    .mz-modal {
+        max-width: calc(100vw - 32px);
+        margin: 0 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .sb-title {
+        font-size: 20px;
+    }
+    .sb-stats {
+        grid-template-columns: 1fr;
+    }
 }

@@ -328,3 +328,110 @@ body {
 .btn-submit:active {
     transform: scale(0.98);
 }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — tb-responsive.css
+   Breakpoints: md ≤ 768px, sm ≤ 480px
+   ══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .tb-header {
+        margin-bottom: 20px;
+    }
+    .tb-title {
+        font-size: 22px;
+    }
+
+    /* Card head */
+    .tb-card-head {
+        padding: 14px 18px;
+    }
+
+    /* Form body */
+    .tb-form-body {
+        padding: 18px;
+    }
+
+    /* Grid: 2 kolom → 1 kolom */
+    .tb-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .col-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Footer: susun vertikal */
+    .tb-footer {
+        padding: 14px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .tb-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Sep */
+    .tb-sep {
+        margin: 18px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .tb-title {
+        font-size: 19px;
+    }
+    .tb-breadcrumb {
+        font-size: 10px;
+    }
+
+    /* Card head lebih compact */
+    .tb-card-head {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .tb-card-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .tb-card-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+    .tb-card-head-text .cht {
+        font-size: 13px;
+    }
+
+    /* Form body */
+    .tb-form-body {
+        padding: 14px;
+    }
+
+    /* Input sedikit lebih kecil */
+    .mz-input {
+        font-size: 12px;
+        padding: 10px 12px 10px 34px;
+    }
+    .mz-label {
+        font-size: 10px;
+    }
+
+    /* Footer */
+    .tb-footer {
+        padding: 12px 14px;
+    }
+    .tb-footer-hint {
+        font-size: 10px;
+    }
+    .btn-cancel {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+    .btn-submit {
+        padding: 8px 20px;
+        font-size: 13px;
+    }
+}

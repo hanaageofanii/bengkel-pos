@@ -395,3 +395,138 @@ body {
 .btn-submit:active {
     transform: scale(0.98);
 }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — tj-responsive.css
+   Breakpoints: md ≤ 768px, sm ≤ 480px
+   ══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .tj-header {
+        margin-bottom: 20px;
+    }
+    .tj-title {
+        font-size: 22px;
+    }
+    .tj-subtitle {
+        max-width: 100%;
+    }
+
+    /* Card head */
+    .tj-card-head {
+        padding: 14px 18px;
+    }
+
+    /* Form body */
+    .tj-form-body {
+        padding: 18px;
+    }
+
+    /* Grid 2 → 1 kolom */
+    .tj-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .col-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Tip block */
+    .tj-tip {
+        padding: 10px 12px;
+        font-size: 11px;
+        margin-bottom: 14px;
+    }
+
+    /* Textarea sedikit lebih pendek di tablet */
+    .mz-textarea {
+        min-height: 80px;
+    }
+
+    /* Footer */
+    .tj-footer {
+        padding: 14px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .tj-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Sep */
+    .tj-sep {
+        margin: 18px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .tj-title {
+        font-size: 19px;
+    }
+    .tj-breadcrumb {
+        font-size: 10px;
+    }
+
+    /* Card head compact */
+    .tj-card-head {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .tj-card-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .tj-card-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+    .tj-card-head-text .cht {
+        font-size: 13px;
+    }
+
+    /* Form body */
+    .tj-form-body {
+        padding: 14px;
+    }
+
+    /* Input */
+    .mz-input {
+        font-size: 12px;
+        padding: 10px 12px 10px 34px;
+    }
+    .mz-textarea {
+        font-size: 12px;
+        padding: 10px 12px 10px 34px;
+        min-height: 70px;
+    }
+    .mz-label {
+        font-size: 10px;
+    }
+
+    /* Tip */
+    .tj-tip {
+        font-size: 11px;
+        gap: 8px;
+    }
+
+    /* Footer */
+    .tj-footer {
+        padding: 12px 14px;
+    }
+    .tj-footer-hint {
+        font-size: 10px;
+    }
+    .tj-actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        padding: 10px 16px;
+    }
+}

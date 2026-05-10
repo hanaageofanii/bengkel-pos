@@ -372,37 +372,150 @@ body {
 }
 
 [data-theme="dark"] .select2-container--default .select2-selection--single {
-    background-color: #1f2937; /* dark bg */
+    background-color: #1f2937;
     color: #fff;
     border: 1px solid #374151;
 }
-
 [data-theme="dark"] .select2-container--default .select2-selection__rendered {
     color: #fff;
 }
-
 [data-theme="dark"] .select2-dropdown {
     background-color: #1f2937;
     color: #fff;
     border: 1px solid #374151;
 }
-
 [data-theme="dark"] .select2-results__option {
     background-color: #1f2937;
     color: #fff;
 }
-
 [data-theme="dark"] .select2-results__option--highlighted {
     background-color: #374151 !important;
     color: #fff;
 }
-
 [data-theme="dark"] .select2-search__field {
     background-color: #111827;
     color: #fff;
     border: 1px solid #374151;
 }
-
 .select2-container {
     width: 100% !important;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE — inv-responsive.css
+   Breakpoints: md ≤ 768px, sm ≤ 480px
+   ══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .inv-title {
+        font-size: 22px;
+    }
+    .inv-subtitle {
+        margin-bottom: 16px;
+    }
+
+    /* Section padding */
+    .inv-section {
+        padding: 18px 16px;
+    }
+
+    /* Grid 2 kolom → 1 kolom */
+    .inv-grid {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
+    /* Label height auto supaya tidak terlalu tinggi di mobile */
+    .mz-label {
+        height: auto;
+        min-height: unset;
+    }
+
+    /* Row items: susun vertikal di tablet */
+    .row-12 {
+        grid-template-columns: 1fr 1fr;
+    }
+    .row-part {
+        grid-template-columns: 1fr 1fr;
+    }
+    .row-keluhan {
+        grid-template-columns: 1fr auto;
+    }
+
+    /* Summary bar: wrap ke beberapa baris */
+    .inv-summary {
+        padding: 14px 16px;
+        flex-wrap: wrap;
+        gap: 14px;
+        justify-content: flex-end;
+    }
+    .sum-val {
+        font-size: 18px;
+    }
+    .sum-val.grand {
+        font-size: 22px;
+    }
+
+    /* Footer */
+    .inv-footer {
+        padding: 14px 16px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .inv-title {
+        font-size: 19px;
+    }
+    .inv-breadcrumb {
+        font-size: 10px;
+    }
+
+    /* Section */
+    .inv-section {
+        padding: 14px 12px;
+    }
+    .inv-section-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    /* Row items: semua jadi 1 kolom */
+    .row-12 {
+        grid-template-columns: 1fr;
+    }
+    .row-part {
+        grid-template-columns: 1fr;
+    }
+
+    /* Tombol hapus full width di mobile */
+    .btn-remove {
+        width: 100%;
+        justify-content: center;
+        padding: 8px 10px;
+    }
+
+    /* Summary */
+    .inv-summary {
+        padding: 12px;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 10px;
+    }
+
+    /* Footer tombol full width */
+    .inv-footer {
+        padding: 12px;
+        flex-direction: column-reverse;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        padding: 10px 16px;
+    }
 }

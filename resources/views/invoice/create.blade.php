@@ -39,8 +39,12 @@
                         <select name="pelanggan_id" class="mz-select select2">
                             <option value="">Pilih pelanggan</option>
                             @foreach($pelanggans as $p)
-                                <option value="{{ $p->id }}" data-tipe="{{ $p->tipe }}">
-                                    {{ $p->nama }}  {{ strtoupper($p->plat_nomor) }}
+                                <option value="{{ $p->id }}"
+                                        data-tipe="{{ $p->tipe }}"
+                                        data-notelp="{{ $p->no_hp }}"
+                                        data-nochasis="{{ $p->no_chasis }}"
+                                        data-nomesin="{{ $p->no_mesin }}">
+                                    {{ $p->nama }} — {{ strtoupper($p->plat_nomor) }}
                                 </option>
                             @endforeach
                         </select>

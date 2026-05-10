@@ -342,3 +342,99 @@ body {
     color: var(--mz-muted);
     font-weight: 600;
 }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 768px) {
+    .absensi-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+
+    .absensi-filter {
+        flex-wrap: wrap;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .absensi-filter .mz-select,
+    .absensi-filter input,
+    .absensi-filter button {
+        flex: 1 1 calc(50% - 6px);
+        min-width: 120px;
+        font-size: 11px;
+    }
+
+    /* wrapper tabel bisa scroll horizontal */
+    .absensi-card {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .absensi-table {
+        font-size: 10.5px;
+        min-width: 600px; /* paksa scroll kalau layar sempit */
+    }
+
+    .absensi-table th,
+    .absensi-table td {
+        padding: 4px 5px;
+    }
+
+    /* kolom nama sticky tetap jalan di mobile */
+    .absensi-table th.col-nama,
+    .absensi-table td.col-nama {
+        min-width: 100px;
+        max-width: 130px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .badge {
+        width: 20px;
+        height: 20px;
+        font-size: 8.5px;
+    }
+
+    .mz-modal {
+        max-width: 92vw;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 6px;
+    }
+
+    .status-btn {
+        padding: 8px 4px;
+    }
+
+    .status-btn .sk {
+        font-size: 12px;
+    }
+
+    .status-btn .sv {
+        font-size: 8.5px;
+    }
+}
+
+@media (max-width: 480px) {
+    .absensi-title {
+        font-size: 18px;
+    }
+
+    .absensi-filter .mz-select,
+    .absensi-filter input,
+    .absensi-filter button {
+        flex: 1 1 100%; /* tiap item full width di HP kecil */
+    }
+
+    .absensi-table {
+        font-size: 10px;
+    }
+
+    .status-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}

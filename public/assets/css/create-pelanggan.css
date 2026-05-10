@@ -398,3 +398,145 @@ body {
     color: #3a4059;
     font-style: italic;
 }
+
+/* ══════════════════════════════════════
+   RESPONSIVE — tp-responsive.css
+   Breakpoints: md ≤ 768px, sm ≤ 480px
+   ══════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    /* Header */
+    .tp-header {
+        margin-bottom: 20px;
+    }
+    .tp-title {
+        font-size: 22px;
+    }
+
+    /* Card head */
+    .tp-card-head {
+        padding: 14px 18px;
+    }
+
+    /* Form body */
+    .tp-form-body {
+        padding: 18px;
+    }
+
+    /* Grid 2 → 1 kolom */
+    .tp-grid {
+        grid-template-columns: 1fr;
+        gap: 14px;
+    }
+    .col-full {
+        grid-column: 1 / -1;
+    }
+
+    /* Car visual */
+    .car-visual {
+        padding: 12px 14px;
+        gap: 12px;
+        min-height: 54px;
+    }
+    .car-visual-icon {
+        width: 28px;
+        height: 28px;
+    }
+    .car-visual-text .cv-plat {
+        font-size: 15px;
+        letter-spacing: 1.5px;
+    }
+
+    /* Footer */
+    .tp-footer {
+        padding: 14px 18px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .tp-actions {
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    /* Sep */
+    .tp-sep {
+        margin: 18px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .tp-title {
+        font-size: 19px;
+    }
+    .tp-breadcrumb {
+        font-size: 10px;
+    }
+
+    /* Card head compact */
+    .tp-card-head {
+        padding: 12px 14px;
+        gap: 10px;
+    }
+    .tp-card-icon {
+        width: 30px;
+        height: 30px;
+    }
+    .tp-card-icon svg {
+        width: 15px;
+        height: 15px;
+    }
+    .tp-card-head-text .cht {
+        font-size: 13px;
+    }
+
+    /* Form body */
+    .tp-form-body {
+        padding: 14px;
+    }
+
+    /* Input & select */
+    .mz-input,
+    .mz-select {
+        font-size: 12px;
+        padding: 10px 12px 10px 34px;
+    }
+    .mz-label {
+        font-size: 10px;
+    }
+
+    /* Car visual */
+    .car-visual {
+        padding: 10px 12px;
+        gap: 10px;
+    }
+    .car-visual-icon {
+        width: 24px;
+        height: 24px;
+    }
+    .car-visual-text .cv-plat {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+    .car-visual-text .cv-model {
+        font-size: 10px;
+    }
+
+    /* Footer */
+    .tp-footer {
+        padding: 12px 14px;
+    }
+    .tp-footer-hint {
+        font-size: 10px;
+    }
+    .tp-actions {
+        flex-direction: column-reverse;
+        width: 100%;
+    }
+    .btn-cancel,
+    .btn-submit {
+        width: 100%;
+        text-align: center;
+        padding: 10px 16px;
+    }
+}

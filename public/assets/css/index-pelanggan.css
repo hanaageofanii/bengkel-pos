@@ -1,6 +1,7 @@
 body {
     color: var(--mz-text);
 }
+
 /* DEFAULT DARK */
 :root {
     --mz-bg: #0f1117;
@@ -9,6 +10,13 @@ body {
     --mz-border: #262c3d;
     --mz-text: #e4e8f0;
     --mz-muted: #6b7694;
+    --mz-accent: #4f8ef7;
+    --mz-accent2: #1e90ff;
+    --mz-green: #3ef08a;
+    --mz-red: #f26c6c;
+    --mz-yellow: #f5c542;
+    --mz-teal: #2dd4bf;
+    --mz-teal2: #0d9488;
 }
 
 /* LIGHT MODE */
@@ -21,7 +29,6 @@ body {
     --mz-muted: #6b7280;
     --mz-accent: #4f8ef7;
     --mz-accent2: #1e90ff;
-    --mz-muted: #6b7694;
     --mz-green: #3ef08a;
     --mz-red: #f26c6c;
     --mz-yellow: #f5c542;
@@ -509,4 +516,140 @@ body {
 }
 .del-btn-confirm:hover {
     opacity: 0.88;
+}
+
+/* ══════════════════════════════════════
+   RESPONSIVE
+══════════════════════════════════════ */
+
+/* ── 768px: header stack, stats 1-col, action col ── */
+@media (max-width: 768px) {
+    .pl-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+    }
+    .btn-add {
+        width: 100%;
+        justify-content: center;
+    }
+    .pl-stats {
+        grid-template-columns: 1fr;
+    }
+    .mz-modal {
+        max-width: calc(100vw - 32px);
+        margin: 0 16px;
+    }
+}
+
+/* ── 640px: tabel jadi card per baris ── */
+@media (max-width: 640px) {
+    /* Sembunyikan header tabel */
+    .pl-table thead {
+        display: none;
+    }
+
+    /* Hilangkan card wrapper, tiap row jadi card sendiri */
+    .pl-card {
+        background: transparent;
+        border: none;
+        box-shadow: none;
+        overflow: visible;
+    }
+    .pl-card-bar {
+        display: none;
+    }
+
+    /* tbody & table layout reset */
+    .pl-table,
+    .pl-table tbody {
+        display: block;
+        width: 100%;
+    }
+
+    /* Tiap baris jadi card */
+    .pl-table tbody tr {
+        display: block;
+        background: var(--mz-surface);
+        border: 1px solid var(--mz-border);
+        border-radius: 10px;
+        margin-bottom: 10px;
+        padding: 4px 0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        overflow: hidden;
+    }
+    .pl-table tbody tr:hover td {
+        background: transparent;
+    }
+
+    /* Tiap cell jadi baris label–nilai */
+    .pl-table td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 9px 14px;
+        border-bottom: 1px solid var(--mz-border);
+        font-size: 12px;
+        text-align: right !important;
+    }
+    .pl-table td:last-child {
+        border-bottom: none;
+    }
+
+    /* Label dari data-label */
+    .pl-table td::before {
+        content: attr(data-label);
+        font-size: 10px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.6px;
+        color: var(--mz-muted);
+        flex-shrink: 0;
+        margin-right: 12px;
+        text-align: left;
+    }
+
+    /* Nama: label di atas, konten di bawah */
+    .pl-table td.td-nama {
+        flex-direction: column;
+        align-items: flex-start;
+        background: var(--mz-surface2);
+        padding: 12px 14px 10px;
+        border-bottom: 1px solid var(--mz-border);
+    }
+    .pl-table td.td-nama::before {
+        font-size: 9px;
+        margin-bottom: 4px;
+        margin-right: 0;
+    }
+    .pl-table td.td-nama .td-hp {
+        margin-top: 4px;
+    }
+
+    /* Aksi: tombol sejajar */
+    .pl-table td.td-aksi {
+        padding: 10px 14px;
+    }
+    .action-group {
+        flex-direction: row;
+        justify-content: flex-end;
+        gap: 6px;
+        flex-wrap: wrap;
+        width: 100%;
+    }
+    .btn-edit,
+    .btn-del {
+        flex: 1;
+        justify-content: center;
+        min-width: 80px;
+    }
+
+    /* Empty state tetap centered */
+    .pl-table td[colspan] {
+        justify-content: center;
+        border: none;
+    }
+    .pl-table td[colspan]::before {
+        display: none;
+    }
 }

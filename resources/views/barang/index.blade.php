@@ -42,9 +42,9 @@
         </div>
         <div class="stat-card">
             <div class="stat-icon green">
-            <svg class="mz-input-icon" viewBox="0 0 24 24">
-                <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
-            </svg>
+                <svg viewBox="0 0 24 24">
+                    <path d="M21.41 11.58l-9-9C12.05 2.22 11.55 2 11 2H4c-1.1 0-2 .9-2 2v7c0 .55.22 1.05.59 1.42l9 9c.36.36.86.58 1.41.58.55 0 1.05-.22 1.41-.59l7-7c.37-.36.59-.86.59-1.41 0-.55-.23-1.06-.59-1.42zM5.5 7C4.67 7 4 6.33 4 5.5S4.67 4 5.5 4 7 4.67 7 5.5 6.33 7 5.5 7z"/>
+                </svg>
             </div>
             <div>
                 <div class="stat-val">{{ $barangs->sum('stok') }}</div>
@@ -66,69 +66,74 @@
     <div class="sb-card">
         <div class="sb-card-bar"></div>
 
-        <table class="sb-table">
-            <thead>
-                <tr>
-                    <th class="th-nama">Nama Barang</th>
-                    <th class="th-num">Harga Modal</th>
-                    {{-- <th class="th-num">Harga Perusahaan</th> --}}
-                    <th class="th-center">Stok</th>
-                    <th class="th-center">Satuan</th>
-                    <th class="th-aksi">Aksi</th>
-                </tr>
-            </thead>
+        {{-- WRAPPER INI yang bikin tabel bisa digeser di HP --}}
+        <div class="sb-table-wrap">
+            <table class="sb-table">
+                <thead>
+                    <tr>
+                        <th class="th-nama">Nama Barang</th>
+                        <th class="th-num">Harga Modal</th>
+                        {{-- <th class="th-num">Harga Perusahaan</th> --}}
+                        <th class="th-center">Stok</th>
+                        <th class="th-center">Satuan</th>
+                        <th class="th-aksi">Aksi</th>
+                    </tr>
+                </thead>
 
-            <tbody>
-                @forelse($barangs as $b)
-                <tr>
-                    <td class="td-nama">{{ $b->nama }}</td>
+                <tbody>
+                    @forelse($barangs as $b)
+                    <tr>
+                        <td class="td-nama">{{ $b->nama }}</td>
 
-                    <td class="td-price">
-                        <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_pribadi) }}
-                    </td>
+                        <td class="td-price">
+                            <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_pribadi) }}
+                        </td>
 
-                    {{-- <td class="td-price">
-                        <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_perusahaan) }}
-                    </td> --}}
+                        {{-- <td class="td-price">
+                            <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_perusahaan) }}
+                        </td> --}}
 
-                    <td class="td-stok">
-                        <span class="stok-badge
-                            @if($b->stok <= 0)   stok-empty
-                            @elseif($b->stok <= 5) stok-low
-                            @else                  stok-ok
-                            @endif
-                        ">{{ $b->stok }}</span>
-                    </td>
+                        <td class="td-stok">
+                            <span class="stok-badge
+                                @if($b->stok <= 0)    stok-empty
+                                @elseif($b->stok <= 5) stok-low
+                                @else                  stok-ok
+                                @endif
+                            ">{{ $b->stok }}</span>
+                        </td>
 
-                    <td class="td-satuan">
-                        <span class="satuan-pill">{{ $b->satuan }}</span>
-                    </td>
+                        <td class="td-satuan">
+                            <span class="satuan-pill">{{ $b->satuan }}</span>
+                        </td>
 
-                    <td class="td-aksi">
-                        <div class="action-group">
-                            <a href="{{ route('barang.edit', $b->id) }}" class="btn-edit">
-                                <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-                                Edit
-                            </a>
-                            <button @click="open({{ $b->id }}, '{{ $b->nama }}')" class="btn-del">
-                                <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
-                                Hapus
-                            </button>
-                        </div>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="6">
-                        <div class="empty-state">
-                            <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-                            <p>Belum ada data barang</p>
-                        </div>
-                    </td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
+                        <td class="td-aksi">
+                            <div class="action-group">
+                                <a href="{{ route('barang.edit', $b->id) }}" class="btn-edit">
+                                    <svg viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41l-2.34-2.34a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+                                    Edit
+                                </a>
+                                <button @click="open({{ $b->id }}, '{{ $b->nama }}')" class="btn-del">
+                                    <svg viewBox="0 0 24 24"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                                    Hapus
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="6">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
+                                <p>Belum ada data barang</p>
+                            </div>
+                        </td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+        {{-- akhir sb-table-wrap --}}
+
     </div>
 
     {{-- ── Delete Modal ── --}}

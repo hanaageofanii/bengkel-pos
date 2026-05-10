@@ -20,12 +20,10 @@
 body {
     min-height: 100vh;
     display: flex;
-    align-items: center;
+    align-items: center; /* tetap center vertikal */
     justify-content: center;
+    padding: 1rem; /* kasih napas di semua sisi */
     background-color: var(--bg);
-    /* background-image:
-                repeating-linear-gradient(0deg,   transparent, transparent 39px, var(--border) 39px, var(--border) 40px),
-                repeating-linear-gradient(90deg,  transparent, transparent 39px, var(--border) 39px, var(--border) 40px); */
     font-family: "Inter", sans-serif;
 }
 
@@ -229,4 +227,89 @@ input::placeholder {
 .status-text {
     font-size: 11px;
     color: var(--muted);
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+    body {
+        align-items: center;
+        padding: 1rem;
+    }
+
+    .card {
+        max-width: 100%;
+        border-radius: 8px;
+    }
+
+    .card-header {
+        padding: 20px 20px 0;
+        gap: 10px;
+    }
+
+    .logo-box {
+        width: 36px;
+        height: 36px;
+    }
+
+    .logo-box svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    .brand-name {
+        font-size: 17px;
+    }
+
+    .brand-sub {
+        font-size: 10px;
+    }
+
+    .divider {
+        margin: 16px 20px 0;
+    }
+
+    .card-body {
+        padding: 16px 20px 24px;
+    }
+
+    .card-footer {
+        padding: 10px 20px 14px;
+    }
+
+    input[type="email"],
+    input[type="password"] {
+        font-size: 16px;
+        padding: 11px 13px;
+    }
+
+    .btn-submit {
+        font-size: 14px;
+        padding: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    body {
+        padding: 0.75rem;
+    }
+
+    .brand-name {
+        font-size: 15px;
+    }
+
+    .card-body {
+        padding: 14px 16px 20px;
+    }
+
+    .card-header {
+        padding: 16px 16px 0;
+    }
+
+    .divider {
+        margin: 14px 16px 0;
+    }
+
+    .card-footer {
+        padding: 10px 16px 12px;
+    }
 }
