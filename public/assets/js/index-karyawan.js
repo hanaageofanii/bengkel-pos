@@ -13,5 +13,18 @@ function deleteModal() {
             this.nama = nama;
             this.show = true;
         },
+        search: "",
+
+        open(id, nama, baseRoute) {
+            // baseRoute defaults to the url pattern already set per-page.
+            // Each page overrides open() inline if needed.
+            this.url = baseRoute ? `/${baseRoute}/${id}` : this.url;
+            this.nama = nama;
+            this.show = true;
+        },
+
+        close() {
+            this.show = false;
+        },
     };
 }

@@ -5,6 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('assets/css/index-karyawan.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/mz-search.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <div x-data="deleteModal()" class="ky-wrap">
@@ -69,6 +70,28 @@
         </div>
     </div>
 
+    {{-- ── Search Bar ── --}}
+    <div class="mz-search-wrap">
+        <div class="mz-search-box">
+            <svg class="mz-search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input
+                type="text"
+                x-model="search"
+                class="mz-search-input"
+                placeholder="Cari nama, jabatan, no. HP, atau email..."
+                autocomplete="off"
+            >
+            <button x-show="search" @click="search = ''" class="mz-search-clear" x-transition>
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+        <div class="mz-search-count" x-show="search" x-transition>
+            Menampilkan hasil untuk "<span x-text="search" class="mz-search-keyword"></span>"
+        </div>
+    </div>
+
     {{-- ── Table Card ── --}}
     <div class="ky-card">
         <div class="ky-card-bar"></div>
@@ -86,7 +109,7 @@
             </thead>
             <tbody>
                 @forelse($karyawans as $k)
-                <tr>
+                <tr x-show="!search || $el.textContent.toLowerCase().includes(search.toLowerCase())">
                     {{-- Nama --}}
                     <td>
                         <div class="td-nama-wrap">
@@ -177,7 +200,7 @@
                 </tr>
                 @empty
                 <tr>
-                    <td colspan="5">
+                    <td colspan="6">
                         <div class="empty-state">
                             <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
                             <p>Belum ada data karyawan</p>

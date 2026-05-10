@@ -5,6 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('assets/css/index-jasa.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/mz-search.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <div class="jasa-wrap" x-data="deleteModal()">
@@ -51,22 +52,34 @@
                 <div class="stat-lbl">Rata-rata Harga Modal</div>
             </div>
         </div>
-        {{-- <div class="stat-card">
-            <div class="stat-icon green">
-                <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
-            </div>
-            <div>
-                <div class="stat-val">Rp {{ number_format($jasas->avg('harga_perusahaan'), 0, ',', '.') }}</div>
-                <div class="stat-lbl">Rata-rata Harga Perusahaan</div>
-            </div>
-        </div> --}}
+    </div>
+
+    {{-- ── Search Bar ── --}}
+    <div class="mz-search-wrap">
+        <div class="mz-search-box">
+            <svg class="mz-search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input
+                type="text"
+                x-model="search"
+                class="mz-search-input"
+                placeholder="Cari nama jasa atau keterangan..."
+                autocomplete="off"
+            >
+            <button x-show="search" @click="search = ''" class="mz-search-clear" x-transition>
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+        <div class="mz-search-count" x-show="search" x-transition>
+            Menampilkan hasil untuk "<span x-text="search" class="mz-search-keyword"></span>"
+        </div>
     </div>
 
     {{-- ── Table Card ── --}}
     <div class="jasa-card">
         <div class="jasa-card-bar"></div>
 
-        {{-- Wrapper scroll horizontal --}}
         <div class="table-scroll-hint" id="scrollHint">
             <div class="table-scroll-wrap" id="tableScroll">
                 <table class="jasa-table">
@@ -79,8 +92,7 @@
                     </thead>
                     <tbody>
                         @forelse($jasas as $j)
-                        <tr>
-                            {{-- Nama --}}
+                        <tr x-show="!search || $el.textContent.toLowerCase().includes(search.toLowerCase())">
                             <td class="td-nama">
                                 {{ $j->nama }}
                                 @if($j->keterangan)
@@ -91,16 +103,10 @@
                                 @endif
                             </td>
 
-                            {{-- Harga Modal --}}
                             <td class="td-price">
                                 <span class="price-rp">Rp</span>{{ number_format($j->harga_pribadi) }}
                             </td>
 
-                            {{-- <td class="td-price">
-                                <span class="price-rp">Rp</span>{{ number_format($j->harga_perusahaan) }}
-                            </td> --}}
-
-                            {{-- Aksi --}}
                             <td class="td-aksi">
                                 <div class="action-group">
                                     <a href="{{ route('jasa.edit', $j->id) }}" class="btn-edit">
@@ -159,38 +165,29 @@
 </div>
 
 <script>
-function setTheme(theme) {
-    document.documentElement.setAttribute('data-theme', theme);
-    localStorage.setItem('theme', theme);
-}
-
 function deleteModal() {
     return {
-        show: false,
-        url: '',
-        nama: '',
+        show:   false,
+        url:    '',
+        nama:   '',
+        search: '',
         open(id, nama) {
-            this.url = `/jasa/${id}`;
+            this.url  = `/jasa/${id}`;
             this.nama = nama;
             this.show = true;
         },
         close() {
             this.show = false;
         }
-    }
+    };
 }
 
-// Hilangkan fade hint setelah user geser tabel
 (function () {
-    var wrap  = document.getElementById('tableScroll');
-    var hint  = document.getElementById('scrollHint');
+    var wrap = document.getElementById('tableScroll');
+    var hint = document.getElementById('scrollHint');
     if (!wrap || !hint) return;
     wrap.addEventListener('scroll', function () {
-        if (wrap.scrollLeft > 10) {
-            hint.classList.add('scrolled');
-        } else {
-            hint.classList.remove('scrolled');
-        }
+        hint.classList.toggle('scrolled', wrap.scrollLeft > 10);
     }, { passive: true });
 })();
 </script>

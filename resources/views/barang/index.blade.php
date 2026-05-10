@@ -5,6 +5,7 @@
 @section('content')
 
 <link rel="stylesheet" href="{{ asset('assets/css/index-barang.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/css/mz-search.css') }}">
 <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 
 <div class="sb-wrap" x-data="deleteModal()">
@@ -62,18 +63,38 @@
         </div>
     </div>
 
+    {{-- ── Search Bar ── --}}
+    <div class="mz-search-wrap">
+        <div class="mz-search-box">
+            <svg class="mz-search-icon" viewBox="0 0 24 24">
+                <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+            </svg>
+            <input
+                type="text"
+                x-model="search"
+                class="mz-search-input"
+                placeholder="Cari nama barang atau satuan..."
+                autocomplete="off"
+            >
+            <button x-show="search" @click="search = ''" class="mz-search-clear" x-transition>
+                <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+            </button>
+        </div>
+        <div class="mz-search-count" x-show="search" x-transition>
+            Menampilkan hasil untuk "<span x-text="search" class="mz-search-keyword"></span>"
+        </div>
+    </div>
+
     {{-- ── Table Card ── --}}
     <div class="sb-card">
         <div class="sb-card-bar"></div>
 
-        {{-- WRAPPER INI yang bikin tabel bisa digeser di HP --}}
         <div class="sb-table-wrap">
             <table class="sb-table">
                 <thead>
                     <tr>
                         <th class="th-nama">Nama Barang</th>
                         <th class="th-num">Harga Modal</th>
-                        {{-- <th class="th-num">Harga Perusahaan</th> --}}
                         <th class="th-center">Stok</th>
                         <th class="th-center">Satuan</th>
                         <th class="th-aksi">Aksi</th>
@@ -82,16 +103,12 @@
 
                 <tbody>
                     @forelse($barangs as $b)
-                    <tr>
+                    <tr x-show="!search || $el.textContent.toLowerCase().includes(search.toLowerCase())">
                         <td class="td-nama">{{ $b->nama }}</td>
 
                         <td class="td-price">
                             <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_pribadi) }}
                         </td>
-
-                        {{-- <td class="td-price">
-                            <span style="font-size:10px;color:var(--mz-muted);margin-right:2px">Rp</span>{{ number_format($b->harga_perusahaan) }}
-                        </td> --}}
 
                         <td class="td-stok">
                             <span class="stok-badge
@@ -121,7 +138,7 @@
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6">
+                        <td colspan="5">
                             <div class="empty-state">
                                 <svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2z"/></svg>
                                 <p>Belum ada data barang</p>
@@ -129,10 +146,19 @@
                         </td>
                     </tr>
                     @endforelse
+
+                    {{-- Empty search result --}}
+                    <tr x-show="search && document.querySelectorAll('.sb-table tbody tr[style*=\'display: none\']').length === {{ $barangs->count() }}" style="display:none">
+                        <td colspan="5">
+                            <div class="empty-state">
+                                <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+                                <p>Tidak ada barang yang cocok</p>
+                            </div>
+                        </td>
+                    </tr>
                 </tbody>
             </table>
         </div>
-        {{-- akhir sb-table-wrap --}}
 
     </div>
 

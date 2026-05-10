@@ -1,0 +1,103 @@
+/* ─────────────────────────────────────────────
+   mz-search  –  shared search bar component
+   Include via: <link rel="stylesheet" href="{{ asset('assets/css/mz-search.css') }}">
+   ───────────────────────────────────────────── */
+
+.mz-search-wrap {
+    margin-bottom: 16px;
+}
+
+/* ── Search box ── */
+.mz-search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.mz-search-icon {
+    position: absolute;
+    left: 14px;
+    width: 18px;
+    height: 18px;
+    fill: var(--mz-muted, #9ca3af);
+    pointer-events: none;
+    flex-shrink: 0;
+}
+
+.mz-search-input {
+    width: 100%;
+    padding: 10px 42px 10px 42px;
+    border: 1.5px solid var(--mz-border, #e5e7eb);
+    border-radius: 10px;
+    background: var(--mz-card, #ffffff);
+    color: var(--mz-text, #111827);
+    font-family: "Inter", sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition:
+        border-color 0.2s,
+        box-shadow 0.2s;
+}
+
+.mz-search-input::placeholder {
+    color: var(--mz-muted, #9ca3af);
+}
+
+.mz-search-input:focus {
+    border-color: var(--mz-primary, #6366f1);
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--mz-primary, #6366f1) 12%, transparent);
+}
+
+/* ── Clear (×) button ── */
+.mz-search-clear {
+    position: absolute;
+    right: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    border: none;
+    background: var(--mz-muted, #9ca3af);
+    border-radius: 50%;
+    cursor: pointer;
+    transition: background 0.15s;
+    padding: 0;
+}
+
+.mz-search-clear svg {
+    width: 14px;
+    height: 14px;
+    fill: #fff;
+}
+
+.mz-search-clear:hover {
+    background: var(--mz-danger, #ef4444);
+}
+
+/* ── Result hint text ── */
+.mz-search-count {
+    margin-top: 7px;
+    font-size: 12px;
+    color: var(--mz-muted, #9ca3af);
+    padding-left: 2px;
+}
+
+.mz-search-keyword {
+    color: var(--mz-primary, #6366f1);
+    font-weight: 600;
+}
+
+/* ── Dark mode support ── */
+[data-theme="dark"] .mz-search-input {
+    background: var(--mz-card, #1e2330);
+    border-color: var(--mz-border, #2d3548);
+    color: var(--mz-text, #f1f5f9);
+}
+
+[data-theme="dark"] .mz-search-input:focus {
+    border-color: var(--mz-primary, #818cf8);
+    box-shadow: 0 0 0 3px
+        color-mix(in srgb, var(--mz-primary, #818cf8) 15%, transparent);
+}

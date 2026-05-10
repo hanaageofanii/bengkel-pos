@@ -25,7 +25,7 @@
 
         {{-- Logo --}}
 <div class="sidebar-logo" style="flex-direction: column; align-items: center; padding: 0 16px 4px; gap: 0; margin-top: -45px;">
-    <img src="{{ asset('assets/images/logo.png') }}" 
+    <img src="{{ asset('assets/images/logo.png') }}"
          alt="5A Auto Service"
          style="width: 200px; height: 200px; object-fit: contain;">
     <div class="sidebar-logo-text" style="text-align: center; margin-top: -45px;">
